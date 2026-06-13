@@ -1,0 +1,97 @@
+{
+  "sourceDirectory": "MarketingScreenshots/2026-06-13-1811-photo-video-copy/app-store-6.9",
+  "outputDirectory": "MarketingScreenshots/2026-06-13-1811-photo-video-copy/app-store-6.9-marketing",
+  "contactSheet": "MarketingScreenshots/2026-06-13-1811-photo-video-copy/app-store-6.9-marketing/contact-sheet.png",
+  "screenshots": [
+    {
+      "source": "MarketingScreenshots/2026-06-13-1811-photo-video-copy/app-store-6.9/01-welcome.png",
+      "output": "MarketingScreenshots/2026-06-13-1811-photo-video-copy/app-store-6.9-marketing/01-local-first.png",
+      "canvasSize": [
+        1320,
+        2868
+      ],
+      "titleBottom": 363,
+      "deviceFrame": [
+        177,
+        690,
+        966,
+        2033
+      ]
+    },
+    {
+      "source": "MarketingScreenshots/2026-06-13-1811-photo-video-copy/app-store-6.9/02-permission-rationale.png",
+      "output": "MarketingScreenshots/2026-06-13-1811-photo-video-copy/app-store-6.9-marketing/02-permission-before-access.png",
+      "canvasSize": [
+        1320,
+        2868
+      ],
+      "titleBottom": 364,
+      "deviceFrame": [
+        177,
+        690,
+        966,
+        2033
+      ]
+    },
+    {
+      "source": "MarketingScreenshots/2026-06-13-1811-photo-video-copy/app-store-6.9/04-home-review-queue.png",
+      "output": "MarketingScreenshots/2026-06-13-1811-photo-video-copy/app-store-6.9-marketing/03-review-queue.png",
+      "canvasSize": [
+        1320,
+        2868
+      ],
+      "titleBottom": 364,
+      "deviceFrame": [
+        177,
+        690,
+        966,
+        2033
+      ]
+    },
+    {
+      "source": "MarketingScreenshots/2026-06-13-1811-photo-video-copy/app-store-6.9/05-screenshot-review.png",
+      "output": "MarketingScreenshots/2026-06-13-1811-photo-video-copy/app-store-6.9-marketing/04-review-before-bin.png",
+      "canvasSize": [
+        1320,
+        2868
+      ],
+      "titleBottom": 363,
+      "deviceFrame": [
+        177,
+        690,
+        966,
+        2033
+      ]
+    },
+    {
+      "source": "MarketingScreenshots/2026-06-13-1811-photo-video-copy/app-store-6.9/06-review-bin.png",
+      "output": "MarketingScreenshots/2026-06-13-1811-photo-video-copy/app-store-6.9-marketing/05-review-bin.png",
+      "canvasSize": [
+        1320,
+        2868
+      ],
+      "titleBottom": 363,
+      "deviceFrame": [
+        177,
+        690,
+        966,
+        2033
+      ]
+    },
+    {
+      "source": "MarketingScreenshots/2026-06-13-1811-photo-video-copy/app-store-6.9/07-delete-safety-confirmation.png",
+      "output": "MarketingScreenshots/2026-06-13-1811-photo-video-copy/app-store-6.9-marketing/06-delete-safety.png",
+      "canvasSize": [
+        1320,
+        2868
+      ],
+      "titleBottom": 364,
+      "deviceFrame": [
+        177,
+        690,
+        966,
+        2033
+      ]
+    }
+  ]
+}

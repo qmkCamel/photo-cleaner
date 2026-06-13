@@ -1,0 +1,165 @@
+:root {
+  color-scheme: light;
+  --page: #f3f8f5;
+  --surface: #ffffff;
+  --ink: #17231f;
+  --muted: #5f716a;
+  --line: #dbe6e1;
+  --green: #247261;
+  --green-soft: #e3f1eb;
+  --warning: #fff6dd;
+  --warning-line: #eadca7;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.58;
+}
+
+a {
+  color: var(--green);
+  font-weight: 650;
+}
+
+.shell {
+  width: min(920px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 40px 0 56px;
+}
+
+.masthead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.2;
+  color: var(--green);
+}
+
+.nav {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  font-size: 15px;
+}
+
+.hero {
+  padding: 46px 0 26px;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--green);
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+h1 {
+  max-width: 760px;
+  margin: 0;
+  font-size: clamp(40px, 8vw, 72px);
+  line-height: 1.02;
+  letter-spacing: 0;
+}
+
+.summary {
+  max-width: 720px;
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: 20px;
+}
+
+.notice {
+  margin: 28px 0;
+  padding: 16px 18px;
+  border: 1px solid var(--warning-line);
+  border-radius: 8px;
+  background: var(--warning);
+  color: #584d26;
+}
+
+.content {
+  display: grid;
+  gap: 16px;
+}
+
+.section {
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+h2 {
+  margin: 0 0 10px;
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+h3 {
+  margin: 24px 0 8px;
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+p {
+  margin: 0 0 12px;
+}
+
+ul,
+ol {
+  margin: 10px 0 0;
+  padding-left: 24px;
+}
+
+li + li {
+  margin-top: 6px;
+}
+
+.footer {
+  margin-top: 34px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 14px;
+}
+
+@media (max-width: 680px) {
+  .shell {
+    width: min(100% - 28px, 920px);
+    padding-top: 24px;
+  }
+
+  .masthead {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .hero {
+    padding-top: 34px;
+  }
+
+  .summary {
+    font-size: 18px;
+  }
+
+  .section {
+    padding: 20px;
+  }
+}

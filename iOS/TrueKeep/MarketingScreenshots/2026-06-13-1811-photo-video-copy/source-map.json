@@ -1,0 +1,144 @@
+[
+  {
+    "name": "01-welcome.png",
+    "exportedFileName": "0A94A103-FA34-4743-9908-D65C79228F6D.png",
+    "suggestedHumanReadableName": "01-welcome_0_7F86E39B-F8CB-4DD3-8F4E-CDB6708FBD6D.png",
+    "deviceName": "iPhone 17",
+    "deviceId": "0157BFC9-C9C9-48DC-845E-AABED7B2DCE9",
+    "timestamp": 1781345538.066,
+    "sourceSize": [
+      1206,
+      2622
+    ],
+    "appStoreSize": [
+      1320,
+      2868
+    ]
+  },
+  {
+    "name": "02-permission-rationale.png",
+    "exportedFileName": "6E8C267C-E7E9-491E-84A3-7CDA705F5CB3.png",
+    "suggestedHumanReadableName": "02-permission-rationale_0_1E9172B3-D4AC-44AD-BD65-6860088C3FCF.png",
+    "deviceName": "iPhone 17",
+    "deviceId": "0157BFC9-C9C9-48DC-845E-AABED7B2DCE9",
+    "timestamp": 1781345539.585,
+    "sourceSize": [
+      1206,
+      2622
+    ],
+    "appStoreSize": [
+      1320,
+      2868
+    ]
+  },
+  {
+    "name": "03-scan-completed-limited.png",
+    "exportedFileName": null,
+    "suggestedHumanReadableName": "03-scan-completed-limited.png",
+    "deviceName": "iPhone 17",
+    "deviceId": "0157BFC9-C9C9-48DC-845E-AABED7B2DCE9",
+    "timestamp": null,
+    "sourceSize": [
+      1206,
+      2622
+    ],
+    "appStoreSize": null,
+    "captureMethod": "xcrun simctl io screenshot with -TrueKeepUITestLimitedCompletedScan"
+  },
+  {
+    "name": "03-settings-trust.png",
+    "exportedFileName": "9113AE94-E07D-4064-9E76-FB4E10557B16.png",
+    "suggestedHumanReadableName": "03-settings-trust_0_CA00361D-8EC0-40B2-97EF-A3EC35F5837D.png",
+    "deviceName": "iPhone 17",
+    "deviceId": "0157BFC9-C9C9-48DC-845E-AABED7B2DCE9",
+    "timestamp": 1781345544.369,
+    "sourceSize": [
+      1206,
+      2622
+    ],
+    "appStoreSize": [
+      1320,
+      2868
+    ]
+  },
+  {
+    "name": "04-home-review-queue.png",
+    "exportedFileName": "6502650D-6C02-49E1-95CA-9DF7D2AF35A0.png",
+    "suggestedHumanReadableName": "04-home-review-queue_0_6395772F-FC26-4835-B13E-0E1179D2DB97.png",
+    "deviceName": "iPhone 17",
+    "deviceId": "0157BFC9-C9C9-48DC-845E-AABED7B2DCE9",
+    "timestamp": 1781345548.507,
+    "sourceSize": [
+      1206,
+      2622
+    ],
+    "appStoreSize": [
+      1320,
+      2868
+    ]
+  },
+  {
+    "name": "05-screenshot-review.png",
+    "exportedFileName": "078F5790-F239-4E7B-9C6F-B6518B242405.png",
+    "suggestedHumanReadableName": "05-screenshot-review_0_E1839AE6-A393-45D3-B15E-BEC59D07ECAE.png",
+    "deviceName": "iPhone 17",
+    "deviceId": "0157BFC9-C9C9-48DC-845E-AABED7B2DCE9",
+    "timestamp": 1781345550.385,
+    "sourceSize": [
+      1206,
+      2622
+    ],
+    "appStoreSize": [
+      1320,
+      2868
+    ]
+  },
+  {
+    "name": "06-review-bin.png",
+    "exportedFileName": "4266D9C1-017C-46BC-AAF2-7095F4447388.png",
+    "suggestedHumanReadableName": "06-review-bin_0_51D0A546-F828-42E5-A8E2-1D3FED51DD3E.png",
+    "deviceName": "iPhone 17",
+    "deviceId": "0157BFC9-C9C9-48DC-845E-AABED7B2DCE9",
+    "timestamp": 1781345553.888,
+    "sourceSize": [
+      1206,
+      2622
+    ],
+    "appStoreSize": [
+      1320,
+      2868
+    ]
+  },
+  {
+    "name": "07-delete-safety-confirmation.png",
+    "exportedFileName": "1EFF3DEC-90C4-4E2D-83CA-FDFFD37885C5.png",
+    "suggestedHumanReadableName": "07-delete-safety-confirmation_0_079DCAE8-A177-49FC-A3B2-7EDE32B36953.png",
+    "deviceName": "iPhone 17",
+    "deviceId": "0157BFC9-C9C9-48DC-845E-AABED7B2DCE9",
+    "timestamp": 1781345555.787,
+    "sourceSize": [
+      1206,
+      2622
+    ],
+    "appStoreSize": [
+      1320,
+      2868
+    ]
+  },
+  {
+    "name": "08-default-empty-no-fixtures.png",
+    "exportedFileName": "AD304730-7DAD-402C-87CF-84AB77A3ED45.png",
+    "suggestedHumanReadableName": "08-default-empty-no-fixtures_0_035A3C21-4A45-4624-B152-F68E22333DD3.png",
+    "deviceName": "iPhone 17",
+    "deviceId": "0157BFC9-C9C9-48DC-845E-AABED7B2DCE9",
+    "timestamp": 1781345563.382,
+    "sourceSize": [
+      1206,
+      2622
+    ],
+    "appStoreSize": [
+      1320,
+      2868
+    ]
+  }
+]

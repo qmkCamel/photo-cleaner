@@ -6,7 +6,7 @@
 
 - App Store 名称：`TrueKeep: AI Photo Cleaner`
 - 中文传播名：`留真`
-- App Store 副标题：`Private Duplicate Cleanup`
+- App Store 副标题：`Private Camera Roll Cleanup`
 - 英文宣传语：`Clean your photos. Keep what's true. All on device.`
 - 中文一句话：`本地 AI 相册清理，留下真正值得留的照片。`
 
@@ -30,7 +30,7 @@
 
 - 中文传播用 `留真`。
 - App Store 标题放英文关键词：`TrueKeep: AI Photo Cleaner`。
-- 副标题补隐私和重复清理：`Private Duplicate Cleanup`。
+- 副标题补隐私和相册范围：`Private Camera Roll Cleanup`。
 
 ## ASO 原则
 
@@ -65,14 +65,15 @@ Subtitle 用于简短总结 App，最多 30 字符。关键词需要准确匹配
 
 ### Subtitle
 
-`Private Duplicate Cleanup`
+`Private Camera Roll Cleanup`
 
 原因：
 
 - 覆盖 `private`。
-- 覆盖 `duplicate`。
+- 覆盖 `camera roll`。
 - 覆盖 `cleanup`。
 - 不重复 title 里的 `photo cleaner`。
+- 比 duplicate-only 更贴合当前截图、大视频、相似、模糊、误拍的 MVP 范围。
 - 30 字符内。
 
 ### 中文本地化
@@ -141,16 +142,17 @@ Subtitle 用于简短总结 App，最多 30 字符。关键词需要准确匹配
 - Keepy: Photo Cleaner: https://apps.apple.com/ph/app/keepy-photo-cleaner/id6761756575
 - TidyPix: Photo Cleaner: https://apps.apple.com/au/app/tidypix-photo-cleaner/id6744943307
 - SafeClean: https://apps.apple.com/us/app/safeclean-cleaner-app/id6758437302
+- PicKeep: AI Photo Cleaner: https://apps.apple.com/il/app/pickeep-ai-photo-cleaner/id6754545965
 
 ## 宣传角度
 
 ### 主标题
 
-`Clean your camera roll without sending photos to the cloud.`
+`Clean your camera roll without sending photos or videos to the cloud.`
 
 ### 中文主张
 
-`照片不上传，孩子照片安心整理。`
+`照片和视频不上传，家庭相册安心整理。`
 
 ### 功能卖点
 
@@ -163,7 +165,7 @@ Subtitle 用于简短总结 App，最多 30 字符。关键词需要准确匹配
 
 ### 中文卖点
 
-- 本地 AI 扫描，照片不上传。
+- 本地 AI 扫描，照片和视频不上传。
 - 找出重复、相似、模糊照片。
 - 快速整理截图和大视频。
 - 每组推荐保留最值得留的一张。
@@ -181,7 +183,7 @@ Subtitle 用于简短总结 App，最多 30 字符。关键词需要准确匹配
 
 中文本地化：
 
-1. `照片不上传，也能整理相册`
+1. `照片和视频不上传，也能整理相册`
 2. `孩子连拍，一组一组轻松选`
 3. `模糊、误拍，删除前先确认`
 4. `截图和大视频，快速释放空间`
@@ -194,7 +196,16 @@ Subtitle 用于简短总结 App，最多 30 字符。关键词需要准确匹配
 - `TrueKeep` 商标是否可注册。
 - `留真` 商标是否可注册。
 - App Store 是否已有近似名称。
-- `truekeep.app`、`truekeep.ai`、`liuzhen.app` 等域名。
+- `truekeep.com` 已被注册；`truekeep.app`、`truekeep.ai`、`liuzhen.app` 等域名还需通过注册商确认。
 - 中文区和英文区用户是否能理解 `TrueKeep`。
 - `AI Photo Cleaner` 是否过于泛化或和竞品过近。
 
+## 2026-06-11 刷新记录
+
+- `TrueKeep: AI Photo Cleaner` 长度为 26，`Private Camera Roll Cleanup` 长度为 27，均在当前 App Store 名称/副标题常用限制内。
+- 英文关键词草稿 `duplicate,similar,blurry,screenshots,storage,album,local,family,kids,videos` 长度为 75。
+- 中文名称草稿 `留真：AI 相册清理` 长度为 10，副标题 `本机复核重复照片` 长度为 8。
+- 中文关键词草稿 `截图,大视频,模糊,重复,相似,隐私,本地,家庭,孩子,照片整理` 长度为 32。
+- 公开搜索未发现明确的 `TrueKeep` App Store 完全同名结果，但这不能替代 App Store Connect 可用性检查。
+- `truekeep.com` 通过 WHOIS 查询显示已注册，除非用户拥有该域名，否则不应作为默认官网假设。
+- USPTO 官方商标检索尚未完成；正式提交前仍需做商标/法务确认。

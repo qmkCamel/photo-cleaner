@@ -1,0 +1,23 @@
+TrueKeep / 留真 helps users review cleanup candidates from their local photo library. The app explains its local-processing promise before requesting Photos permission.
+
+Current real scan coverage:
+- Screenshots and screen captures identified from Photos metadata.
+- Long or large videos identified from Photos metadata and duration estimates.
+- Similar-photo candidates identified on device from local thumbnail perceptual hashes inside a short time window.
+- Accidental-shot and blurry-photo candidates identified on device from local thumbnail brightness, saturation, and edge-sharpness heuristics.
+- Visual classifications are treated as low-confidence review candidates, not automatic deletion decisions.
+- The scan does not allow network-backed iCloud thumbnail downloads for visual classification.
+
+Sample/demo coverage:
+- Fixture/sample groups remain isolated behind the internal -TrueKeepUseSampleCleanupData launch argument for UI automation and design review only.
+- The default launch path uses real metadata and local visual heuristics instead of placeholder task cards.
+
+Deletion safety:
+- Items must first be added to Review Bin.
+- Deletion requires a second confirmation sheet.
+- The confirmation copy explains iCloud Photos and Recently Deleted recovery risk.
+- Debug builds keep the deletion safety lock active by default so internal manual testing can verify the deletion flow without deleting photo or video items.
+- Internal manual testing can also launch with -TrueKeepDisablePhotoDeletion or TRUEKEEP_DISABLE_PHOTO_DELETION=1 as explicit extra guards.
+- Destructive debug testing requires a separate approved plan and the explicit opt-in -TrueKeepEnableDestructivePhotoDeletion or TRUEKEEP_ENABLE_DESTRUCTIVE_PHOTO_DELETION=1.
+
+No account, upload, analytics, advertising, or cross-app tracking behavior is present in the current build.

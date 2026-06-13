@@ -10,18 +10,31 @@
 - [04 产品定位与 MVP](./04-product-positioning-and-mvp.md)：建议定位、功能边界、MVP 和验证指标。
 - [05 隐私、安全与风险](./05-privacy-safety-risk.md)：隐私承诺、误删风险、App Store 风险和用户信任。
 - [06 命名与 ASO](./06-naming-and-aso.md)：品牌名、App Store 名称、副标题、关键词和宣传语。
+- [07 三阶段产品路线](./07-three-phase-roadmap.md)：按 MVP 信任验证、TestFlight 商业化、留存扩展拆解阶段目标。
+- [08 MVP 与信任验证设计稿和交互稿](./08-mvp-trust-design-and-interaction.md)：阶段一的高保真原型、屏幕规格、交互规则和开发接口建议。
+- [09 当前产品动线与截图](./09-current-product-flow-with-screenshots.md)：当前 iOS MVP 的实际使用动线，并配套最新模拟器截图。
+- [App Store 隐私政策草稿](./app-store/privacy-policy.md)：可托管为 App Store 隐私政策 URL 的页面内容。
+- [App Store 支持页草稿](./app-store/support.md)：可托管为 App Store Support URL 的页面内容。
+- [App Store 合规问答草稿](./app-store/compliance-answers.md)：年龄分级、出口合规、内容权利和类别选择的提交前答案草稿。
+
+## Native App
+
+- [iOS README](../iOS/README.md)：原生 iOS 工程入口、构建命令和当前范围。
+- [iOS Decisions](../iOS/TrueKeep/DECISIONS.md)：实现过程中记录的技术选型和产品决策。
+- [iOS Release Checklist](../iOS/TrueKeep/RELEASE_CHECKLIST.md)：上架前需要完成和验证的事项。
+- [iOS Device Signing](../iOS/TrueKeep/DEVICE_SIGNING.md)：真机签名、账号准备和安全 smoke test 操作说明。
 
 ## 当前结论
 
 市场可以做，但不建议做普通“手机清理大师”或泛泛的“照片清理 App”。更好的切口是：
 
-> 本地 AI 家庭相册整理工具，帮助家长快速清理孩子乱拍、相似连拍、截图、模糊照片和大视频，照片不上传，删除前可解释、可复核、可恢复。
+> 本地 AI 家庭相册整理工具，帮助家长快速清理孩子乱拍、相似连拍、截图、模糊照片和大视频，照片和视频不上传，删除前可解释、可复核、可恢复。
 
 推荐品牌组合：
 
 - App Store 名称：`TrueKeep: AI Photo Cleaner`
 - 中文传播名：`留真`
-- 副标题：`Private Duplicate Cleanup`
+- 副标题：`Private Camera Roll Cleanup`
 - 一句话定位：`本地 AI 相册清理，留下真正值得留的照片。`
 
 ## 时间边界
@@ -31,4 +44,3 @@
 - App Store 竞品评分、订阅价格和隐私标签。
 - Apple Foundation Models / App Intents / Core AI 的正式 API 可用性和设备要求。
 - `TrueKeep`、`留真` 及相关名称的商标、域名和 App Store 占用情况。
-
