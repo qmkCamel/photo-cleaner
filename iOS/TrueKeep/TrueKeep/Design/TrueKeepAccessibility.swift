@@ -11,6 +11,7 @@ enum TrueKeepAccessibility {
         case openSettings = "truekeep.permission-issue.open-settings"
         case retryPhotoAccess = "truekeep.permission-issue.retry"
         case returnToPermission = "truekeep.permission-issue.return-to-permission"
+        case scanInProgress = "truekeep.scan.in-progress"
         case cancelScan = "truekeep.scan.cancel"
         case retryScan = "truekeep.scan.retry"
         case viewScanResults = "truekeep.scan.view-results"

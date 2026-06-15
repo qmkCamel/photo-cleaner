@@ -3,6 +3,9 @@ import SwiftUI
 struct CleanupResultsView: View {
     var state: CleanupFlowState
     var scanLimitationWarning: String? = nil
+    var shouldShowPhotoAccessPrompt: Bool = false
+    var isRequestingAccess: Bool = false
+    var onRequestPhotoAccess: () -> Void = {}
     var onReviewTask: (CleanupTask) -> Void
 
     var body: some View {
@@ -26,6 +29,13 @@ struct CleanupResultsView: View {
                     SafetyNotice(
                         title: "访问范围有限",
                         message: scanLimitationWarning
+                    )
+                }
+
+                if shouldShowPhotoAccessPrompt {
+                    PhotoAccessPrompt(
+                        isRequestingAccess: isRequestingAccess,
+                        onRequestAccess: onRequestPhotoAccess
                     )
                 }
 
@@ -62,6 +72,38 @@ struct CleanupResultsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .accessibilityIdentifier(TrueKeepAccessibility.Control.cleanupResultsScreen.id)
         .trueKeepScreenBackground()
+    }
+}
+
+private struct PhotoAccessPrompt: View {
+    var isRequestingAccess: Bool
+    var onRequestAccess: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Label("需要照片访问才能扫描", systemImage: "photo.on.rectangle")
+                .font(TrueKeepTheme.Font.cardTitle)
+                .foregroundStyle(TrueKeepTheme.ink)
+                .lineLimit(nil)
+                .fixedSize(horizontal: false, vertical: true)
+            Text("你已跳过首次说明。开启访问后，留真只会在本机查找候选项目，删除前仍需要你确认。")
+                .font(TrueKeepTheme.Font.bodySmall)
+                .foregroundStyle(TrueKeepTheme.muted)
+                .lineLimit(nil)
+                .fixedSize(horizontal: false, vertical: true)
+            PrimaryActionButton(
+                title: isRequestingAccess ? "正在请求访问..." : "开启照片访问",
+                isBusy: isRequestingAccess,
+                action: onRequestAccess
+            )
+            .disabled(isRequestingAccess)
+            .opacity(isRequestingAccess ? 0.72 : 1)
+            .accessibilityIdentifier(TrueKeepAccessibility.Control.allowPhotos.id)
+        }
+        .padding(14)
+        .background(TrueKeepTheme.paper)
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).stroke(TrueKeepTheme.line))
     }
 }
 
@@ -139,6 +181,7 @@ private struct CleanupTaskCard: View {
             .padding(11)
             .background(TrueKeepTheme.paper)
             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).stroke(TrueKeepTheme.line))
         }
         .buttonStyle(.plain)

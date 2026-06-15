@@ -2,6 +2,7 @@ import SwiftUI
 
 struct PermissionIssueView: View {
     var access: PhotoLibraryAccess
+    var isRequestingAccess: Bool = false
     var onBack: () -> Void
     var onOpenSettings: () -> Void
     var onRetry: () -> Void
@@ -60,14 +61,26 @@ struct PermissionIssueView: View {
             VStack(spacing: 12) {
                 if access.requiresSettings {
                     PrimaryActionButton(title: "打开系统设置", action: onOpenSettings)
+                        .disabled(isRequestingAccess)
+                        .opacity(isRequestingAccess ? 0.55 : 1)
                         .accessibilityIdentifier(TrueKeepAccessibility.Control.openSettings.id)
-                    SecondaryActionButton(title: "我已开启，重新检查", action: onRetry)
+                    SecondaryActionButton(
+                        title: isRequestingAccess ? "正在重新检查..." : "我已开启，重新检查",
+                        isBusy: isRequestingAccess,
+                        action: onRetry
+                    )
                         .accessibilityIdentifier(TrueKeepAccessibility.Control.retryPhotoAccess.id)
                 } else {
-                    PrimaryActionButton(title: "重新请求访问", action: onRetry)
+                    PrimaryActionButton(
+                        title: isRequestingAccess ? "正在请求访问..." : "重新请求访问",
+                        isBusy: isRequestingAccess,
+                        action: onRetry
+                    )
                         .accessibilityIdentifier(TrueKeepAccessibility.Control.retryPhotoAccess.id)
                 }
-                InlineTextActionButton(title: "返回权限说明", action: onBack)
+                InlineTextActionButton(title: "回到首页", action: onBack)
+                    .disabled(isRequestingAccess)
+                    .opacity(isRequestingAccess ? 0.55 : 1)
                     .accessibilityIdentifier(TrueKeepAccessibility.Control.returnToPermission.id)
             }
             .padding(20)

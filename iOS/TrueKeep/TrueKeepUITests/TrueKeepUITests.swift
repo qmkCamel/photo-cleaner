@@ -18,7 +18,12 @@ final class TrueKeepUITests: XCTestCase {
         try await super.setUp()
         continueAfterFailure = false
         app = XCUIApplication()
-        app.launchArguments = ["-TrueKeepDisablePhotoDeletion", "-TrueKeepUseSampleCleanupData"]
+        app.launchArguments = [
+            "-TrueKeepDisablePhotoDeletion",
+            "-TrueKeepUseSampleCleanupData",
+            "-TrueKeepResetIntroState",
+            "-TrueKeepUITestForceNotDeterminedAccess"
+        ]
         app.launch()
     }
 
@@ -28,18 +33,18 @@ final class TrueKeepUITests: XCTestCase {
         try await super.tearDown()
     }
 
-    func testPermissionRationaleBackAndNotNowReturnToWelcome() {
-        app.buttons[ID.welcomeContinue].tap()
-        XCTAssertTrue(app.buttons[ID.permissionBack].waitForExistence(timeout: defaultTimeout))
-
-        app.buttons[ID.permissionBack].tap()
-        XCTAssertTrue(app.buttons[ID.welcomeContinue].waitForExistence(timeout: defaultTimeout))
-
-        app.buttons[ID.welcomeContinue].tap()
-        XCTAssertTrue(app.buttons[ID.permissionNotNow].waitForExistence(timeout: defaultTimeout))
+    func testCombinedIntroCanBeSkippedAndDoesNotReturnOnRelaunch() {
+        XCTAssertTrue(app.buttons[ID.allowPhotos].waitForExistence(timeout: defaultTimeout))
+        XCTAssertTrue(app.staticTexts["授权前先说清楚"].exists)
         app.buttons[ID.permissionNotNow].tap()
 
-        XCTAssertTrue(app.buttons[ID.welcomeContinue].waitForExistence(timeout: defaultTimeout))
+        assertHomeIsVisible()
+        XCTAssertTrue(app.buttons[ID.allowPhotos].exists)
+
+        relaunchWithSampleCleanupData(resetIntro: false)
+
+        assertHomeIsVisible()
+        XCTAssertFalse(app.staticTexts["授权前先说清楚"].exists)
     }
 
     func testSettingsRowsNavigateToDetailPages() {
@@ -58,6 +63,31 @@ final class TrueKeepUITests: XCTestCase {
         assertTaskOpensReviewGroup(taskID: ID.taskAccidental, title: "误拍复核")
         assertTaskOpensReviewGroup(taskID: ID.taskBlurry, title: "模糊复核")
         assertTaskOpensReviewGroup(taskID: ID.taskLargeVideos, title: "大视频复核")
+    }
+
+    func testLargeVisualControlsRespondNearTheirEdges() {
+        launchWithArguments([
+            "-TrueKeepDisablePhotoDeletion",
+            "-TrueKeepUseSampleCleanupData",
+            "-TrueKeepResetIntroState",
+            "-TrueKeepUITestForceNotDeterminedAccess",
+            "-TrueKeepUITestDelayPhotoAccess"
+        ])
+        tapControlEdge(ID.allowPhotos, x: 0.06, y: 0.50)
+        XCTAssertTrue(app.staticTexts["照片权限已关闭"].waitForExistence(timeout: defaultTimeout))
+        app.buttons[ID.returnToPermission].tap()
+        assertHomeIsVisible()
+
+        app.tabBars.buttons["设置"].tap()
+        XCTAssertTrue(app.buttons[ID.settingsHowItWorks].waitForExistence(timeout: defaultTimeout))
+        tapControlEdge(ID.settingsHowItWorks, x: 0.94, y: 0.50)
+        XCTAssertTrue(app.staticTexts["留真如何工作"].waitForExistence(timeout: defaultTimeout))
+
+        tapBack()
+        app.tabBars.buttons["首页"].tap()
+        assertHomeIsVisible()
+        tapControlEdge(ID.taskSimilar, x: 0.94, y: 0.50)
+        XCTAssertTrue(app.staticTexts["相似照片"].waitForExistence(timeout: defaultTimeout))
     }
 
     func testDefaultLaunchDoesNotExposeFixtureCleanupTasks() {
@@ -100,7 +130,42 @@ final class TrueKeepUITests: XCTestCase {
         XCTAssertTrue(app.buttons[ID.retryPhotoAccess].exists)
 
         app.buttons[ID.returnToPermission].tap()
-        XCTAssertTrue(app.buttons[ID.permissionNotNow].waitForExistence(timeout: defaultTimeout))
+        assertHomeIsVisible()
+    }
+
+    func testPermissionRetryShowsLocalBusyState() {
+        launchWithArguments([
+            "-TrueKeepDisablePhotoDeletion",
+            "-TrueKeepUseSampleCleanupData",
+            "-TrueKeepUITestPermissionDenied",
+            "-TrueKeepUITestDelayPhotoAccess"
+        ])
+
+        XCTAssertTrue(app.staticTexts["照片权限已关闭"].waitForExistence(timeout: defaultTimeout))
+        app.buttons[ID.retryPhotoAccess].tap()
+
+        XCTAssertTrue(waitForButtonLabel(ID.retryPhotoAccess, contains: "正在重新检查"))
+        XCTAssertTrue(waitForButtonEnabled(ID.retryPhotoAccess, false))
+        XCTAssertTrue(app.staticTexts["照片或视频不会被上传"].exists)
+        XCTAssertTrue(app.buttons[ID.openSettings].exists)
+        XCTAssertTrue(waitForButtonLabel(ID.retryPhotoAccess, contains: "我已开启，重新检查"))
+        XCTAssertTrue(waitForButtonEnabled(ID.retryPhotoAccess, true))
+    }
+
+    func testScanBusyStateKeepsCancelAvailable() {
+        launchForUITestScenario("-TrueKeepUITestScanInProgress")
+
+        let scanButton = app.buttons[ID.scanInProgress]
+        XCTAssertTrue(scanButton.waitForExistence(timeout: defaultTimeout))
+        XCTAssertTrue(scanButton.label.contains("扫描中"))
+        XCTAssertFalse(scanButton.isEnabled)
+
+        let cancelButton = app.buttons[ID.cancelScan]
+        XCTAssertTrue(cancelButton.waitForExistence(timeout: defaultTimeout))
+        XCTAssertTrue(cancelButton.isEnabled)
+        cancelButton.tap()
+
+        XCTAssertTrue(app.staticTexts["扫描已停止"].waitForExistence(timeout: defaultTimeout))
     }
 
     func testInterruptedScanStateIsReachableForAutomation() {
@@ -111,7 +176,7 @@ final class TrueKeepUITests: XCTestCase {
         XCTAssertTrue(app.buttons[ID.retryScan].exists)
 
         app.buttons[ID.returnToPermission].tap()
-        XCTAssertTrue(app.buttons[ID.permissionNotNow].waitForExistence(timeout: defaultTimeout))
+        assertHomeIsVisible()
     }
 
     func testLimitedCompletedScanShowsAccessWarningBeforeResults() {
@@ -128,12 +193,9 @@ final class TrueKeepUITests: XCTestCase {
 
     func testMarketingScreenshotCaptureFlow() {
         attachScreenshot(named: "01-welcome")
-
-        app.buttons[ID.welcomeContinue].tap()
-        XCTAssertTrue(app.buttons[ID.permissionNotNow].waitForExistence(timeout: defaultTimeout))
         attachScreenshot(named: "02-permission-rationale")
 
-        relaunchWithSampleCleanupData()
+        relaunchWithSampleCleanupData(resetIntro: true)
         openMainThroughSettings()
         attachScreenshot(named: "03-settings-trust")
 
@@ -186,6 +248,37 @@ final class TrueKeepUITests: XCTestCase {
 
         app.buttons[ID.restoreReviewBinSelection].tap()
         XCTAssertTrue(app.staticTexts["复核箱为空"].waitForExistence(timeout: defaultTimeout))
+    }
+
+    func testDeleteConfirmationShowsBusyStateAndPreservesItemsOnFailure() {
+        launchWithArguments([
+            "-TrueKeepDisablePhotoDeletion",
+            "-TrueKeepUseSampleCleanupData",
+            "-TrueKeepResetIntroState",
+            "-TrueKeepUITestForceNotDeterminedAccess",
+            "-TrueKeepUITestDelayPhotoDeletion"
+        ])
+        openHome()
+        app.buttons[ID.taskSimilar].tap()
+        XCTAssertTrue(app.buttons[ID.reviewAll].waitForExistence(timeout: defaultTimeout))
+
+        app.buttons[ID.reviewAll].tap()
+        app.buttons[ID.addToReviewBin].tap()
+        XCTAssertTrue(app.buttons[ID.deleteReviewBinSelection].waitForExistence(timeout: defaultTimeout))
+        XCTAssertTrue(app.buttons[ID.similarReviewBinItems[0]].waitForExistence(timeout: defaultTimeout))
+
+        app.buttons[ID.deleteReviewBinSelection].tap()
+        XCTAssertTrue(app.buttons[ID.confirmPhotoDeletion].waitForExistence(timeout: defaultTimeout))
+        app.buttons[ID.confirmPhotoDeletion].tap()
+
+        XCTAssertTrue(waitForButtonLabel(ID.confirmPhotoDeletion, contains: "正在请求系统删除"))
+        XCTAssertTrue(waitForButtonEnabled(ID.confirmPhotoDeletion, false))
+        XCTAssertTrue(waitForButtonEnabled(ID.cancelPhotoDeletion, false))
+        XCTAssertTrue(app.staticTexts["iCloud Photos 风险"].exists)
+
+        XCTAssertTrue(app.staticTexts["删除未完成"].waitForExistence(timeout: defaultTimeout))
+        XCTAssertTrue(app.staticTexts["真机调试删除安全锁已开启，未删除任何照片或视频。"].exists)
+        XCTAssertTrue(app.buttons[ID.similarReviewBinItems[0]].waitForExistence(timeout: defaultTimeout))
     }
 
     func testReviewBinActionsAreDisabledWhenNoItemsAreSelected() {
@@ -243,11 +336,11 @@ final class TrueKeepUITests: XCTestCase {
     func testCriticalScreensPassAccessibilityAudit() throws {
         try assertAccessibilityAuditPasses("welcome")
 
-        app.buttons[ID.welcomeContinue].tap()
-        XCTAssertTrue(app.buttons[ID.permissionNotNow].waitForExistence(timeout: defaultTimeout))
-        try assertAccessibilityAuditPasses("permission-rationale")
+        app.buttons[ID.permissionNotNow].tap()
+        assertHomeIsVisible()
+        try assertAccessibilityAuditPasses("home-photo-access-prompt")
 
-        relaunchWithSampleCleanupData()
+        relaunchWithSampleCleanupData(resetIntro: true)
         openMainThroughSettings()
         try assertAccessibilityAuditPasses("settings")
 
@@ -299,21 +392,36 @@ final class TrueKeepUITests: XCTestCase {
     private func relaunchWithoutSampleCleanupData() {
         app.terminate()
         app = XCUIApplication()
-        app.launchArguments = ["-TrueKeepDisablePhotoDeletion"]
+        app.launchArguments = [
+            "-TrueKeepDisablePhotoDeletion",
+            "-TrueKeepResetIntroState",
+            "-TrueKeepUITestForceNotDeterminedAccess"
+        ]
         app.launch()
     }
 
-    private func relaunchWithSampleCleanupData() {
+    private func relaunchWithSampleCleanupData(resetIntro: Bool = true) {
         app.terminate()
         app = XCUIApplication()
-        app.launchArguments = ["-TrueKeepDisablePhotoDeletion", "-TrueKeepUseSampleCleanupData"]
+        app.launchArguments = [
+            "-TrueKeepDisablePhotoDeletion",
+            "-TrueKeepUseSampleCleanupData",
+            "-TrueKeepUITestForceNotDeterminedAccess"
+        ]
+        if resetIntro {
+            app.launchArguments.append("-TrueKeepResetIntroState")
+        }
         app.launch()
     }
 
     private func launchForUITestScenario(_ scenario: String) {
+        launchWithArguments(["-TrueKeepDisablePhotoDeletion", "-TrueKeepUseSampleCleanupData", "-TrueKeepResetIntroState", scenario])
+    }
+
+    private func launchWithArguments(_ launchArguments: [String]) {
         app.terminate()
         app = XCUIApplication()
-        app.launchArguments = ["-TrueKeepDisablePhotoDeletion", "-TrueKeepUseSampleCleanupData", scenario]
+        app.launchArguments = launchArguments
         app.launch()
     }
 
@@ -357,6 +465,24 @@ final class TrueKeepUITests: XCTestCase {
         XCTAssertTrue(button.isHittable, "\(id) should be visible and tappable")
     }
 
+    private func tapControlEdge(_ id: String, x: CGFloat, y: CGFloat) {
+        let button = app.buttons[id]
+        XCTAssertTrue(button.waitForExistence(timeout: defaultTimeout), "\(id) should exist")
+        button.coordinate(withNormalizedOffset: CGVector(dx: x, dy: y)).tap()
+    }
+
+    private func waitForButtonLabel(_ id: String, contains text: String) -> Bool {
+        let predicate = NSPredicate(format: "label CONTAINS %@", text)
+        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: app.buttons[id])
+        return XCTWaiter.wait(for: [expectation], timeout: defaultTimeout) == .completed
+    }
+
+    private func waitForButtonEnabled(_ id: String, _ isEnabled: Bool) -> Bool {
+        let predicate = NSPredicate(format: "enabled == %@", NSNumber(value: isEnabled))
+        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: app.buttons[id])
+        return XCTWaiter.wait(for: [expectation], timeout: defaultTimeout) == .completed
+    }
+
     private func attachScreenshot(named name: String) {
         let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         attachment.name = name
@@ -378,10 +504,13 @@ private enum ID {
     static let welcomeContinue = "truekeep.welcome.continue"
     static let welcomeLearnMore = "truekeep.welcome.learn-more"
     static let permissionBack = "truekeep.permission.back"
+    static let allowPhotos = "truekeep.permission.allow-photos"
     static let permissionNotNow = "truekeep.permission.not-now"
     static let openSettings = "truekeep.permission-issue.open-settings"
     static let retryPhotoAccess = "truekeep.permission-issue.retry"
     static let returnToPermission = "truekeep.permission-issue.return-to-permission"
+    static let scanInProgress = "truekeep.scan.in-progress"
+    static let cancelScan = "truekeep.scan.cancel"
     static let retryScan = "truekeep.scan.retry"
     static let viewScanResults = "truekeep.scan.view-results"
     static let cleanupResultsScreen = "truekeep.cleanup.results"
@@ -390,6 +519,7 @@ private enum ID {
     static let restoreReviewBinSelection = "truekeep.review-bin.restore-selection"
     static let deleteReviewBinSelection = "truekeep.review-bin.delete-selection"
     static let confirmPhotoDeletion = "truekeep.delete.confirm"
+    static let cancelPhotoDeletion = "truekeep.delete.cancel"
 
     static let settingsHowItWorks = "truekeep.settings.topic.how-it-works"
     static let settingsPrivacyDetails = "truekeep.settings.topic.privacy-details"

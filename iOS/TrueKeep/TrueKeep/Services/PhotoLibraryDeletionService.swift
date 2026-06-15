@@ -61,6 +61,8 @@ struct SystemPhotoLibraryDeletionService: PhotoLibraryDeleting {
     }
 
     func deleteAssets(withLocalIdentifiers assetIDs: [String]) async -> PhotoDeletionResult {
+        await AppUITestActionDelay.sleepIfEnabled(AppLaunchConfiguration.uiTestDelayedPhotoDeletionArgument)
+
         guard !assetIDs.isEmpty else {
             return .success(deletedAssetIDs: [])
         }

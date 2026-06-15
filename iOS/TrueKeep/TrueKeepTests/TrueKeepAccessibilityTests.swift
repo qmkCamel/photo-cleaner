@@ -14,8 +14,8 @@ final class TrueKeepAccessibilityTests: XCTestCase {
     func testPrimaryControlIdentifiersCoverCriticalFlowActions() {
         let controls = Set(TrueKeepAccessibility.Control.allCases)
 
-        XCTAssertTrue(controls.contains(.welcomeContinue))
         XCTAssertTrue(controls.contains(.allowPhotos))
+        XCTAssertTrue(controls.contains(.scanInProgress))
         XCTAssertTrue(controls.contains(.cancelScan))
         XCTAssertTrue(controls.contains(.viewScanResults))
         XCTAssertTrue(controls.contains(.addToReviewBin))

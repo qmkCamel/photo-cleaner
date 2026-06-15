@@ -118,7 +118,7 @@ enum PhotoPermissionDecision {
         case .denied, .restricted:
             .permissionIssue(access)
         case .notDetermined:
-            .permission
+            .main
         }
     }
 }

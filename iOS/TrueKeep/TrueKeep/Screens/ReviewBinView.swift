@@ -41,6 +41,7 @@ struct ReviewBinView: View {
                 )
                 .presentationDetents([.large])
                 .presentationDragIndicator(.hidden)
+                .interactiveDismissDisabled(isDeleting)
             }
         }
     }
@@ -73,7 +74,9 @@ struct ReviewBinView: View {
                             isSelected: item.selectedForDelete,
                             videoLabel: item.candidate.category == .largeVideos ? item.candidate.estimatedBytes.formattedStorage : nil
                         )
+                        .frame(maxWidth: .infinity)
                         .frame(height: 108)
+                        .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                     }
                     .buttonStyle(.plain)
                     .accessibilityIdentifier(TrueKeepAccessibility.reviewBinItem(id: item.id))
@@ -239,6 +242,7 @@ private struct DeleteConfirmationSheet: View {
                 VStack(spacing: 10) {
                     DangerActionButton(
                         title: isDeleting ? "正在请求系统删除..." : "确认删除 \(count) 项",
+                        isBusy: isDeleting,
                         action: onConfirm
                     )
                     .disabled(isDeleting)

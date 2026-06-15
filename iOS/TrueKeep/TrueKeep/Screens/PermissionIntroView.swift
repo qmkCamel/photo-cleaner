@@ -69,7 +69,11 @@ struct PermissionIntroView: View {
             }
 
             VStack(spacing: 12) {
-                PrimaryActionButton(title: isRequestingAccess ? "正在请求访问..." : "允许访问照片", action: onAllow)
+                PrimaryActionButton(
+                    title: isRequestingAccess ? "正在请求访问..." : "允许访问照片",
+                    isBusy: isRequestingAccess,
+                    action: onAllow
+                )
                     .disabled(isRequestingAccess)
                     .opacity(isRequestingAccess ? 0.72 : 1)
                     .accessibilityIdentifier(TrueKeepAccessibility.Control.allowPhotos.id)

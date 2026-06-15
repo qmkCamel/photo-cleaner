@@ -172,9 +172,10 @@ struct ScanProgressView: View {
     private var primaryAction: some View {
         switch status {
         case .scanning:
-            PrimaryActionButton(title: "扫描中...", action: {})
+            PrimaryActionButton(title: "扫描中...", isBusy: true, action: {})
                 .disabled(true)
-                .opacity(0.55)
+                .opacity(0.72)
+                .accessibilityIdentifier(TrueKeepAccessibility.Control.scanInProgress.id)
         case .completed:
             PrimaryActionButton(title: "查看结果", action: onViewResults)
                 .accessibilityIdentifier(TrueKeepAccessibility.Control.viewScanResults.id)
@@ -194,7 +195,7 @@ struct ScanProgressView: View {
             SecondaryActionButton(title: "重新扫描", action: onRetry)
                 .accessibilityIdentifier(TrueKeepAccessibility.Control.retryScan.id)
         case .interrupted:
-            SecondaryActionButton(title: "返回权限说明", action: onCancel)
+            SecondaryActionButton(title: "回到首页", action: onCancel)
                 .accessibilityIdentifier(TrueKeepAccessibility.Control.returnToPermission.id)
         }
     }

@@ -30,8 +30,8 @@ final class PhotoLibraryAuthorizationTests: XCTestCase {
         XCTAssertEqual(PhotoPermissionDecision.phase(after: .restricted), .permissionIssue(.restricted))
     }
 
-    func testPermissionDecisionKeepsNotDeterminedOnPermissionIntro() {
-        XCTAssertEqual(PhotoPermissionDecision.phase(after: .notDetermined), .permission)
+    func testPermissionDecisionRoutesNotDeterminedToMainAfterIntroAction() {
+        XCTAssertEqual(PhotoPermissionDecision.phase(after: .notDetermined), .main)
     }
 
     func testPhotoPermissionCopyDescribesOnDeviceVisualCandidatesWithSafetyLimits() throws {

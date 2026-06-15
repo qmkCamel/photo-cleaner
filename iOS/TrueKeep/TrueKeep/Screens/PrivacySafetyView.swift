@@ -152,6 +152,7 @@ private struct SettingsRow: View {
         .frame(minHeight: 46)
         .background(TrueKeepTheme.paper)
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).stroke(TrueKeepTheme.line))
     }
 }

@@ -1,7 +1,9 @@
 import SwiftUI
 
 struct WelcomeView: View {
-    var onContinue: () -> Void
+    var isRequestingAccess: Bool = false
+    var onAllowPhotos: () -> Void
+    var onNotNow: () -> Void
     var onLearnMore: () -> Void
 
     var body: some View {
@@ -26,11 +28,18 @@ struct WelcomeView: View {
                 .padding(.top, 28)
 
                 VStack(alignment: .leading, spacing: 18) {
-                    PromiseRow(systemImage: "shield", title: "100% 本地处理", subtitle: "照片和视频不会离开你的 iPhone。")
-                    PromiseRow(systemImage: "icloud.slash", title: "隐私优先", subtitle: "不收集、不上传、不出售任何照片或视频数据。")
+                    PromiseRow(systemImage: "photo.on.rectangle", title: "需要照片访问才能扫描", subtitle: "留真会读取可访问照片和视频，找出你可能想复核的项目。")
+                    PromiseRow(systemImage: "shield", title: "100% 本地处理", subtitle: "分析只在这台 iPhone 上进行，照片和视频不会离开设备。")
                     PromiseRow(systemImage: "eye", title: "删除前先复核", subtitle: "所有候选都需要你确认，不会自动删除。")
                 }
                 .padding(.top, 40)
+
+                SafetyNotice(
+                    title: "授权前先说清楚",
+                    message: SupportedScanCopy.permissionSafetyMessage
+                )
+                .padding(.top, 24)
+
                 Spacer()
             }
             .padding(.horizontal, 24)
@@ -42,10 +51,21 @@ struct WelcomeView: View {
                     Spacer()
                     TrustChip(title: "不需要联网", systemImage: "wifi.slash")
                 }
-                PrimaryActionButton(title: "继续", action: onContinue)
-                    .accessibilityIdentifier(TrueKeepAccessibility.Control.welcomeContinue.id)
-                InlineTextActionButton(title: "了解更多", action: onLearnMore)
-                    .accessibilityIdentifier(TrueKeepAccessibility.Control.welcomeLearnMore.id)
+                PrimaryActionButton(
+                    title: isRequestingAccess ? "正在请求访问..." : "允许访问照片",
+                    isBusy: isRequestingAccess,
+                    action: onAllowPhotos
+                )
+                    .disabled(isRequestingAccess)
+                    .opacity(isRequestingAccess ? 0.72 : 1)
+                    .accessibilityIdentifier(TrueKeepAccessibility.Control.allowPhotos.id)
+
+                HStack(spacing: 12) {
+                    InlineTextActionButton(title: "暂不", action: onNotNow)
+                        .accessibilityIdentifier(TrueKeepAccessibility.Control.permissionNotNow.id)
+                    InlineTextActionButton(title: "了解更多", action: onLearnMore)
+                        .accessibilityIdentifier(TrueKeepAccessibility.Control.welcomeLearnMore.id)
+                }
             }
             .padding(20)
         }
@@ -54,5 +74,5 @@ struct WelcomeView: View {
 }
 
 #Preview {
-    WelcomeView(onContinue: {}, onLearnMore: {})
+    WelcomeView(onAllowPhotos: {}, onNotNow: {}, onLearnMore: {})
 }

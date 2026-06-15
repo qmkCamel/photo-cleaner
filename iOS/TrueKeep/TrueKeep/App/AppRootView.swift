@@ -3,7 +3,6 @@ import UIKit
 
 enum AppPhase: Hashable {
     case welcome
-    case permission
     case permissionIssue(PhotoLibraryAccess)
     case scan
     case main
@@ -22,19 +21,33 @@ enum CleanupRoute: Hashable {
 struct AppLaunchConfiguration: Hashable {
     static let sampleCleanupDataArgument = "-TrueKeepUseSampleCleanupData"
     static let sampleCleanupDataEnvironmentKey = "TRUEKEEP_USE_SAMPLE_CLEANUP_DATA"
+    static let completedIntroDefaultsKey = "truekeep.completedIntro"
+    static let resetIntroStateArgument = "-TrueKeepResetIntroState"
+    static let uiTestForceNotDeterminedAccessArgument = "-TrueKeepUITestForceNotDeterminedAccess"
     static let uiTestPermissionDeniedArgument = "-TrueKeepUITestPermissionDenied"
     static let uiTestScanInterruptedArgument = "-TrueKeepUITestScanInterrupted"
     static let uiTestLimitedCompletedScanArgument = "-TrueKeepUITestLimitedCompletedScan"
+    static let uiTestScanInProgressArgument = "-TrueKeepUITestScanInProgress"
+    static let uiTestDelayedPhotoAccessArgument = "-TrueKeepUITestDelayPhotoAccess"
+    static let uiTestDelayedPhotoDeletionArgument = "-TrueKeepUITestDelayPhotoDeletion"
 
     var usesSampleCleanupData: Bool
+    var hasCompletedIntro: Bool
+    var forcesNotDeterminedPhotoAccess: Bool
     var uiTestScenario: AppUITestLaunchScenario?
 
     init(
         arguments: [String] = ProcessInfo.processInfo.arguments,
         environment: [String: String] = ProcessInfo.processInfo.environment
     ) {
+        if arguments.contains(Self.resetIntroStateArgument) {
+            UserDefaults.standard.removeObject(forKey: Self.completedIntroDefaultsKey)
+        }
+
         usesSampleCleanupData = arguments.contains(Self.sampleCleanupDataArgument)
             || environment[Self.sampleCleanupDataEnvironmentKey] == "1"
+        hasCompletedIntro = UserDefaults.standard.bool(forKey: Self.completedIntroDefaultsKey)
+        forcesNotDeterminedPhotoAccess = arguments.contains(Self.uiTestForceNotDeterminedAccessArgument)
         uiTestScenario = AppUITestLaunchScenario(arguments: arguments)
     }
 
@@ -42,14 +55,20 @@ struct AppLaunchConfiguration: Hashable {
         usesSampleCleanupData ? .sample() : PhotoScanResultBuilder.state(from: [])
     }
 
-    var initialPhase: AppPhase {
+    func initialPhase(for access: PhotoLibraryAccess) -> AppPhase {
         switch uiTestScenario {
         case .permissionDenied:
             .permissionIssue(.denied)
-        case .scanInterrupted, .limitedCompletedScan:
+        case .scanInterrupted, .limitedCompletedScan, .scanInProgress:
             .scan
         case nil:
-            .welcome
+            if access.requiresSettings {
+                .permissionIssue(access)
+            } else if hasCompletedIntro || access.canScan {
+                .main
+            } else {
+                .welcome
+            }
         }
     }
 
@@ -59,7 +78,7 @@ struct AppLaunchConfiguration: Hashable {
             .denied
         case .limitedCompletedScan:
             .limited
-        case .scanInterrupted:
+        case .scanInterrupted, .scanInProgress:
             .full
         case nil:
             .notDetermined
@@ -72,9 +91,13 @@ struct AppLaunchConfiguration: Hashable {
             .interrupted(message: "用户已取消")
         case .limitedCompletedScan:
             .completed(candidateCount: state.tasks.map(\.candidateCount).reduce(0, +))
-        case .permissionDenied, nil:
+        case .scanInProgress, .permissionDenied, nil:
             .scanning
         }
+    }
+
+    static func markIntroCompleted() {
+        UserDefaults.standard.set(true, forKey: completedIntroDefaultsKey)
     }
 }
 
@@ -82,6 +105,7 @@ enum AppUITestLaunchScenario: Hashable {
     case permissionDenied
     case scanInterrupted
     case limitedCompletedScan
+    case scanInProgress
 
     init?(arguments: [String]) {
         if arguments.contains(AppLaunchConfiguration.uiTestPermissionDeniedArgument) {
@@ -90,9 +114,24 @@ enum AppUITestLaunchScenario: Hashable {
             self = .scanInterrupted
         } else if arguments.contains(AppLaunchConfiguration.uiTestLimitedCompletedScanArgument) {
             self = .limitedCompletedScan
+        } else if arguments.contains(AppLaunchConfiguration.uiTestScanInProgressArgument) {
+            self = .scanInProgress
         } else {
             return nil
         }
+    }
+}
+
+enum AppUITestActionDelay {
+    static let nanoseconds: UInt64 = 1_200_000_000
+
+    static func isEnabled(_ argument: String, arguments: [String] = ProcessInfo.processInfo.arguments) -> Bool {
+        arguments.contains(argument)
+    }
+
+    static func sleepIfEnabled(_ argument: String) async {
+        guard isEnabled(argument) else { return }
+        try? await Task.sleep(nanoseconds: nanoseconds)
     }
 }
 
@@ -121,8 +160,16 @@ struct AppRootView: View {
         self.photoScanner = photoScanner
         self.photoDeletion = photoDeletion
         let initialCleanupState = launchConfiguration.initialCleanupState
-        self._phase = State(initialValue: launchConfiguration.initialPhase)
-        self._photoAccess = State(initialValue: launchConfiguration.initialPhotoAccess)
+        let initialPhotoAccess: PhotoLibraryAccess
+        if launchConfiguration.uiTestScenario != nil {
+            initialPhotoAccess = launchConfiguration.initialPhotoAccess
+        } else if launchConfiguration.forcesNotDeterminedPhotoAccess {
+            initialPhotoAccess = .notDetermined
+        } else {
+            initialPhotoAccess = photoAuthorization.currentAccess()
+        }
+        self._phase = State(initialValue: launchConfiguration.initialPhase(for: initialPhotoAccess))
+        self._photoAccess = State(initialValue: initialPhotoAccess)
         self._scanStatus = State(initialValue: launchConfiguration.initialScanStatus(for: initialCleanupState))
         self._cleanupState = State(initialValue: initialCleanupState)
     }
@@ -132,23 +179,20 @@ struct AppRootView: View {
             switch phase {
             case .welcome:
                 WelcomeView(
-                    onContinue: { phase = .permission },
+                    isRequestingAccess: isRequestingPhotoAccess,
+                    onAllowPhotos: { requestPhotoAccess() },
+                    onNotNow: { completeIntroAndShowHome() },
                     onLearnMore: {
+                        AppLaunchConfiguration.markIntroCompleted()
                         phase = .main
                         selectedTab = .settings
                     }
                 )
-            case .permission:
-                PermissionIntroView(
-                    isRequestingAccess: isRequestingPhotoAccess,
-                    onBack: { phase = .welcome },
-                    onAllow: { requestPhotoAccess() },
-                    onNotNow: { phase = .welcome }
-                )
             case .permissionIssue(let access):
                 PermissionIssueView(
                     access: access,
-                    onBack: { phase = .permission },
+                    isRequestingAccess: isRequestingPhotoAccess,
+                    onBack: { completeIntroAndShowHome() },
                     onOpenSettings: { openAppSettings() },
                     onRetry: { requestPhotoAccess() }
                 )
@@ -173,9 +217,20 @@ struct AppRootView: View {
 
     private func requestPhotoAccess() {
         guard !isRequestingPhotoAccess else { return }
+        AppLaunchConfiguration.markIntroCompleted()
         isRequestingPhotoAccess = true
         let photoAuthorization = photoAuthorization
         Task {
+            if AppUITestActionDelay.isEnabled(AppLaunchConfiguration.uiTestDelayedPhotoAccessArgument) {
+                await AppUITestActionDelay.sleepIfEnabled(AppLaunchConfiguration.uiTestDelayedPhotoAccessArgument)
+                await MainActor.run {
+                    photoAccess = .denied
+                    isRequestingPhotoAccess = false
+                    phase = .permissionIssue(.denied)
+                }
+                return
+            }
+
             let access = await photoAuthorization.requestReadWriteAccess()
             await MainActor.run {
                 photoAccess = access
@@ -226,8 +281,14 @@ struct AppRootView: View {
             activeScanID = UUID()
             scanStatus = .interrupted(message: "用户已取消")
         case .completed, .interrupted:
-            phase = .permission
+            completeIntroAndShowHome()
         }
+    }
+
+    private func completeIntroAndShowHome() {
+        AppLaunchConfiguration.markIntroCompleted()
+        phase = .main
+        selectedTab = .home
     }
 
     private func openAppSettings() {
@@ -241,6 +302,9 @@ struct AppRootView: View {
                 CleanupResultsView(
                     state: cleanupState,
                     scanLimitationWarning: photoAccess.scanLimitationWarning,
+                    shouldShowPhotoAccessPrompt: photoAccess == .notDetermined,
+                    isRequestingAccess: isRequestingPhotoAccess,
+                    onRequestPhotoAccess: { requestPhotoAccess() },
                     onReviewTask: { task in
                         guard cleanupState.selectReviewGroup(for: task.category) else { return }
                         homePath.append(.reviewGroup(task.category))

@@ -3,42 +3,38 @@ import UIKit
 
 struct PrimaryActionButton: View {
     var title: String
+    var isBusy: Bool = false
     var action: () -> Void
 
     var body: some View {
         Button(action: action) {
-            Text(title)
-                .font(TrueKeepTheme.Font.button)
-                .lineLimit(nil)
-                .multilineTextAlignment(.center)
-                .fixedSize(horizontal: false, vertical: true)
-                .frame(maxWidth: .infinity, minHeight: 52)
+            ActionButtonContent(title: title, isBusy: isBusy, progressTint: .white)
         }
+        .disabled(isBusy)
         .buttonStyle(.plain)
         .foregroundStyle(.white)
         .background(TrueKeepTheme.greenStrong)
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .shadow(color: TrueKeepTheme.green.opacity(0.20), radius: 12, y: 6)
     }
 }
 
 struct SecondaryActionButton: View {
     var title: String
+    var isBusy: Bool = false
     var action: () -> Void
 
     var body: some View {
         Button(action: action) {
-            Text(title)
-                .font(TrueKeepTheme.Font.button)
-                .lineLimit(nil)
-                .multilineTextAlignment(.center)
-                .fixedSize(horizontal: false, vertical: true)
-                .frame(maxWidth: .infinity, minHeight: 52)
+            ActionButtonContent(title: title, isBusy: isBusy, progressTint: TrueKeepTheme.green)
         }
+        .disabled(isBusy)
         .buttonStyle(.plain)
         .foregroundStyle(TrueKeepTheme.ink)
         .background(TrueKeepTheme.paper)
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .overlay(
             RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .stroke(TrueKeepTheme.line)
@@ -48,21 +44,43 @@ struct SecondaryActionButton: View {
 
 struct DangerActionButton: View {
     var title: String
+    var isBusy: Bool = false
     var action: () -> Void
 
     var body: some View {
         Button(action: action) {
+            ActionButtonContent(title: title, isBusy: isBusy, progressTint: .white)
+        }
+        .disabled(isBusy)
+        .buttonStyle(.plain)
+        .foregroundStyle(.white)
+        .background(TrueKeepTheme.danger)
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+    }
+}
+
+private struct ActionButtonContent: View {
+    var title: String
+    var isBusy: Bool
+    var progressTint: Color
+
+    var body: some View {
+        HStack(spacing: isBusy ? 8 : 0) {
+            if isBusy {
+                ProgressView()
+                    .controlSize(.small)
+                    .tint(progressTint)
+                    .accessibilityHidden(true)
+            }
             Text(title)
                 .font(TrueKeepTheme.Font.button)
                 .lineLimit(nil)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
-                .frame(maxWidth: .infinity, minHeight: 52)
         }
-        .buttonStyle(.plain)
-        .foregroundStyle(.white)
-        .background(TrueKeepTheme.danger)
-        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .frame(maxWidth: .infinity, minHeight: 52)
+        .contentShape(Rectangle())
     }
 }
 
@@ -90,7 +108,7 @@ struct InlineTextActionButton: View {
         }
         .buttonStyle(.plain)
         .tint(TrueKeepTheme.ink)
-        .contentShape(Rectangle())
+        .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
     }
 }
 

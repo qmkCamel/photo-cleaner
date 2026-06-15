@@ -33,7 +33,9 @@ struct ReviewGroupView: View {
                                 isRecommendedKeep: candidate.recommendedKeep,
                                 videoLabel: candidateVideoLabel(candidate)
                             )
+                            .frame(maxWidth: .infinity)
                             .frame(height: candidate.recommendedKeep ? 178 : 104)
+                            .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                         }
                         .buttonStyle(.plain)
                         .gridCellColumns(candidate.recommendedKeep ? 3 : 1)
