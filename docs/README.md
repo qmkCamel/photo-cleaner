@@ -13,6 +13,7 @@
 - [07 三阶段产品路线](./07-three-phase-roadmap.md)：按 MVP 信任验证、TestFlight 商业化、留存扩展拆解阶段目标。
 - [08 MVP 与信任验证设计稿和交互稿](./08-mvp-trust-design-and-interaction.md)：阶段一的高保真原型、屏幕规格、交互规则和开发接口建议。
 - [09 当前产品动线与截图](./09-current-product-flow-with-screenshots.md)：当前 iOS MVP 的实际使用动线，并配套最新模拟器截图。
+- [10 当前识别策略](./10-current-recognition-strategy.md)：当前真实扫描候选规则、默认选中策略、限制和端侧 AI 引入建议。
 - [App Store 隐私政策草稿](./app-store/privacy-policy.md)：可托管为 App Store 隐私政策 URL 的页面内容。
 - [App Store 支持页草稿](./app-store/support.md)：可托管为 App Store Support URL 的页面内容。
 - [App Store 合规问答草稿](./app-store/compliance-answers.md)：年龄分级、出口合规、内容权利和类别选择的提交前答案草稿。
