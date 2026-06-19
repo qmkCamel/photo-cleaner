@@ -45,7 +45,7 @@ struct CleanupResultsView: View {
                     HStack {
                         Text("预计可释放空间")
                             .font(TrueKeepTheme.Font.bodySmall.weight(.medium))
-                            .foregroundStyle(TrueKeepTheme.green)
+                            .foregroundStyle(TrueKeepTheme.greenStrong)
                         Spacer()
                         Text(state.totalEstimatedBytes.formattedStorage)
                             .font(TrueKeepTheme.Font.metric)
@@ -56,7 +56,7 @@ struct CleanupResultsView: View {
                     .background(TrueKeepTheme.greenSoft)
                     .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
 
-                    VStack(spacing: 9) {
+                    LazyVStack(spacing: 9) {
                         ForEach(state.tasks) { task in
                             CleanupTaskCard(task: task) {
                                 onReviewTask(task)
@@ -80,27 +80,40 @@ private struct PhotoAccessPrompt: View {
     var onRequestAccess: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Label("需要照片访问才能扫描", systemImage: "photo.on.rectangle")
-                .font(TrueKeepTheme.Font.cardTitle)
-                .foregroundStyle(TrueKeepTheme.ink)
-                .lineLimit(nil)
-                .fixedSize(horizontal: false, vertical: true)
-            Text("你已跳过首次说明。开启访问后，留真只会在本机查找候选项目，删除前仍需要你确认。")
-                .font(TrueKeepTheme.Font.bodySmall)
-                .foregroundStyle(TrueKeepTheme.muted)
-                .lineLimit(nil)
-                .fixedSize(horizontal: false, vertical: true)
+        HStack(alignment: .center, spacing: 12) {
+            Image(systemName: "photo.on.rectangle")
+                .font(TrueKeepTheme.Font.iconMedium)
+                .foregroundStyle(TrueKeepTheme.greenStrong)
+                .frame(width: 34, height: 34)
+                .background(Color(red: 0.953, green: 0.965, blue: 0.957))
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text("需要照片访问才能扫描")
+                    .font(TrueKeepTheme.Font.cardTitle)
+                    .foregroundStyle(TrueKeepTheme.ink)
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+                Text("仅在本机查找候选，删除前仍需确认。")
+                    .font(TrueKeepTheme.Font.caption)
+                    .foregroundStyle(TrueKeepTheme.muted)
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
             PrimaryActionButton(
-                title: isRequestingAccess ? "正在请求访问..." : "开启照片访问",
+                title: isRequestingAccess ? "请求中..." : "开启访问",
                 isBusy: isRequestingAccess,
                 action: onRequestAccess
             )
+            .frame(width: 116)
             .disabled(isRequestingAccess)
             .opacity(isRequestingAccess ? 0.72 : 1)
             .accessibilityIdentifier(TrueKeepAccessibility.Control.allowPhotos.id)
+            .accessibilityLabel(isRequestingAccess ? "正在请求照片访问" : "开启照片访问")
         }
-        .padding(14)
+        .padding(12)
         .background(TrueKeepTheme.paper)
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).stroke(TrueKeepTheme.line))
@@ -133,51 +146,14 @@ private struct EmptyResultsState: View {
 }
 
 private struct CleanupTaskCard: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     var task: CleanupTask
     var onTap: () -> Void
 
     var body: some View {
         Button(action: onTap) {
-            HStack(alignment: .top, spacing: 10) {
-                Image(systemName: task.category.systemImage)
-                    .font(TrueKeepTheme.Font.iconMedium)
-                    .foregroundStyle(TrueKeepTheme.green)
-                    .frame(width: 34, height: 34)
-                    .background(Color(red: 0.953, green: 0.965, blue: 0.957))
-                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(task.category.title)
-                        .font(TrueKeepTheme.Font.cardTitle)
-                        .foregroundStyle(TrueKeepTheme.ink)
-                        .lineLimit(nil)
-                        .fixedSize(horizontal: false, vertical: true)
-                    HStack(spacing: 4) {
-                        ForEach(task.previewCandidates.prefix(4)) { candidate in
-                            ThumbnailView(
-                                style: candidate.thumbnail,
-                                assetID: candidate.thumbnailAssetID
-                            )
-                                .frame(width: 37, height: 37)
-                        }
-                    }
-                }
-                Spacer()
-                VStack(alignment: .trailing, spacing: 6) {
-                    Text(task.candidateCount.formatted(.number))
-                        .font(TrueKeepTheme.Font.metric)
-                        .foregroundStyle(TrueKeepTheme.ink)
-                    Text(task.confidenceLabel)
-                        .font(TrueKeepTheme.Font.statusLabel)
-                        .foregroundStyle(TrueKeepTheme.green)
-                        .lineLimit(nil)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .padding(.horizontal, 7)
-                        .padding(.vertical, 4)
-                        .background(TrueKeepTheme.greenSoft)
-                        .clipShape(Capsule())
-                }
-            }
+            cardContent
             .padding(11)
             .background(TrueKeepTheme.paper)
             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
@@ -188,6 +164,90 @@ private struct CleanupTaskCard: View {
         .accessibilityIdentifier(TrueKeepAccessibility.cleanupTask(category: task.category))
         .accessibilityLabel("\(task.category.title)，\(task.description)，\(task.candidateCount) 项，\(task.confidenceLabel)")
         .accessibilityHint("打开复核列表")
+    }
+
+    @ViewBuilder
+    private var cardContent: some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            VStack(alignment: .leading, spacing: 10) {
+                HStack(alignment: .top, spacing: 10) {
+                    categoryIcon
+                    taskTitle
+                    Spacer(minLength: 8)
+                }
+
+                previewStrip
+
+                HStack(alignment: .firstTextBaseline, spacing: 10) {
+                    candidateCount
+                    Spacer(minLength: 8)
+                    confidenceBadge
+                }
+            }
+        } else {
+            HStack(alignment: .top, spacing: 10) {
+                categoryIcon
+
+                VStack(alignment: .leading, spacing: 6) {
+                    taskTitle
+                    previewStrip
+                }
+                Spacer()
+                VStack(alignment: .trailing, spacing: 6) {
+                    candidateCount
+                    confidenceBadge
+                }
+            }
+        }
+    }
+
+    private var categoryIcon: some View {
+        Image(systemName: task.category.systemImage)
+            .font(TrueKeepTheme.Font.iconMedium)
+            .foregroundStyle(TrueKeepTheme.greenStrong)
+            .frame(width: 34, height: 34)
+            .background(Color(red: 0.953, green: 0.965, blue: 0.957))
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+    }
+
+    private var taskTitle: some View {
+        Text(task.category.title)
+            .font(TrueKeepTheme.Font.cardTitle)
+            .foregroundStyle(TrueKeepTheme.ink)
+            .lineLimit(nil)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+
+    private var previewStrip: some View {
+        HStack(spacing: 4) {
+            ForEach(task.previewCandidates.prefix(4)) { candidate in
+                ThumbnailView(
+                    style: candidate.thumbnail,
+                    assetID: candidate.thumbnailAssetID
+                )
+                .frame(width: 37, height: 37)
+            }
+        }
+    }
+
+    private var candidateCount: some View {
+        Text(task.candidateCount.formatted(.number))
+            .font(TrueKeepTheme.Font.metric)
+            .foregroundStyle(TrueKeepTheme.ink)
+            .lineLimit(nil)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+
+    private var confidenceBadge: some View {
+        Text(task.confidenceLabel)
+            .font(TrueKeepTheme.Font.statusLabel)
+            .foregroundStyle(TrueKeepTheme.greenStrong)
+            .lineLimit(nil)
+            .fixedSize(horizontal: false, vertical: true)
+            .padding(.horizontal, 7)
+            .padding(.vertical, 4)
+            .background(TrueKeepTheme.greenSoft)
+            .clipShape(Capsule())
     }
 }
 

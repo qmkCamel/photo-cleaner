@@ -1,4 +1,5 @@
 import XCTest
+import CoreML
 @testable import TrueKeep
 
 final class PhotoScanResultBuilderTests: XCTestCase {
@@ -200,6 +201,142 @@ final class PhotoScanResultBuilderTests: XCTestCase {
         XCTAssertTrue(classifications["sharp"]?.recommendedKeep ?? false)
     }
 
+    func testVisualClassifierPrefersFeaturePrintSimilarityOverPerceptualHash() {
+        let now = Date(timeIntervalSince1970: 1_780_000_000)
+        let classifications = PhotoVisualClassifier.classifications(
+            from: [
+                PhotoVisualInput(
+                    assetID: "first",
+                    creationDate: now,
+                    metrics: PhotoVisualMetrics(
+                        perceptualHash: 0,
+                        featurePrint: featurePrint([0.10, 0.20, 0.30, 0.40]),
+                        brightness: 0.45,
+                        saturation: 0.3,
+                        sharpness: 0.04
+                    )
+                ),
+                PhotoVisualInput(
+                    assetID: "second",
+                    creationDate: now.addingTimeInterval(20),
+                    metrics: PhotoVisualMetrics(
+                        perceptualHash: UInt64.max,
+                        featurePrint: featurePrint([0.11, 0.19, 0.29, 0.41]),
+                        brightness: 0.46,
+                        saturation: 0.32,
+                        sharpness: 0.06
+                    )
+                )
+            ]
+        )
+
+        XCTAssertEqual(classifications["first"]?.similarGroupID, classifications["second"]?.similarGroupID)
+    }
+
+    func testVisualClassifierFallsBackToPerceptualHashWhenFeaturePrintIsMissing() {
+        let now = Date(timeIntervalSince1970: 1_780_000_000)
+        let classifications = PhotoVisualClassifier.classifications(
+            from: [
+                PhotoVisualInput(
+                    assetID: "first",
+                    creationDate: now,
+                    metrics: PhotoVisualMetrics(
+                        perceptualHash: 0b1010,
+                        brightness: 0.45,
+                        saturation: 0.3,
+                        sharpness: 0.04
+                    )
+                ),
+                PhotoVisualInput(
+                    assetID: "second",
+                    creationDate: now.addingTimeInterval(20),
+                    metrics: PhotoVisualMetrics(
+                        perceptualHash: 0b1011,
+                        brightness: 0.46,
+                        saturation: 0.32,
+                        sharpness: 0.06
+                    )
+                )
+            ]
+        )
+
+        XCTAssertEqual(classifications["first"]?.similarGroupID, classifications["second"]?.similarGroupID)
+    }
+
+    func testVisualClassifierDoesNotUseHashFallbackWhenFeaturePrintsAreComparableAndDistant() {
+        let now = Date(timeIntervalSince1970: 1_780_000_000)
+        let classifications = PhotoVisualClassifier.classifications(
+            from: [
+                PhotoVisualInput(
+                    assetID: "first",
+                    creationDate: now,
+                    metrics: PhotoVisualMetrics(
+                        perceptualHash: 0b1010,
+                        featurePrint: featurePrint([0.0, 0.0, 0.0, 0.0]),
+                        brightness: 0.45,
+                        saturation: 0.3,
+                        sharpness: 0.04
+                    )
+                ),
+                PhotoVisualInput(
+                    assetID: "second",
+                    creationDate: now.addingTimeInterval(20),
+                    metrics: PhotoVisualMetrics(
+                        perceptualHash: 0b1011,
+                        featurePrint: featurePrint([1.0, 1.0, 1.0, 1.0]),
+                        brightness: 0.46,
+                        saturation: 0.32,
+                        sharpness: 0.06
+                    )
+                )
+            ]
+        )
+
+        XCTAssertNil(classifications["first"]?.similarGroupID)
+        XCTAssertNil(classifications["second"]?.similarGroupID)
+    }
+
+    func testVisualClassifierUsesQualityScoreForRecommendedKeep() {
+        let now = Date(timeIntervalSince1970: 1_780_000_000)
+        let classifications = PhotoVisualClassifier.classifications(
+            from: [
+                PhotoVisualInput(
+                    assetID: "model-keeper",
+                    creationDate: now,
+                    metrics: PhotoVisualMetrics(
+                        perceptualHash: 0b1010,
+                        brightness: 0.45,
+                        saturation: 0.3,
+                        sharpness: 0.02,
+                        quality: PhotoQualityAssessment(
+                            overallQuality: 0.92,
+                            blurRisk: 0.05,
+                            accidentalRisk: 0.02
+                        )
+                    )
+                ),
+                PhotoVisualInput(
+                    assetID: "sharp-but-worse-quality",
+                    creationDate: now.addingTimeInterval(20),
+                    metrics: PhotoVisualMetrics(
+                        perceptualHash: 0b1011,
+                        brightness: 0.46,
+                        saturation: 0.32,
+                        sharpness: 0.10,
+                        quality: PhotoQualityAssessment(
+                            overallQuality: 0.48,
+                            blurRisk: 0.10,
+                            accidentalRisk: 0.02
+                        )
+                    )
+                )
+            ]
+        )
+
+        XCTAssertTrue(classifications["model-keeper"]?.recommendedKeep ?? false)
+        XCTAssertFalse(classifications["sharp-but-worse-quality"]?.recommendedKeep ?? true)
+    }
+
     func testVisualClassifierDoesNotGroupNearHashesOutsideTimeWindow() {
         let now = Date(timeIntervalSince1970: 1_780_000_000)
         let classifications = PhotoVisualClassifier.classifications(
@@ -260,5 +397,73 @@ final class PhotoScanResultBuilderTests: XCTestCase {
         XCTAssertTrue(classifications["dark-pocket-shot"]?.isAccidental ?? false)
         XCTAssertFalse(classifications["dark-pocket-shot"]?.isBlurry ?? true)
         XCTAssertTrue(classifications["soft-focus"]?.isBlurry ?? false)
+    }
+
+    func testVisualClassifierUsesQualityAssessmentForBlurrySingles() {
+        let classifications = PhotoVisualClassifier.classifications(
+            from: [
+                PhotoVisualInput(
+                    assetID: "model-blurry",
+                    creationDate: nil,
+                    metrics: PhotoVisualMetrics(
+                        perceptualHash: 0,
+                        brightness: 0.48,
+                        saturation: 0.28,
+                        sharpness: 0.08,
+                        quality: PhotoQualityAssessment(
+                            overallQuality: 0.22,
+                            blurRisk: 0.96,
+                            accidentalRisk: 0.02
+                        )
+                    )
+                )
+            ]
+        )
+
+        XCTAssertTrue(classifications["model-blurry"]?.isBlurry ?? false)
+    }
+
+    func testCoreMLQualityScorerParsesNamedModelOutputs() {
+        let prediction = StubFeatureProvider(
+            values: [
+                "quality_score": MLFeatureValue(double: 0.74),
+                "blur_risk": MLFeatureValue(double: 0.13),
+                "accidental_risk": MLFeatureValue(double: 0.08)
+            ]
+        )
+
+        let assessment = CoreMLPhotoQualityScorer.assessment(from: prediction)
+
+        XCTAssertEqual(assessment?.overallQuality, 0.74)
+        XCTAssertEqual(assessment?.blurRisk, 0.13)
+        XCTAssertEqual(assessment?.accidentalRisk, 0.08)
+    }
+
+    private func featurePrint(_ values: [Float]) -> PhotoFeaturePrint {
+        var mutableValues = values
+        let data = mutableValues.withUnsafeMutableBytes { buffer in
+            Data(buffer)
+        }
+        return PhotoFeaturePrint(
+            data: data,
+            elementType: .float,
+            elementCount: values.count
+        )
+    }
+}
+
+private final class StubFeatureProvider: MLFeatureProvider {
+    let values: [String: MLFeatureValue]
+
+    init(values: [String: MLFeatureValue]) {
+        self.values = values
+    }
+
+    var featureNames: Set<String> {
+        Set(values.keys)
+    }
+
+    func featureValue(for featureName: String) -> MLFeatureValue? {
+        values[featureName]
     }
 }

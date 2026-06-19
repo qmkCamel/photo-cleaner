@@ -123,7 +123,7 @@ enum AppUITestLaunchScenario: Hashable {
 }
 
 enum AppUITestActionDelay {
-    static let nanoseconds: UInt64 = 1_200_000_000
+    static let nanoseconds: UInt64 = 3_500_000_000
 
     static func isEnabled(_ argument: String, arguments: [String] = ProcessInfo.processInfo.arguments) -> Bool {
         arguments.contains(argument)

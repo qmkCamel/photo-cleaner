@@ -1,7 +1,9 @@
 import Foundation
+@preconcurrency import CoreML
 import CoreGraphics
 import Photos
 @preconcurrency import UIKit
+@preconcurrency import Vision
 
 enum PhotoAssetMediaKind: Hashable, Sendable {
     case photo
@@ -58,20 +60,286 @@ struct PhotoVisualClassification: Hashable, Sendable {
 
 struct PhotoVisualMetrics: Hashable, Sendable {
     var perceptualHash: UInt64
+    var featurePrint: PhotoFeaturePrint?
     var brightness: Double
     var saturation: Double
     var sharpness: Double
+    var quality: PhotoQualityAssessment
 
     init(
         perceptualHash: UInt64,
+        featurePrint: PhotoFeaturePrint? = nil,
         brightness: Double,
         saturation: Double,
-        sharpness: Double
+        sharpness: Double,
+        quality: PhotoQualityAssessment? = nil
     ) {
         self.perceptualHash = perceptualHash
+        self.featurePrint = featurePrint
         self.brightness = brightness
         self.saturation = saturation
         self.sharpness = sharpness
+        let features = PhotoQualityFeatures(
+            brightness: brightness,
+            saturation: saturation,
+            sharpness: sharpness,
+            hashBitDensity: Double(perceptualHash.nonzeroBitCount) / 64.0
+        )
+        self.quality = quality ?? PhotoQualityAssessment.heuristic(from: features)
+    }
+}
+
+enum PhotoFeatureElementType: Int, Hashable, Sendable {
+    case unknown = 0
+    case float = 1
+    case double = 2
+
+    init(visionElementType: VNElementType) {
+        self = PhotoFeatureElementType(rawValue: Int(visionElementType.rawValue)) ?? .unknown
+    }
+}
+
+struct PhotoFeaturePrint: Hashable, Sendable {
+    var data: Data
+    var elementType: PhotoFeatureElementType
+    var elementCount: Int
+
+    init(data: Data, elementType: PhotoFeatureElementType = .float, elementCount: Int? = nil) {
+        self.data = data
+        self.elementType = elementType
+        switch elementType {
+        case .float:
+            self.elementCount = elementCount ?? data.count / MemoryLayout<Float>.stride
+        case .double:
+            self.elementCount = elementCount ?? data.count / MemoryLayout<Double>.stride
+        case .unknown:
+            self.elementCount = elementCount ?? 0
+        }
+    }
+
+    init(observation: VNFeaturePrintObservation) {
+        self.init(
+            data: observation.data,
+            elementType: PhotoFeatureElementType(visionElementType: observation.elementType),
+            elementCount: observation.elementCount
+        )
+    }
+
+    func distance(to other: PhotoFeaturePrint) -> Double? {
+        guard elementType == other.elementType,
+              elementCount == other.elementCount,
+              elementCount > 0
+        else {
+            return nil
+        }
+
+        switch elementType {
+        case .float:
+            return normalizedDistance(to: other, elementSize: MemoryLayout<Float>.stride) { buffer, offset in
+                Double(buffer.loadUnaligned(fromByteOffset: offset, as: Float.self))
+            }
+        case .double:
+            return normalizedDistance(to: other, elementSize: MemoryLayout<Double>.stride) { buffer, offset in
+                buffer.loadUnaligned(fromByteOffset: offset, as: Double.self)
+            }
+        case .unknown:
+            return nil
+        }
+    }
+
+    private func normalizedDistance(
+        to other: PhotoFeaturePrint,
+        elementSize: Int,
+        valueAt: (UnsafeRawBufferPointer, Int) -> Double
+    ) -> Double? {
+        let requiredByteCount = elementCount * elementSize
+        guard data.count >= requiredByteCount, other.data.count >= requiredByteCount else {
+            return nil
+        }
+
+        return data.withUnsafeBytes { lhsBuffer in
+            other.data.withUnsafeBytes { rhsBuffer in
+                var squaredDistance = 0.0
+
+                for index in 0..<elementCount {
+                    let offset = index * elementSize
+                    let delta = valueAt(lhsBuffer, offset) - valueAt(rhsBuffer, offset)
+                    squaredDistance += delta * delta
+                }
+
+                return sqrt(squaredDistance / Double(elementCount))
+            }
+        }
+    }
+}
+
+struct PhotoQualityFeatures: Hashable, Sendable {
+    var brightness: Double
+    var saturation: Double
+    var sharpness: Double
+    var hashBitDensity: Double
+
+    var featureValues: [Double] {
+        [brightness, saturation, sharpness, hashBitDensity]
+    }
+}
+
+struct PhotoQualityAssessment: Hashable, Sendable {
+    var overallQuality: Double
+    var blurRisk: Double
+    var accidentalRisk: Double
+
+    init(overallQuality: Double, blurRisk: Double, accidentalRisk: Double) {
+        self.overallQuality = Self.clamp(overallQuality)
+        self.blurRisk = Self.clamp(blurRisk)
+        self.accidentalRisk = Self.clamp(accidentalRisk)
+    }
+
+    static func heuristic(from features: PhotoQualityFeatures) -> PhotoQualityAssessment {
+        let sharpnessScore = clamp(features.sharpness / 0.08)
+        let exposureScore = clamp(1.0 - abs(features.brightness - 0.5) / 0.5)
+        let saturationScore = clamp(features.saturation / 0.35)
+        let overallQuality = (sharpnessScore * 0.65) + (exposureScore * 0.25) + (saturationScore * 0.10)
+
+        let blurRisk = features.sharpness <= 0.018
+            ? 1.0
+            : clamp((0.028 - features.sharpness) / 0.010)
+        let accidentalRisk: Double
+        if features.brightness < 0.11
+            || features.brightness > 0.92
+            || (features.saturation < 0.045 && features.sharpness < 0.015) {
+            accidentalRisk = 1.0
+        } else {
+            let darkRisk = clamp((0.16 - features.brightness) / 0.16)
+            let brightRisk = clamp((features.brightness - 0.86) / 0.14)
+            let lowInformationRisk = min(
+                clamp((0.07 - features.saturation) / 0.07),
+                clamp((0.024 - features.sharpness) / 0.024)
+            )
+            accidentalRisk = max(darkRisk, brightRisk, lowInformationRisk)
+        }
+
+        return PhotoQualityAssessment(
+            overallQuality: overallQuality,
+            blurRisk: blurRisk,
+            accidentalRisk: accidentalRisk
+        )
+    }
+
+    private static func clamp(_ value: Double) -> Double {
+        min(1.0, max(0.0, value))
+    }
+}
+
+protocol PhotoQualityScoring: Sendable {
+    func assessment(for features: PhotoQualityFeatures) -> PhotoQualityAssessment?
+}
+
+struct HeuristicPhotoQualityScorer: PhotoQualityScoring {
+    func assessment(for features: PhotoQualityFeatures) -> PhotoQualityAssessment? {
+        PhotoQualityAssessment.heuristic(from: features)
+    }
+}
+
+struct CoreMLPhotoQualityScorer: PhotoQualityScoring, @unchecked Sendable {
+    static let bundledModelName = "TrueKeepPhotoQuality"
+
+    private let model: MLModel
+
+    init?(bundle: Bundle = .main, modelName: String = bundledModelName) {
+        guard let modelURL = bundle.url(forResource: modelName, withExtension: "mlmodelc"),
+              let loadedModel = try? MLModel(contentsOf: modelURL)
+        else {
+            return nil
+        }
+
+        self.model = loadedModel
+    }
+
+    init(model: MLModel) {
+        self.model = model
+    }
+
+    func assessment(for features: PhotoQualityFeatures) -> PhotoQualityAssessment? {
+        guard let input = makeInput(from: features),
+              let prediction = try? model.prediction(from: input)
+        else {
+            return nil
+        }
+
+        return Self.assessment(from: prediction)
+    }
+
+    static func assessment(from prediction: MLFeatureProvider) -> PhotoQualityAssessment? {
+        let overallQuality = outputDouble(
+            named: ["overall_quality", "quality_score", "quality"],
+            from: prediction
+        )
+        let blurRisk = outputDouble(
+            named: ["blur_risk", "blur_score", "blurry_risk", "blurry_score"],
+            from: prediction
+        )
+        let accidentalRisk = outputDouble(
+            named: ["accidental_risk", "accidental_score", "mistake_risk"],
+            from: prediction
+        )
+
+        guard overallQuality != nil || blurRisk != nil || accidentalRisk != nil else {
+            return nil
+        }
+
+        return PhotoQualityAssessment(
+            overallQuality: overallQuality ?? 0.5,
+            blurRisk: blurRisk ?? 0,
+            accidentalRisk: accidentalRisk ?? 0
+        )
+    }
+
+    private func makeInput(from features: PhotoQualityFeatures) -> MLFeatureProvider? {
+        if model.modelDescription.inputDescriptionsByName["quality_features"] != nil,
+           let featureArray = try? MLMultiArray(
+            shape: [NSNumber(value: features.featureValues.count)],
+            dataType: .double
+           ) {
+            for (index, value) in features.featureValues.enumerated() {
+                featureArray[index] = NSNumber(value: value)
+            }
+            return try? MLDictionaryFeatureProvider(dictionary: [
+                "quality_features": MLFeatureValue(multiArray: featureArray)
+            ])
+        }
+
+        return try? MLDictionaryFeatureProvider(dictionary: [
+            "brightness": features.brightness,
+            "saturation": features.saturation,
+            "sharpness": features.sharpness,
+            "hash_density": features.hashBitDensity
+        ])
+    }
+
+    private static func outputDouble(
+        named candidateNames: [String],
+        from prediction: MLFeatureProvider
+    ) -> Double? {
+        for name in candidateNames {
+            guard let value = prediction.featureValue(for: name) else { continue }
+
+            switch value.type {
+            case .double:
+                return value.doubleValue
+            case .int64:
+                return Double(value.int64Value)
+            case .multiArray:
+                guard let multiArray = value.multiArrayValue, multiArray.count > 0 else {
+                    return nil
+                }
+                return multiArray[0].doubleValue
+            default:
+                continue
+            }
+        }
+
+        return nil
     }
 }
 
@@ -152,9 +420,14 @@ protocol PhotoLibraryScanning: Sendable {
 
 struct SystemPhotoLibraryScanner: PhotoLibraryScanning {
     private let policy: PhotoLibraryScanPolicy
+    private let qualityScorer: any PhotoQualityScoring
 
-    init(policy: PhotoLibraryScanPolicy = .init()) {
+    init(
+        policy: PhotoLibraryScanPolicy = .init(),
+        qualityScorer: (any PhotoQualityScoring)? = CoreMLPhotoQualityScorer()
+    ) {
         self.policy = policy
+        self.qualityScorer = qualityScorer ?? HeuristicPhotoQualityScorer()
     }
 
     func scan(access: PhotoLibraryAccess) async -> CleanupFlowState {
@@ -220,7 +493,11 @@ struct SystemPhotoLibraryScanner: PhotoLibraryScanning {
 
             let asset = photoAssets.object(at: index)
             guard !asset.mediaSubtypes.contains(.photoScreenshot),
-                  let metrics = Self.visualMetrics(for: asset, imageManager: imageManager)
+                  let metrics = Self.visualMetrics(
+                    for: asset,
+                    imageManager: imageManager,
+                    qualityScorer: qualityScorer
+                  )
             else {
                 continue
             }
@@ -243,7 +520,8 @@ struct SystemPhotoLibraryScanner: PhotoLibraryScanning {
 
     private static func visualMetrics(
         for asset: PHAsset,
-        imageManager: PHImageManager
+        imageManager: PHImageManager,
+        qualityScorer: any PhotoQualityScoring
     ) -> PhotoVisualMetrics? {
         let options = PHImageRequestOptions()
         options.deliveryMode = .fastFormat
@@ -254,7 +532,7 @@ struct SystemPhotoLibraryScanner: PhotoLibraryScanning {
         var requestedImage: UIImage?
         imageManager.requestImage(
             for: asset,
-            targetSize: CGSize(width: 96, height: 96),
+            targetSize: CGSize(width: 224, height: 224),
             contentMode: .aspectFill,
             options: options
         ) { image, info in
@@ -265,7 +543,7 @@ struct SystemPhotoLibraryScanner: PhotoLibraryScanning {
         }
 
         guard let cgImage = requestedImage?.cgImage else { return nil }
-        return PhotoVisualAnalyzer.metrics(from: cgImage)
+        return PhotoVisualAnalyzer.metrics(from: cgImage, qualityScorer: qualityScorer)
     }
 
     private func fetchOptions() -> PHFetchOptions {
@@ -280,12 +558,10 @@ struct SystemPhotoLibraryScanner: PhotoLibraryScanning {
 
 enum PhotoVisualClassifier {
     private static let similarHashDistance = 8
+    private static let similarFeaturePrintDistance = 0.16
     private static let similarTimeWindow: TimeInterval = 180
-    private static let blurrySharpnessThreshold = 0.018
-    private static let accidentalDarkBrightness = 0.11
-    private static let accidentalBrightBrightness = 0.92
-    private static let accidentalLowSaturation = 0.045
-    private static let accidentalLowSharpness = 0.015
+    private static let blurryQualityRiskThreshold = 0.85
+    private static let accidentalQualityRiskThreshold = 0.85
 
     static func classifications(from inputs: [PhotoVisualInput]) -> [String: PhotoVisualClassification] {
         guard !inputs.isEmpty else { return [:] }
@@ -305,7 +581,7 @@ enum PhotoVisualClassifier {
             guard cluster.count >= 2 else { continue }
 
             let keepAssetID = cluster.max { lhs, rhs in
-                lhs.metrics.sharpness < rhs.metrics.sharpness
+                lhs.metrics.quality.overallQuality < rhs.metrics.quality.overallQuality
             }?.assetID
             let groupID = stableGroupID(for: cluster.map(\.assetID))
 
@@ -343,17 +619,21 @@ enum PhotoVisualClassifier {
             return false
         }
 
+        if let lhsFeaturePrint = lhs.metrics.featurePrint,
+           let rhsFeaturePrint = rhs.metrics.featurePrint,
+           let distance = lhsFeaturePrint.distance(to: rhsFeaturePrint) {
+            return distance <= similarFeaturePrintDistance
+        }
+
         return hammingDistance(lhs.metrics.perceptualHash, rhs.metrics.perceptualHash) <= similarHashDistance
     }
 
     private static func isBlurry(_ metrics: PhotoVisualMetrics) -> Bool {
-        metrics.sharpness < blurrySharpnessThreshold
+        metrics.quality.blurRisk >= blurryQualityRiskThreshold
     }
 
     private static func isAccidental(_ metrics: PhotoVisualMetrics) -> Bool {
-        metrics.brightness < accidentalDarkBrightness
-            || metrics.brightness > accidentalBrightBrightness
-            || (metrics.saturation < accidentalLowSaturation && metrics.sharpness < accidentalLowSharpness)
+        metrics.quality.accidentalRisk >= accidentalQualityRiskThreshold
     }
 
     private static func hammingDistance(_ lhs: UInt64, _ rhs: UInt64) -> Int {
@@ -375,7 +655,10 @@ enum PhotoVisualAnalyzer {
     private static let sampleHeight = 32
     private static let bytesPerPixel = 4
 
-    static func metrics(from cgImage: CGImage) -> PhotoVisualMetrics? {
+    static func metrics(
+        from cgImage: CGImage,
+        qualityScorer: any PhotoQualityScoring = HeuristicPhotoQualityScorer()
+    ) -> PhotoVisualMetrics? {
         let bytesPerRow = sampleWidth * bytesPerPixel
         var pixels = [UInt8](repeating: 0, count: sampleHeight * bytesPerRow)
         let colorSpace = CGColorSpaceCreateDeviceRGB()
@@ -421,12 +704,25 @@ enum PhotoVisualAnalyzer {
 
         let pixelCount = Double(luminance.count)
         guard pixelCount > 0 else { return nil }
+        let perceptualHash = perceptualHash(from: luminance)
+        let brightness = brightnessSum / pixelCount
+        let saturation = saturationSum / pixelCount
+        let sharpness = edgeSharpness(from: luminance)
+        let qualityFeatures = PhotoQualityFeatures(
+            brightness: brightness,
+            saturation: saturation,
+            sharpness: sharpness,
+            hashBitDensity: Double(perceptualHash.nonzeroBitCount) / 64.0
+        )
 
         return PhotoVisualMetrics(
-            perceptualHash: perceptualHash(from: luminance),
-            brightness: brightnessSum / pixelCount,
-            saturation: saturationSum / pixelCount,
-            sharpness: edgeSharpness(from: luminance)
+            perceptualHash: perceptualHash,
+            featurePrint: PhotoFeaturePrintGenerator.featurePrint(from: cgImage),
+            brightness: brightness,
+            saturation: saturation,
+            sharpness: sharpness,
+            quality: qualityScorer.assessment(for: qualityFeatures)
+                ?? PhotoQualityAssessment.heuristic(from: qualityFeatures)
         )
     }
 
@@ -476,6 +772,22 @@ enum PhotoVisualAnalyzer {
         let sourceX = min(sampleWidth - 1, Int((Double(x) / 8.0) * Double(sampleWidth - 1)))
         let sourceY = min(sampleHeight - 1, Int((Double(y) / 7.0) * Double(sampleHeight - 1)))
         return luminance[sourceY * sampleWidth + sourceX]
+    }
+}
+
+enum PhotoFeaturePrintGenerator {
+    static func featurePrint(from cgImage: CGImage) -> PhotoFeaturePrint? {
+        let request = VNGenerateImageFeaturePrintRequest()
+        request.imageCropAndScaleOption = .scaleFit
+
+        do {
+            let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
+            try handler.perform([request])
+            guard let observation = request.results?.first else { return nil }
+            return PhotoFeaturePrint(observation: observation)
+        } catch {
+            return nil
+        }
     }
 }
 

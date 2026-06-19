@@ -119,7 +119,7 @@ struct TrustChip: View {
     var body: some View {
         Label(title, systemImage: systemImage)
             .font(TrueKeepTheme.Font.captionStrong)
-            .foregroundStyle(TrueKeepTheme.green)
+            .foregroundStyle(TrueKeepTheme.greenStrong)
             .padding(.horizontal, 10)
             .padding(.vertical, 7)
             .background(TrueKeepTheme.greenSoft)
@@ -219,12 +219,12 @@ struct ThumbnailView: View {
                 if isRecommendedKeep {
                     VStack {
                         HStack {
-                            Label("推荐保留", systemImage: "checkmark.seal.fill")
-                                .font(TrueKeepTheme.Font.caption2Strong)
-                                .foregroundStyle(TrueKeepTheme.green)
-                                .padding(.horizontal, 7)
-                                .padding(.vertical, 5)
-                                .background(TrueKeepTheme.greenSoft.opacity(0.95))
+                Label("推荐保留", systemImage: "checkmark.seal.fill")
+                    .font(TrueKeepTheme.Font.caption2Strong)
+                    .foregroundStyle(TrueKeepTheme.greenStrong)
+                    .padding(.horizontal, 7)
+                    .padding(.vertical, 5)
+                    .background(TrueKeepTheme.greenSoft.opacity(0.95))
                                 .clipShape(Capsule())
                             Spacer()
                         }

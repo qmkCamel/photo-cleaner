@@ -1,5 +1,14 @@
 # Global Codex Agents Guide
 
+<!-- OPENSPEC:START -->
+## OpenSpec 工作流
+
+- 产品、行为、架构或用户可见流程变更前，先阅读 `openspec/AGENTS.md` 和相关规格。
+- 大幅代码改动前，先在 `openspec/changes/<change-id>/` 下创建或更新 OpenSpec 变更。
+- 实现范围必须跟对应变更的 `proposal.md`、`tasks.md` 和规格增量保持一致。
+- 工作推进时同步更新任务清单；变更发布后再把规格增量合入正式规格并归档。
+<!-- OPENSPEC:END -->
+
 ## Cross-Project Interaction Rules
 
 - When implementing, reviewing, or testing user-triggered UI actions that may exceed 300ms, use the global `user-action-contract` skill. Keep project files limited to references and project-specific differences; the skill is the source of truth.
