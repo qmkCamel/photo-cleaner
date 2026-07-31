@@ -7,7 +7,7 @@ This folder contains the native iOS implementation for TrueKeep / 留真.
 - Project: `TrueKeep/TrueKeep.xcodeproj`
 - Scheme: `TrueKeep`
 - Bundle ID: `app.truekeep.ios`
-- Minimum iOS: 17.0
+- Minimum iOS: 18.0
 - UI framework: SwiftUI
 - Project generation: XcodeGen via `TrueKeep/project.yml`
 
@@ -40,7 +40,7 @@ The first native milestone implements the MVP trust-validation prototype:
 - iCloud deletion confirmation
 - Privacy & Safety page
 
-Real Photos authorization, screenshot scanning, large-video scanning, local thumbnail loading, 复核箱安全机制, and Photos deletion error handling are wired through service boundaries. Similar-photo, accidental-shot, and blurry-photo results are exposed as low-confidence local review candidates from bounded thumbnail heuristics, not as automatic deletion decisions.
+Real Photos authorization, screenshot scanning, large-video scanning, local thumbnail loading, 复核箱安全机制, and Photos deletion error handling are wired through service boundaries. Similar-photo grouping uses Vision feature prints, overall photo quality uses the on-device iOS 18 Vision aesthetics model, and face capture quality assists recommended-keep ranking. Accidental-shot and blurry-photo results remain low-confidence local review candidates, not automatic deletion decisions; explainable thumbnail heuristics remain in place for reasons and Vision failure fallback.
 
 ## Device Signing
 

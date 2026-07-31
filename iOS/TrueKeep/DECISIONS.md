@@ -10,7 +10,7 @@ This file records technical choices and product decisions made while turning the
   - Reason: the prototype is screen- and state-driven, and SwiftUI maps directly to the onboarding, tab, sheet, and review flows.
 - Use XcodeGen to generate `TrueKeep.xcodeproj` from `project.yml`.
   - Reason: the repo did not have an iOS project yet, and a generated project keeps target settings reviewable in text.
-- Set minimum iOS to 17.0 for the first pass.
+- Set minimum iOS to 17.0 for the first pass. Superseded by the 2026-07-13 iOS 18 Vision aesthetics decision below.
   - Reason: keeps the SwiftUI implementation modern while avoiding a premature iOS 26-only dependency before Photos/Vision capability work is validated.
 - Keep the first product state model as value types.
   - Reason: the first milestone is local UI state and deterministic fixture data; value types are easy to test and do not require a shared observable store yet.
@@ -198,12 +198,30 @@ This file records technical choices and product decisions made while turning the
 - Treat real Photos deletion as a separately approved destructive test, not part of ordinary verification.
   - Reason: the MVP trust promise depends on not surprising the tester or user. Smoke tests can still exercise the Review Bin and confirmation flow, but they should end at the safety-lock failure message until a separate destructive-test plan is approved.
 
+## 2026-07-13
+
+### Technical choices
+
+- Raise the minimum deployment target to iOS 18.0.
+  - Reason: TrueKeep now uses the system `VNCalculateImageAestheticsScoresRequest` as the default photo-quality model path, which is available from iOS 18. Keeping an iOS 17 branch would preserve a rules-only runtime that the product no longer intends to support.
+- Use Vision aesthetics as the primary overall-quality signal while preserving deterministic heuristics.
+  - Reason: the system model provides an on-device quality score without bundling a custom model. Brightness, saturation, and edge sharpness remain useful for explainable candidate reasons and provide a safe fallback if Vision returns no result.
+- Use face capture quality only as a bounded recommended-keep assist.
+  - Reason: face quality is useful when comparing similar family-photo frames, but it is not a general measure of memory value. Recommended-keep ranking weights overall quality at 80% and face capture quality at 20% when a face signal exists.
+
+### Product decisions
+
+- Never turn Vision's utility flag directly into a cleanup candidate.
+  - Reason: receipts, documents, screenshots, and other utility images may be valuable even when they are not aesthetically memorable. Utility classification is context, not deletion intent.
+- Keep model-driven accidental findings conservative and unselected by default.
+  - Reason: only a very low non-utility aesthetics score can independently cross the existing accidental-risk threshold. The result remains a low-confidence review aid and still requires the 复核箱 plus second deletion confirmation.
+
 ## Open decisions
 
 - Whether the first TestFlight should proactively prompt Limited Access users to expand access after their first incomplete scan.
 - How to estimate or retrieve exact asset byte size without private APIs or misleading cleanup numbers.
 - Whether the scan screen should expose exact item-level progress once Photos enumeration cost is profiled on large libraries.
-- Whether to replace the current thumbnail heuristics with Vision, Core ML, or Foundation Models/Core AI after real-device quality data is collected.
+- Whether to fine-tune a lightweight Core ML accidental-shot model after Vision aesthetics and heuristic false positives are collected from real-device testing.
 - Whether the first paid SKU is one-time purchase only or one-time purchase plus optional annual Pro.
 - Which Apple Developer Team, bundle identifier, and provisioning profile should be treated as the release source of truth.
 - How much additional VoiceOver-specific polish is needed before the first TestFlight parent-user pass.

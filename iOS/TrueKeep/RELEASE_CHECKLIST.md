@@ -13,7 +13,7 @@ This is the working checklist for reaching a state that can be submitted to App 
 - [x] Real scan results replace fixture data for metadata-supported screenshot and video categories.
 - [x] Fixture-only similar, accidental, and blurry task cards are not exposed on the default launch path.
 - [x] Public Photos permission and onboarding copy claims only local review candidates with deletion-safety limits.
-- [x] Similar, accidental, and blurry scan results replace fixture placeholders with local low-confidence visual heuristics.
+- [x] Similar, accidental, and blurry scan results replace fixture placeholders with local low-confidence Vision and explainable visual signals.
 - [x] Empty, denied-permission, and no-candidate states are implemented.
 - [x] Interrupted-scan state is implemented.
 - [ ] TestFlight feedback loop with parent users is complete.

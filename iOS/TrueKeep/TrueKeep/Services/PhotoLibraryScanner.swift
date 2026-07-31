@@ -188,11 +188,29 @@ struct PhotoQualityAssessment: Hashable, Sendable {
     var overallQuality: Double
     var blurRisk: Double
     var accidentalRisk: Double
+    var faceCaptureQuality: Double?
+    var isUtility: Bool
+    var source: PhotoQualitySource
 
-    init(overallQuality: Double, blurRisk: Double, accidentalRisk: Double) {
+    init(
+        overallQuality: Double,
+        blurRisk: Double,
+        accidentalRisk: Double,
+        faceCaptureQuality: Double? = nil,
+        isUtility: Bool = false,
+        source: PhotoQualitySource = .heuristic
+    ) {
         self.overallQuality = Self.clamp(overallQuality)
         self.blurRisk = Self.clamp(blurRisk)
         self.accidentalRisk = Self.clamp(accidentalRisk)
+        self.faceCaptureQuality = faceCaptureQuality.map(Self.clamp)
+        self.isUtility = isUtility
+        self.source = source
+    }
+
+    var recommendedKeepScore: Double {
+        guard let faceCaptureQuality else { return overallQuality }
+        return (overallQuality * 0.8) + (faceCaptureQuality * 0.2)
     }
 
     static func heuristic(from features: PhotoQualityFeatures) -> PhotoQualityAssessment {
@@ -222,7 +240,8 @@ struct PhotoQualityAssessment: Hashable, Sendable {
         return PhotoQualityAssessment(
             overallQuality: overallQuality,
             blurRisk: blurRisk,
-            accidentalRisk: accidentalRisk
+            accidentalRisk: accidentalRisk,
+            source: .heuristic
         )
     }
 
@@ -231,13 +250,75 @@ struct PhotoQualityAssessment: Hashable, Sendable {
     }
 }
 
+enum PhotoQualitySource: String, Hashable, Sendable {
+    case heuristic
+    case visionAesthetics
+    case customCoreML
+}
+
 protocol PhotoQualityScoring: Sendable {
-    func assessment(for features: PhotoQualityFeatures) -> PhotoQualityAssessment?
+    func assessment(
+        for image: CGImage,
+        features: PhotoQualityFeatures
+    ) -> PhotoQualityAssessment?
 }
 
 struct HeuristicPhotoQualityScorer: PhotoQualityScoring {
-    func assessment(for features: PhotoQualityFeatures) -> PhotoQualityAssessment? {
+    func assessment(
+        for image: CGImage,
+        features: PhotoQualityFeatures
+    ) -> PhotoQualityAssessment? {
         PhotoQualityAssessment.heuristic(from: features)
+    }
+}
+
+struct VisionPhotoQualityScorer: PhotoQualityScoring {
+    func assessment(
+        for image: CGImage,
+        features: PhotoQualityFeatures
+    ) -> PhotoQualityAssessment? {
+        let aestheticsRequest = VNCalculateImageAestheticsScoresRequest()
+        let faceQualityRequest = VNDetectFaceCaptureQualityRequest()
+        faceQualityRequest.revision = VNDetectFaceCaptureQualityRequestRevision3
+
+        do {
+            let handler = VNImageRequestHandler(cgImage: image, options: [:])
+            try handler.perform([aestheticsRequest, faceQualityRequest])
+        } catch {
+            return nil
+        }
+
+        guard let aesthetics = aestheticsRequest.results?.first else { return nil }
+        let faceQualities = faceQualityRequest.results?.compactMap(\.faceCaptureQuality) ?? []
+
+        return Self.assessment(
+            overallScore: Double(aesthetics.overallScore),
+            isUtility: aesthetics.isUtility,
+            faceCaptureQualities: faceQualities.map(Double.init),
+            heuristic: PhotoQualityAssessment.heuristic(from: features)
+        )
+    }
+
+    static func assessment(
+        overallScore: Double,
+        isUtility: Bool,
+        faceCaptureQualities: [Double],
+        heuristic: PhotoQualityAssessment
+    ) -> PhotoQualityAssessment {
+        let normalizedOverallQuality = (overallScore + 1.0) / 2.0
+        let modelAccidentalRisk = isUtility ? 0 : max(0, -overallScore)
+        let faceCaptureQuality = faceCaptureQualities.isEmpty
+            ? nil
+            : faceCaptureQualities.reduce(0, +) / Double(faceCaptureQualities.count)
+
+        return PhotoQualityAssessment(
+            overallQuality: normalizedOverallQuality,
+            blurRisk: heuristic.blurRisk,
+            accidentalRisk: max(heuristic.accidentalRisk, modelAccidentalRisk),
+            faceCaptureQuality: faceCaptureQuality,
+            isUtility: isUtility,
+            source: .visionAesthetics
+        )
     }
 }
 
@@ -260,7 +341,10 @@ struct CoreMLPhotoQualityScorer: PhotoQualityScoring, @unchecked Sendable {
         self.model = model
     }
 
-    func assessment(for features: PhotoQualityFeatures) -> PhotoQualityAssessment? {
+    func assessment(
+        for image: CGImage,
+        features: PhotoQualityFeatures
+    ) -> PhotoQualityAssessment? {
         guard let input = makeInput(from: features),
               let prediction = try? model.prediction(from: input)
         else {
@@ -291,7 +375,8 @@ struct CoreMLPhotoQualityScorer: PhotoQualityScoring, @unchecked Sendable {
         return PhotoQualityAssessment(
             overallQuality: overallQuality ?? 0.5,
             blurRisk: blurRisk ?? 0,
-            accidentalRisk: accidentalRisk ?? 0
+            accidentalRisk: accidentalRisk ?? 0,
+            source: .customCoreML
         )
     }
 
@@ -424,10 +509,10 @@ struct SystemPhotoLibraryScanner: PhotoLibraryScanning {
 
     init(
         policy: PhotoLibraryScanPolicy = .init(),
-        qualityScorer: (any PhotoQualityScoring)? = CoreMLPhotoQualityScorer()
+        qualityScorer: (any PhotoQualityScoring)? = nil
     ) {
         self.policy = policy
-        self.qualityScorer = qualityScorer ?? HeuristicPhotoQualityScorer()
+        self.qualityScorer = qualityScorer ?? VisionPhotoQualityScorer()
     }
 
     func scan(access: PhotoLibraryAccess) async -> CleanupFlowState {
@@ -581,7 +666,7 @@ enum PhotoVisualClassifier {
             guard cluster.count >= 2 else { continue }
 
             let keepAssetID = cluster.max { lhs, rhs in
-                lhs.metrics.quality.overallQuality < rhs.metrics.quality.overallQuality
+                lhs.metrics.quality.recommendedKeepScore < rhs.metrics.quality.recommendedKeepScore
             }?.assetID
             let groupID = stableGroupID(for: cluster.map(\.assetID))
 
@@ -721,7 +806,7 @@ enum PhotoVisualAnalyzer {
             brightness: brightness,
             saturation: saturation,
             sharpness: sharpness,
-            quality: qualityScorer.assessment(for: qualityFeatures)
+            quality: qualityScorer.assessment(for: cgImage, features: qualityFeatures)
                 ?? PhotoQualityAssessment.heuristic(from: qualityFeatures)
         )
     }

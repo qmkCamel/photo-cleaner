@@ -128,7 +128,7 @@ Disclosure for App Review notes:
 
 - Screenshot candidates are captured from UI automation.
 - Sample cleanup groups appear only when launched with `-TrueKeepUseSampleCleanupData`.
-- The default launch path uses real Photos metadata and local thumbnail heuristics instead of sample cleanup groups.
+- The default launch path uses real Photos metadata, on-device Vision analysis, and local explainable thumbnail signals instead of sample cleanup groups.
 - Any final public screenshots that show sample items should be treated as representative demo content, not as a scan result from a real user library.
 
 ## Naming And Availability Notes

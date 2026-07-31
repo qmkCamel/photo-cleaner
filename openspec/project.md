@@ -14,9 +14,9 @@ TrueKeep / 留真是一个 iOS 照片清理 app，重点是信任、本地处理
 ## 技术背景
 
 - 平台：`iOS/TrueKeep` 下的 iOS SwiftUI app。
-- 最低部署版本：iOS 17.0。
+- 最低部署版本：iOS 18.0。
 - Xcode 项目：`iOS/TrueKeep/TrueKeep.xcodeproj`。
-- 项目生成源：`iOS/TrueKeep/project.yml`，但当前环境没有安装 `xcodegen`。
+- 项目生成源：`iOS/TrueKeep/project.yml`，通过 XcodeGen 同步生成工程文件。
 - 本地扫描入口：`TrueKeep/Services/PhotoLibraryScanner.swift`。
 - 单元测试：`TrueKeepTests`。
 - UI 测试：`TrueKeepUITests`。

@@ -23,7 +23,7 @@ If you choose Limited Photos Access, TrueKeep can only scan the items you allow.
 
 ## Local Processing
 
-TrueKeep identifies screenshots and large videos from Photos metadata. Similar-photo, blurry-photo, and accidental-shot candidates are generated from bounded local thumbnail heuristics. These results are review candidates, not automatic deletion decisions.
+TrueKeep identifies screenshots and large videos from Photos metadata. Similar-photo, overall-quality, blurry-photo, and accidental-shot candidates use bounded on-device Vision analysis together with local explainable thumbnail signals. These results are review candidates, not automatic deletion decisions. Images marked as utility content are not treated as cleanup candidates from that label alone.
 
 The current visual scan does not allow network-backed iCloud thumbnail downloads.
 

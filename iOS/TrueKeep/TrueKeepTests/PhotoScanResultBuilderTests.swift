@@ -1,5 +1,6 @@
 import XCTest
 import CoreML
+import CoreGraphics
 @testable import TrueKeep
 
 final class PhotoScanResultBuilderTests: XCTestCase {
@@ -337,6 +338,51 @@ final class PhotoScanResultBuilderTests: XCTestCase {
         XCTAssertFalse(classifications["sharp-but-worse-quality"]?.recommendedKeep ?? true)
     }
 
+    func testVisualClassifierUsesFaceCaptureQualityAsRecommendedKeepSupport() {
+        let now = Date(timeIntervalSince1970: 1_780_000_000)
+        let classifications = PhotoVisualClassifier.classifications(
+            from: [
+                PhotoVisualInput(
+                    assetID: "lower-face-quality",
+                    creationDate: now,
+                    metrics: PhotoVisualMetrics(
+                        perceptualHash: 0b1010,
+                        brightness: 0.45,
+                        saturation: 0.3,
+                        sharpness: 0.05,
+                        quality: PhotoQualityAssessment(
+                            overallQuality: 0.8,
+                            blurRisk: 0.05,
+                            accidentalRisk: 0.02,
+                            faceCaptureQuality: 0.2,
+                            source: .visionAesthetics
+                        )
+                    )
+                ),
+                PhotoVisualInput(
+                    assetID: "higher-face-quality",
+                    creationDate: now.addingTimeInterval(20),
+                    metrics: PhotoVisualMetrics(
+                        perceptualHash: 0b1011,
+                        brightness: 0.45,
+                        saturation: 0.3,
+                        sharpness: 0.05,
+                        quality: PhotoQualityAssessment(
+                            overallQuality: 0.8,
+                            blurRisk: 0.05,
+                            accidentalRisk: 0.02,
+                            faceCaptureQuality: 0.9,
+                            source: .visionAesthetics
+                        )
+                    )
+                )
+            ]
+        )
+
+        XCTAssertFalse(classifications["lower-face-quality"]?.recommendedKeep ?? true)
+        XCTAssertTrue(classifications["higher-face-quality"]?.recommendedKeep ?? false)
+    }
+
     func testVisualClassifierDoesNotGroupNearHashesOutsideTimeWindow() {
         let now = Date(timeIntervalSince1970: 1_780_000_000)
         let classifications = PhotoVisualClassifier.classifications(
@@ -439,6 +485,78 @@ final class PhotoScanResultBuilderTests: XCTestCase {
         XCTAssertEqual(assessment?.accidentalRisk, 0.08)
     }
 
+    func testVisionQualityScorerNormalizesAestheticsAndAveragesFaceQuality() {
+        let assessment = VisionPhotoQualityScorer.assessment(
+            overallScore: 0.6,
+            isUtility: false,
+            faceCaptureQualities: [0.6, 0.8],
+            heuristic: PhotoQualityAssessment(
+                overallQuality: 0.4,
+                blurRisk: 0.2,
+                accidentalRisk: 0.1
+            )
+        )
+
+        XCTAssertEqual(assessment.overallQuality, 0.8, accuracy: 0.0001)
+        XCTAssertEqual(assessment.faceCaptureQuality ?? 0, 0.7, accuracy: 0.0001)
+        XCTAssertEqual(assessment.blurRisk, 0.2, accuracy: 0.0001)
+        XCTAssertEqual(assessment.accidentalRisk, 0.1, accuracy: 0.0001)
+        XCTAssertEqual(assessment.source, .visionAesthetics)
+    }
+
+    func testVisionQualityScorerUsesOnlyExtremelyLowNonUtilityScoreAsAccidentalRisk() {
+        let assessment = VisionPhotoQualityScorer.assessment(
+            overallScore: -0.9,
+            isUtility: false,
+            faceCaptureQualities: [],
+            heuristic: PhotoQualityAssessment(
+                overallQuality: 0.5,
+                blurRisk: 0.1,
+                accidentalRisk: 0.2
+            )
+        )
+
+        XCTAssertEqual(assessment.accidentalRisk, 0.9, accuracy: 0.0001)
+    }
+
+    func testVisionQualityScorerDoesNotTreatUtilityAsAccidental() {
+        let assessment = VisionPhotoQualityScorer.assessment(
+            overallScore: -0.95,
+            isUtility: true,
+            faceCaptureQualities: [],
+            heuristic: PhotoQualityAssessment(
+                overallQuality: 0.5,
+                blurRisk: 0.1,
+                accidentalRisk: 0.2
+            )
+        )
+
+        XCTAssertTrue(assessment.isUtility)
+        XCTAssertEqual(assessment.accidentalRisk, 0.2, accuracy: 0.0001)
+    }
+
+    func testVisualAnalyzerFallsBackToHeuristicsWhenVisionScoringFails() throws {
+        let context = try XCTUnwrap(
+            CGContext(
+                data: nil,
+                width: 4,
+                height: 4,
+                bitsPerComponent: 8,
+                bytesPerRow: 16,
+                space: CGColorSpaceCreateDeviceRGB(),
+                bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+            )
+        )
+        let image = try XCTUnwrap(context.makeImage())
+
+        let metrics = PhotoVisualAnalyzer.metrics(
+            from: image,
+            qualityScorer: NilPhotoQualityScorer()
+        )
+
+        XCTAssertEqual(metrics?.quality.source, .heuristic)
+    }
+
     private func featurePrint(_ values: [Float]) -> PhotoFeaturePrint {
         var mutableValues = values
         let data = mutableValues.withUnsafeMutableBytes { buffer in
@@ -449,6 +567,15 @@ final class PhotoScanResultBuilderTests: XCTestCase {
             elementType: .float,
             elementCount: values.count
         )
+    }
+}
+
+private struct NilPhotoQualityScorer: PhotoQualityScoring {
+    func assessment(
+        for image: CGImage,
+        features: PhotoQualityFeatures
+    ) -> PhotoQualityAssessment? {
+        nil
     }
 }
 

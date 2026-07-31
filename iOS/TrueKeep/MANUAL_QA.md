@@ -151,9 +151,9 @@ Automated verification:
 
 Implemented coverage:
 
-- Similar-photo candidates are generated from local thumbnail perceptual hashes inside a short time window.
-- Similar groups recommend the sharpest candidate as the keep item and do not select it for deletion by default.
-- Accidental-shot candidates are generated from local thumbnail brightness, saturation, and edge-sharpness heuristics.
+- Similar-photo candidates are generated from local Vision feature prints inside a short time window, with pHash fallback when feature prints are unavailable.
+- Similar groups use Vision aesthetics quality as the primary recommended-keep signal and face capture quality as a bounded assist; the recommended item is not selected for deletion by default.
+- Accidental-shot candidates conservatively combine extremely low non-utility Vision aesthetics scores with local thumbnail brightness, saturation, and edge-sharpness heuristics.
 - Blurry-photo candidates are generated from local thumbnail edge-sharpness heuristics.
 - Low Power Mode uses a smaller visual-classification limit to keep local scanning bounded.
 - Public permission and Info.plist copy now describe visual results as local review candidates and do not claim automatic deletion or upload behavior.

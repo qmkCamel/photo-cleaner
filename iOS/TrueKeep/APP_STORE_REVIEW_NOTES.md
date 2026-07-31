@@ -22,15 +22,16 @@ Current real scan coverage:
 
 - Screenshots and screen captures identified from Photos metadata.
 - Long or large videos identified from Photos metadata and duration estimates.
-- Similar-photo candidates identified on device from local thumbnail perceptual hashes inside a short time window.
-- Accidental-shot and blurry-photo candidates identified on device from local thumbnail brightness, saturation, and edge-sharpness heuristics.
+- Similar-photo candidates identified on device from Vision feature prints inside a short time window.
+- Overall photo quality ranked on device with the iOS 18 Vision image-aesthetics model; face capture quality provides a bounded assist when recommending a keep item in a similar group.
+- Accidental-shot candidates use a conservative combination of extremely low non-utility Vision aesthetics scores and local thumbnail brightness, saturation, and edge-sharpness signals. Blurry-photo reasons remain based on local edge sharpness.
 - Visual classifications are treated as low-confidence review candidates, not automatic deletion decisions.
 - The scan does not allow network-backed iCloud thumbnail downloads for visual classification.
 
 Sample/demo coverage:
 
 - Fixture/sample groups remain isolated behind the internal `-TrueKeepUseSampleCleanupData` launch argument for UI automation and design review only.
-- The default launch path uses real metadata and local visual heuristics instead of placeholder task cards.
+- The default launch path uses real metadata, on-device Vision analysis, and local explainable signals instead of placeholder task cards.
 
 Deletion safety:
 

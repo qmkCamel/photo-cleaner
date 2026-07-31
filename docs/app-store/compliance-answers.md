@@ -110,6 +110,6 @@ Reason:
 
 - Do not claim system cache cleaning, virus removal, phone speedup, or automatic cleanup.
 - Do not imply photos are uploaded or analyzed in the cloud.
-- Do not imply heuristic similar/blurry/accidental classifications are certain.
+- Do not imply Vision or heuristic similar/blurry/accidental classifications are certain.
 - State that deletion requires user review and confirmation.
 - State that iCloud Photos deletion may sync to other devices.
