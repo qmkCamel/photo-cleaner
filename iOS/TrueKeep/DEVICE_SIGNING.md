@@ -4,10 +4,17 @@ This note records what is needed before TrueKeep can be installed on a physical 
 
 ## Current State
 
+- Release Team: `D8BE8WBTV5`
 - Bundle ID: `app.truekeep.ios`
 - Project: `TrueKeep.xcodeproj`
 - Scheme: `TrueKeep`
-- Local iPhone target has been detected by Xcode tools.
+- `project.yml` commits the confirmed release Team, and XcodeGen propagates it to the generated project.
+- 2026-07-31: Xcode automatic signing confirmed that `app.truekeep.ios` is registered to Team `D8BE8WBTV5`.
+- 2026-07-31: a Debug device build used `iOS Team Provisioning Profile: *`, installed on an iPhone 16 Plus (iOS 26.2.1; device identifier intentionally omitted), and launched with both deletion safety controls enabled.
+- 2026-07-31: Release archive succeeded at `/tmp/TrueKeepDistribution-20260731-1504.xcarchive`.
+- 2026-07-31: local App Store Connect export succeeded at `/tmp/TrueKeepAppStoreExport-20260731-1505/TrueKeep.ipa`.
+- Distribution export used `Cloud Managed Apple Distribution`, Team `D8BE8WBTV5`, application identifier `D8BE8WBTV5.app.truekeep.ios`, and `iOS Team Store Provisioning Profile: app.truekeep.ios`.
+- Full real-library physical-device smoke and TestFlight validation remain open. No destructive Photos test was run.
 - 2026-06-11 09:01 CST check: `xcrun devicectl list devices` sees three physical iPhone entries, but all are currently `unavailable`.
 - 2026-06-11 09:01 CST check: `xcodebuild -showdestinations` lists only the generic iOS device placeholder and simulators; no physical iPhone is currently available as a build destination.
 - 2026-06-11 09:01 CST check: Keychain contains `Apple Development: Meikai Qu (KTTVMPA76Y)`.
@@ -19,32 +26,26 @@ This note records what is needed before TrueKeep can be installed on a physical 
 - 2026-06-11 09:45 CST recheck: `xcodebuild -showdestinations` still lists no real physical iPhone destination for the `TrueKeep` scheme.
 - 2026-06-11 09:45 CST recheck: local provisioning profile count is still `0`.
 - Unsigned iPhoneOS compilation succeeds with `CODE_SIGNING_ALLOWED=NO`.
-- Signed install is blocked because Xcode cannot use a valid Apple Developer account session and no matching local provisioning profile exists for `app.truekeep.ios`.
+- The 2026-06-11 signed-install blocker below is retained as historical evidence and was cleared on 2026-07-31.
 - Debug builds now keep the deletion safety lock active by default, even when launched directly from Xcode without extra arguments.
-- The local Xcode account session must be refreshed in Xcode before automatic provisioning can create or download profiles.
 
-## What the Account Owner Must Do
+## Confirmed Signing Source Of Truth
 
 Do not share Apple ID passwords, 2FA codes, app-specific passwords, or Keychain secrets in this repo or chat.
 
-1. Open Xcode.
-2. Go to `Xcode > Settings > Accounts`.
-3. Re-authenticate the Apple ID that should own the development signing assets.
-4. Complete any 2FA prompt in Xcode.
-5. Confirm the Apple Developer Team ID to use for this app.
-6. Confirm whether `app.truekeep.ios` should remain the Bundle ID. If it is unavailable in the account, choose a unique replacement such as `com.<team-or-name>.truekeep`.
-7. In the TrueKeep target, enable `Automatically manage signing` for the chosen Team.
-
-Keep `DEVELOPMENT_TEAM` empty in `project.yml` until the release source-of-truth Team is confirmed. This avoids committing a personal Team ID accidentally.
+1. Keep Team `D8BE8WBTV5` as the release source of truth.
+2. Keep Bundle ID `app.truekeep.ios`; Apple Developer Services confirmed it is registered to this Team.
+3. Keep automatic signing enabled for the TrueKeep target.
+4. If the account session expires, re-authenticate the same Team in `Xcode > Settings > Accounts` and rerun the checks below.
 
 ## Safe Device Verification Command
 
-After the account session and provisioning profile are fixed, the preferred path is to use the scripted dry-run first:
+Use the scripted dry-run first:
 
 ```bash
 cd /Users/edge/side/photo-cleaner
 python3 iOS/TrueKeep/Scripts/device_smoke.py \
-  --team-id <TEAM_ID> \
+  --team-id D8BE8WBTV5 \
   --device-id <DEVICE_ID>
 ```
 
@@ -53,7 +54,7 @@ The dry-run prints the exact `devicectl` and `xcodebuild` commands without build
 ```bash
 cd /Users/edge/side/photo-cleaner
 python3 iOS/TrueKeep/Scripts/device_smoke.py \
-  --team-id <TEAM_ID> \
+  --team-id D8BE8WBTV5 \
   --device-id <DEVICE_ID> \
   --execute
 ```
@@ -71,7 +72,7 @@ xcodebuild build \
   -destination 'platform=iOS,id=<DEVICE_ID>' \
   -derivedDataPath /tmp/TrueKeepDeviceSmokeBuild \
   -allowProvisioningUpdates \
-  DEVELOPMENT_TEAM=<TEAM_ID> \
+  DEVELOPMENT_TEAM=D8BE8WBTV5 \
   CODE_SIGN_STYLE=Automatic \
   CODE_SIGN_IDENTITY='Apple Development'
 ```
@@ -89,7 +90,7 @@ xcodebuild build \
   -destination 'generic/platform=iOS' \
   -derivedDataPath /tmp/TrueKeepSignedGenericBuild \
   -allowProvisioningUpdates \
-  DEVELOPMENT_TEAM=<TEAM_ID> \
+  DEVELOPMENT_TEAM=D8BE8WBTV5 \
   CODE_SIGN_STYLE=Automatic \
   CODE_SIGN_IDENTITY='Apple Development'
 ```
@@ -135,8 +136,6 @@ Do not use either opt-in during normal physical-device smoke testing.
 
 ## Release Blockers
 
-- Confirm Team ID and Bundle ID.
-- Re-authenticate the Apple Developer account in Xcode so `xcodebuild -allowProvisioningUpdates` can access account credentials.
-- Generate or download a development provisioning profile for the physical-device smoke test.
-- Generate a distribution profile before App Store archive validation.
-- Re-run the physical-device smoke test without changing deletion safety behavior.
+- Complete the full physical-device smoke criteria above without changing deletion safety behavior.
+- Upload a release candidate to TestFlight and complete a real-device TestFlight smoke pass.
+- Keep the Xcode account session valid for future provisioning/profile renewal.

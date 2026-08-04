@@ -67,6 +67,7 @@ def launch_command(device_id: str) -> list[str]:
         "--environment-variables",
         json.dumps({"TRUEKEEP_DISABLE_PHOTO_DELETION": "1"}),
         BUNDLE_ID,
+        "--",
         "-TrueKeepDisablePhotoDeletion",
     ]
 

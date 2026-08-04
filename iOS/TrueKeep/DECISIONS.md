@@ -36,10 +36,10 @@ This file records technical choices and product decisions made while turning the
   - Reason: the same assets appear across result previews, review groups, and Review Bin. A stable in-memory cache avoids repeated Photos requests without persisting user photos outside the system library.
 - Add a debug-only deletion safety lock controlled by launch argument or environment.
   - Reason: manual device testing sometimes needs real Photos permission and scan flows, but should be able to run with deletion disabled. Launching with `-TrueKeepDisablePhotoDeletion` or `TRUEKEEP_DISABLE_PHOTO_DELETION=1` makes the deletion service return a failure without calling Photos deletion APIs.
-- Keep device signing/provisioning as an explicit release blocker.
-  - Reason: the app compiles for iPhoneOS, but local installation failed because no matching development provisioning profile exists for `app.truekeep.ios` and the configured Apple account could not refresh profiles.
-- Keep `DEVELOPMENT_TEAM` empty in `project.yml` until the release Team is confirmed.
-  - Reason: the repo should not accidentally commit a personal Apple Developer Team ID. Device builds can pass `DEVELOPMENT_TEAM=<TEAM_ID>` at build time until the source-of-truth account is selected.
+- Keep device signing/provisioning as an explicit release blocker. Resolved on 2026-07-31 after signed device install, safe launch, and App Store export succeeded.
+  - Reason: the original local installation failed because no matching development provisioning profile existed for `app.truekeep.ios` and the configured Apple account could not refresh profiles.
+- Keep `DEVELOPMENT_TEAM` empty in `project.yml` until the release Team is confirmed. Superseded on 2026-07-31 by confirmed Team `D8BE8WBTV5`.
+  - Reason: the repo should not accidentally commit a provisional Team ID. Once Apple Developer Services confirmed the Team and Bundle ID, the source-of-truth Team was committed to the XcodeGen configuration.
 - Scan Photos assets in batches and yield between batches.
   - Reason: large libraries should not be processed as one long synchronous enumeration. The scanner now has a batch policy and cancellation checks before each batch.
 - Use a smaller scan batch size in Low Power Mode.

@@ -1,6 +1,6 @@
 # TrueKeep App Store Submission Runbook
 
-Updated: 2026-06-13
+Updated: 2026-07-31
 
 This runbook is the ordered path from the current local release candidate to an App Store submission. It separates local evidence that can be produced in this repo from external work that requires the Apple Developer account, a physical iPhone, hosted URLs, and App Store Connect.
 
@@ -14,13 +14,13 @@ Local evidence already prepared:
 - Privacy, support, and compliance drafts are saved in `../../docs/app-store/`.
 - Native and composed 6.9-inch screenshot candidates are saved in `MarketingScreenshots/2026-06-13-1811-photo-video-copy/`.
 - Physical-device smoke runner is prepared at `Scripts/device_smoke.py`, with dry-run as the default and deletion disabled during execution. Debug builds also keep the deletion safety lock active by default.
+- Release Team `D8BE8WBTV5` and Bundle ID `app.truekeep.ios` are confirmed.
+- Automatic Development signing, physical-device installation, and deletion-safe launch have succeeded.
+- Release archive and local App Store Connect export have succeeded with cloud-managed Apple Distribution signing.
 
 Submission blockers still open:
 
-- Apple Developer account session must be refreshed in Xcode.
-- Release Team ID and Bundle ID must be confirmed.
-- Development and distribution provisioning profiles must be created or downloaded.
-- Signed install and physical-device smoke test must pass.
+- Full physical-device smoke coverage must pass; only signed install and deletion-safe launch are currently confirmed.
 - TestFlight upload and real-device TestFlight smoke must pass.
 - Privacy Policy URL and Support URL must be hosted and verified.
 - App Store Connect compliance answers, metadata, screenshots, and Review Notes must be entered and approved by the account owner.
@@ -31,7 +31,7 @@ Submission blockers still open:
 - Do not share Apple ID passwords, 2FA codes, app-specific passwords, Keychain secrets, certificates, or provisioning profiles in this repo or chat.
 - Do not run real Photos deletion during smoke testing. Debug builds are deletion-safe by default; keep `-TrueKeepDisablePhotoDeletion` and `TRUEKEEP_DISABLE_PHOTO_DELETION=1` enabled as extra guards until a separate destructive-test plan is approved.
 - Do not pass `-TrueKeepEnableDestructivePhotoDeletion` or `TRUEKEEP_ENABLE_DESTRUCTIVE_PHOTO_DELETION=1` during normal smoke testing.
-- Do not commit a personal or provisional `DEVELOPMENT_TEAM` into `project.yml` until the release Team is confirmed as the source of truth.
+- Keep committed `DEVELOPMENT_TEAM` aligned with confirmed release Team `D8BE8WBTV5`.
 - Do not mark the app ready for submission until every stop condition below is cleared with fresh evidence.
 
 ## Phase 1: Freeze The Local Candidate
@@ -58,7 +58,7 @@ Pass criteria:
 - Full preflight reports 0 failed checks.
 - `xcodebuild test` passes all unit and UI tests.
 - Unsigned Release archive succeeds.
-- `DEVELOPMENT_TEAM` remains empty in `project.yml`.
+- `DEVELOPMENT_TEAM` is `D8BE8WBTV5` in `project.yml`.
 - App Store metadata length checks pass.
 - Raw and composed screenshot exports are `1320 x 2868`.
 - Static support/privacy template links resolve locally.
@@ -82,16 +82,12 @@ Evidence to keep:
 
 Goal: install and smoke-test the app on a physical iPhone without deleting any photo or video items.
 
-Account-owner steps:
+Confirmed account state:
 
-1. Open Xcode.
-2. Go to `Xcode > Settings > Accounts`.
-3. Re-authenticate the Apple ID that owns the release team.
-4. Complete any 2FA prompt in Xcode.
-5. Confirm the Apple Developer Team ID to use for this app.
-6. Confirm whether `app.truekeep.ios` is available in that account.
-7. If the Bundle ID is not available, choose and document a replacement before changing project settings.
-8. Enable automatic signing for the TrueKeep target only after the Team and Bundle ID are confirmed.
+1. The release Team is `D8BE8WBTV5`.
+2. Bundle ID `app.truekeep.ios` is registered to that Team.
+3. Automatic signing is enabled through the committed XcodeGen source.
+4. Re-authenticate this account in Xcode only if a future provisioning request reports an expired session.
 
 Device discovery:
 
@@ -114,7 +110,7 @@ xcodebuild build \
   -destination 'generic/platform=iOS' \
   -derivedDataPath /tmp/TrueKeepSignedGenericBuild \
   -allowProvisioningUpdates \
-  DEVELOPMENT_TEAM=<TEAM_ID> \
+  DEVELOPMENT_TEAM=D8BE8WBTV5 \
   CODE_SIGN_STYLE=Automatic \
   CODE_SIGN_IDENTITY='Apple Development'
 ```
@@ -124,7 +120,7 @@ Safe physical-device dry-run:
 ```bash
 cd /Users/edge/side/photo-cleaner
 python3 iOS/TrueKeep/Scripts/device_smoke.py \
-  --team-id <TEAM_ID> \
+  --team-id D8BE8WBTV5 \
   --device-id <DEVICE_ID>
 ```
 
@@ -133,7 +129,7 @@ Safe physical-device execution:
 ```bash
 cd /Users/edge/side/photo-cleaner
 python3 iOS/TrueKeep/Scripts/device_smoke.py \
-  --team-id <TEAM_ID> \
+  --team-id D8BE8WBTV5 \
   --device-id <DEVICE_ID> \
   --execute
 ```
@@ -213,7 +209,7 @@ xcodebuild archive \
   -destination 'generic/platform=iOS' \
   -archivePath /tmp/TrueKeepDistribution.xcarchive \
   -allowProvisioningUpdates \
-  DEVELOPMENT_TEAM=<TEAM_ID> \
+  DEVELOPMENT_TEAM=D8BE8WBTV5 \
   CODE_SIGN_STYLE=Automatic
 ```
 

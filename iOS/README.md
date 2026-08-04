@@ -44,12 +44,12 @@ Real Photos authorization, screenshot scanning, large-video scanning, local thum
 
 ## Device Signing
 
-Physical-device installation is blocked until the Apple Developer account session and provisioning profile are fixed in Xcode. See [TrueKeep device signing](./TrueKeep/DEVICE_SIGNING.md) for the required account-owner steps and the safe smoke-test command.
+The confirmed release Team is `D8BE8WBTV5`. On 2026-07-31, automatic signing built, installed, and safely launched `app.truekeep.ios` on the connected iPhone; an App Store Connect export also succeeded with cloud-managed distribution signing. See [TrueKeep device signing](./TrueKeep/DEVICE_SIGNING.md) for the evidence and safe smoke-test command.
 
-After signing is fixed, preview the physical-device smoke command without installing:
+Preview the physical-device smoke command without installing:
 
 ```bash
-python3 iOS/TrueKeep/Scripts/device_smoke.py --team-id <TEAM_ID> --device-id <DEVICE_ID>
+python3 iOS/TrueKeep/Scripts/device_smoke.py --team-id D8BE8WBTV5 --device-id <DEVICE_ID>
 ```
 
 Add `--execute` only after the iPhone is available and the printed command is correct. The script launches with the deletion safety lock enabled.
@@ -70,7 +70,7 @@ Full local release preflight, including `xcodebuild test` and unsigned Release a
 python3 iOS/TrueKeep/Scripts/release_preflight.py --run-xcode
 ```
 
-The preflight script does not prove physical-device signing, TestFlight, hosted URLs, or App Store Connect approval. It reports those as external blockers when the local evidence is missing.
+The preflight script checks the committed Team and local provisioning-profile state, but it does not replace physical-device smoke coverage, TestFlight, hosted-URL verification, or App Store Connect approval.
 
 ## App Store Readiness
 

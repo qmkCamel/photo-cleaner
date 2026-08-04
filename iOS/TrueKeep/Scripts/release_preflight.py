@@ -19,6 +19,7 @@ IOS_ROOT = REPO_ROOT / "iOS" / "TrueKeep"
 PROJECT = IOS_ROOT / "TrueKeep.xcodeproj"
 SCHEME = "TrueKeep"
 SIMULATOR_ID = "0157BFC9-C9C9-48DC-845E-AABED7B2DCE9"
+EXPECTED_DEVELOPMENT_TEAM = "D8BE8WBTV5"
 
 CURRENT_SCREENSHOT_SET = IOS_ROOT / "MarketingScreenshots" / "2026-06-13-1811-photo-video-copy"
 APP_STORE_69 = CURRENT_SCREENSHOT_SET / "app-store-6.9"
@@ -359,19 +360,37 @@ class Preflight:
 
     def check_signing_state(self) -> None:
         project_yml = (IOS_ROOT / "project.yml").read_text(encoding="utf-8")
-        if 'DEVELOPMENT_TEAM: ""' in project_yml:
-            self.pass_("development-team-policy", "DEVELOPMENT_TEAM remains empty in project.yml")
+        expected_setting = f"DEVELOPMENT_TEAM: {EXPECTED_DEVELOPMENT_TEAM}"
+        if expected_setting in project_yml:
+            self.pass_(
+                "development-team-policy",
+                f"DEVELOPMENT_TEAM matches confirmed release Team {EXPECTED_DEVELOPMENT_TEAM}",
+            )
         else:
-            self.fail("development-team-policy", "DEVELOPMENT_TEAM is no longer empty in project.yml")
+            self.fail(
+                "development-team-policy",
+                f"project.yml must set DEVELOPMENT_TEAM to confirmed release Team {EXPECTED_DEVELOPMENT_TEAM}",
+            )
 
-        profiles_dir = Path.home() / "Library" / "MobileDevice" / "Provisioning Profiles"
         profiles = []
-        if profiles_dir.exists():
-            profiles = list(profiles_dir.glob("*.mobileprovision")) + list(profiles_dir.glob("*.provisionprofile"))
+        profile_dirs = (
+            Path.home() / "Library" / "Developer" / "Xcode" / "UserData" / "Provisioning Profiles",
+            Path.home() / "Library" / "MobileDevice" / "Provisioning Profiles",
+        )
+        for profiles_dir in profile_dirs:
+            if profiles_dir.exists():
+                profiles.extend(profiles_dir.glob("*.mobileprovision"))
+                profiles.extend(profiles_dir.glob("*.provisionprofile"))
         if profiles:
-            self.info("local-provisioning-profiles", f"{len(profiles)} profile file(s) present; signing still needs explicit validation")
+            self.info(
+                "local-provisioning-profiles",
+                f"{len(profiles)} profile file(s) present across current and legacy Xcode profile directories",
+            )
         else:
-            self.info("local-provisioning-profiles", "none found; physical-device and distribution signing remain blocked")
+            self.info(
+                "local-provisioning-profiles",
+                "none found across current and legacy Xcode profile directories; signed builds require automatic provisioning",
+            )
 
     def run_xcode_tests(self) -> None:
         cmd = [

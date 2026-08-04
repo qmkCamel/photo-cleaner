@@ -19,6 +19,50 @@ def load_module():
 
 
 class ReleasePreflightScriptTests(unittest.TestCase):
+    def test_signing_state_accepts_confirmed_team_and_current_xcode_profile_directory(self):
+        module = load_module()
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            ios_root = root / "iOS" / "TrueKeep"
+            home = root / "home"
+            profiles = home / "Library" / "Developer" / "Xcode" / "UserData" / "Provisioning Profiles"
+            ios_root.mkdir(parents=True)
+            profiles.mkdir(parents=True)
+            (ios_root / "project.yml").write_text(
+                f"settings:\n  base:\n    DEVELOPMENT_TEAM: {module.EXPECTED_DEVELOPMENT_TEAM}\n",
+                encoding="utf-8",
+            )
+            (profiles / "development.mobileprovision").write_bytes(b"profile")
+
+            with patch.object(module, "IOS_ROOT", ios_root), patch.object(module.Path, "home", return_value=home):
+                preflight = module.Preflight(run_xcode=False)
+                preflight.check_signing_state()
+
+        self.assertEqual([result.status for result in preflight.results], ["PASS", "INFO"])
+        self.assertIn(module.EXPECTED_DEVELOPMENT_TEAM, preflight.results[0].detail)
+        self.assertIn("1 profile file(s)", preflight.results[1].detail)
+
+    def test_signing_state_rejects_unconfirmed_team(self):
+        module = load_module()
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            ios_root = root / "iOS" / "TrueKeep"
+            home = root / "home"
+            ios_root.mkdir(parents=True)
+            (ios_root / "project.yml").write_text(
+                "settings:\n  base:\n    DEVELOPMENT_TEAM: WRONGTEAM\n",
+                encoding="utf-8",
+            )
+
+            with patch.object(module, "IOS_ROOT", ios_root), patch.object(module.Path, "home", return_value=home):
+                preflight = module.Preflight(run_xcode=False)
+                preflight.check_signing_state()
+
+        self.assertEqual(preflight.results[0].status, "FAIL")
+        self.assertIn(module.EXPECTED_DEVELOPMENT_TEAM, preflight.results[0].detail)
+
     def test_localized_copy_guard_fails_when_chinese_surfaces_use_review_bin(self):
         module = load_module()
 

@@ -496,6 +496,44 @@ Still not verified:
 - TestFlight install or smoke.
 - Hosted Support/Privacy URLs and App Store Connect approval.
 
+## 2026-07-31 15:05 Signing Chain And Safe Device Launch
+
+Verified configuration:
+
+- Confirmed release Team: `D8BE8WBTV5`.
+- Confirmed Bundle ID: `app.truekeep.ios`; Apple Developer Services returned the explicit identifier under Team `D8BE8WBTV5`.
+- Connected device: iPhone 16 Plus, iOS 26.2.1; the destination identifier is intentionally not committed to this public repository.
+- `project.yml` now commits the confirmed Team and the generated Xcode project uses it for application and test targets.
+
+Development signing and device evidence:
+
+- Automatic signed Debug device build succeeded with application identifier `D8BE8WBTV5.app.truekeep.ios`.
+- Xcode used `iOS Team Provisioning Profile: *`; the profile UUID is intentionally not committed.
+- `app.truekeep.ios` installed successfully on the connected iPhone.
+- The app launched successfully with `TRUEKEEP_DISABLE_PHOTO_DELETION=1` and `-TrueKeepDisablePhotoDeletion`.
+- No destructive Photos test was run and no photo or video deletion was requested.
+
+Distribution evidence:
+
+- Release archive succeeded: `/tmp/TrueKeepDistribution-20260731-1504.xcarchive`.
+- Local App Store Connect export succeeded: `/tmp/TrueKeepAppStoreExport-20260731-1505/TrueKeep.ipa`.
+- Export used `Cloud Managed Apple Distribution`, Team `D8BE8WBTV5`, application identifier `D8BE8WBTV5.app.truekeep.ios`, and `get-task-allow = 0`.
+- App Store profile: `iOS Team Store Provisioning Profile: app.truekeep.ios`, expiring 2027-07-31; the profile UUID is intentionally not committed.
+
+Automation verification:
+
+- `device_smoke.py` now inserts `--` before the app launch argument for current `devicectl` parsing.
+- End-to-end runner command: `python3 iOS/TrueKeep/Scripts/device_smoke.py --team-id D8BE8WBTV5 --device-id <DEVICE_ID> --execute`.
+- End-to-end runner result: signed build, install, and deletion-safe launch all succeeded.
+- Script unit tests: 12 tests passed, 0 failures.
+- Fast release preflight: 14 pass/info checks, 0 failures.
+
+Still not verified:
+
+- Full real-library physical-device smoke criteria after launch.
+- TestFlight upload, install, and smoke.
+- Hosted Support/Privacy URLs and App Store Connect approval.
+
 ## 2026-06-13 17:31 Debug Deletion Safety Default
 
 Automated verification:

@@ -40,6 +40,10 @@ class DeviceSmokeScriptTests(unittest.TestCase):
         self.assertTrue(any('"TRUEKEEP_DISABLE_PHOTO_DELETION": "1"' in part for part in command))
         self.assertIn("-TrueKeepDisablePhotoDeletion", command)
         self.assertIn("app.truekeep.ios", command)
+        self.assertEqual(
+            command[command.index("app.truekeep.ios") :],
+            ["app.truekeep.ios", "--", "-TrueKeepDisablePhotoDeletion"],
+        )
 
     def test_parse_args_requires_explicit_execute_for_mutating_install(self):
         module = load_module()

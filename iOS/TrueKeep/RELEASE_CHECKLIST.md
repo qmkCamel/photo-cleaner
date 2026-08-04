@@ -40,12 +40,12 @@ This is the working checklist for reaching a state that can be submitted to App 
 - [x] Automatic development-signing preflight has been attempted and the current Xcode account/profile blocker is documented.
 - [x] Physical-device smoke-test runner is prepared with dry-run default and deletion safety-lock launch arguments.
 - [x] App Store submission runbook exists with ordered local, signing, physical-device, TestFlight, hosted-URL, and App Store Connect gates.
-- [ ] Physical-device signed install succeeds after Apple Developer account re-authentication.
+- [x] Physical-device signed install succeeds after Apple Developer account re-authentication.
 - [ ] Physical-device smoke test succeeds with deletion safety lock enabled.
 - [x] Primary controls expose stable accessibility identifiers for automation.
 - [ ] Full VoiceOver accessibility audit is complete.
 - [x] Dynamic Type accessibility pass is complete.
-- [ ] Archive build succeeds with distribution signing.
+- [x] Release archive and local App Store export succeed with cloud-managed distribution signing.
 
 ## Privacy and App Store
 
@@ -72,10 +72,10 @@ This is the working checklist for reaching a state that can be submitted to App 
 
 ## Signing
 
-- [x] Device signing blocker is documented in `DEVICE_SIGNING.md`.
+- [x] Device signing state and cleared blocker evidence are documented in `DEVICE_SIGNING.md`.
 - [x] Local Apple Development certificate is present in Keychain.
 - [x] Automatic signing preflight failure is recorded with exact Xcode account/profile errors.
-- [ ] Apple Developer Team ID is confirmed as the release source of truth.
-- [ ] Bundle ID availability is confirmed in the chosen Apple Developer account.
-- [ ] Development provisioning profile exists for the connected iPhone.
-- [ ] Distribution signing assets are confirmed before archive validation.
+- [x] Apple Developer Team `D8BE8WBTV5` is confirmed as the release source of truth.
+- [x] Bundle ID `app.truekeep.ios` is registered in the chosen Apple Developer account.
+- [x] Development provisioning succeeds for the connected iPhone.
+- [x] Cloud-managed Apple Distribution signing and the App Store provisioning profile are confirmed by local export.
