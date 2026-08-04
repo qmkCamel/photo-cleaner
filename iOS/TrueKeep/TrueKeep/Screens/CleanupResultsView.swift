@@ -4,8 +4,11 @@ struct CleanupResultsView: View {
     var state: CleanupFlowState
     var scanLimitationWarning: String? = nil
     var shouldShowPhotoAccessPrompt: Bool = false
+    var hasCompletedScan: Bool = true
+    var canScan: Bool = false
     var isRequestingAccess: Bool = false
     var onRequestPhotoAccess: () -> Void = {}
+    var onScan: () -> Void = {}
     var onReviewTask: (CleanupTask) -> Void
 
     var body: some View {
@@ -15,7 +18,7 @@ struct CleanupResultsView: View {
                     VStack(alignment: .leading, spacing: 6) {
                         Text("扫描结果")
                             .font(TrueKeepTheme.Font.pageTitle)
-                        Text("我们找到了值得你复核的项目。")
+                        Text(headerMessage)
                             .font(TrueKeepTheme.Font.bodySmall)
                             .foregroundStyle(TrueKeepTheme.muted)
                             .lineLimit(nil)
@@ -40,7 +43,10 @@ struct CleanupResultsView: View {
                 }
 
                 if state.tasks.isEmpty {
-                    EmptyResultsState()
+                    if canScan {
+                        scanAction
+                    }
+                    EmptyResultsState(hasCompletedScan: hasCompletedScan)
                 } else {
                     HStack {
                         Text("预计可释放空间")
@@ -68,10 +74,45 @@ struct CleanupResultsView: View {
             .padding(20)
             .padding(.bottom, TrueKeepTheme.tabScrollBottomPadding)
         }
+        .accessibilityIdentifier(TrueKeepAccessibility.Control.cleanupResultsScreen.id)
+        .safeAreaInset(edge: .bottom) {
+            if canScan, !state.tasks.isEmpty {
+                resultsRescanFooter
+            }
+        }
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
-        .accessibilityIdentifier(TrueKeepAccessibility.Control.cleanupResultsScreen.id)
         .trueKeepScreenBackground()
+    }
+
+    private var headerMessage: String {
+        if !hasCompletedScan {
+            return "扫描后，本地复核候选会显示在这里。"
+        }
+        if state.tasks.isEmpty {
+            return "本次扫描没有发现需要复核的项目。"
+        }
+        return "我们找到了值得你复核的项目。"
+    }
+
+    @ViewBuilder
+    private var scanAction: some View {
+        PrimaryActionButton(title: hasCompletedScan ? "重新扫描" : "扫描相册", action: onScan)
+            .accessibilityIdentifier(TrueKeepAccessibility.Control.homeScan.id)
+    }
+
+    private var resultsRescanFooter: some View {
+        PrimaryActionButton(title: "重新扫描", action: onScan)
+            .accessibilityIdentifier(TrueKeepAccessibility.Control.homeScan.id)
+            .padding(.horizontal, 20)
+            .padding(.top, 12)
+            .padding(.bottom, 12)
+            .background(TrueKeepTheme.page.ignoresSafeArea(edges: .bottom))
+            .overlay(alignment: .top) {
+                Rectangle()
+                    .fill(TrueKeepTheme.line)
+                    .frame(height: 1)
+            }
     }
 }
 
@@ -121,17 +162,19 @@ private struct PhotoAccessPrompt: View {
 }
 
 private struct EmptyResultsState: View {
+    var hasCompletedScan: Bool
+
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Image(systemName: "checkmark.seal")
                 .font(TrueKeepTheme.Font.iconLarge)
                 .foregroundStyle(TrueKeepTheme.green)
-            Text("暂未发现可清理项目")
+            Text(hasCompletedScan ? "暂未发现可清理项目" : "尚未扫描相册")
                 .font(TrueKeepTheme.Font.sectionTitle)
                 .foregroundStyle(TrueKeepTheme.ink)
                 .lineLimit(nil)
                 .fixedSize(horizontal: false, vertical: true)
-            Text("当前本机规则没有发现可复核候选。截图、大视频、相似、误拍和模糊结果都会只作为候选项呈现，由你逐项确认。")
+            Text(message)
                 .font(TrueKeepTheme.Font.bodySmall)
                 .foregroundStyle(TrueKeepTheme.muted)
                 .lineLimit(nil)
@@ -142,6 +185,13 @@ private struct EmptyResultsState: View {
         .background(TrueKeepTheme.paper)
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).stroke(TrueKeepTheme.line))
+    }
+
+    private var message: String {
+        if hasCompletedScan {
+            return "当前本机规则没有发现可复核候选。截图、大视频、相似、误拍和模糊结果都会只作为候选项呈现，由你逐项确认。"
+        }
+        return "扫描只在本机进行。截图、大视频、相似、误拍和模糊结果都会先作为候选项呈现，由你逐项确认。"
     }
 }
 

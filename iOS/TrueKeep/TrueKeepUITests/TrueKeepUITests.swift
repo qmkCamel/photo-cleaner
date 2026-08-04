@@ -47,6 +47,46 @@ final class TrueKeepUITests: XCTestCase {
         XCTAssertFalse(app.staticTexts["授权前先说清楚"].exists)
     }
 
+    func testAuthorizedColdLaunchCanStartAndRepeatScanFromHome() {
+        launchWithArguments([
+            "-TrueKeepDisablePhotoDeletion",
+            "-TrueKeepResetIntroState",
+            "-TrueKeepUITestAuthorizedHome"
+        ])
+
+        assertHomeIsVisible()
+        XCTAssertTrue(app.staticTexts["尚未扫描相册"].waitForExistence(timeout: defaultTimeout))
+        assertButtonIsReady(ID.homeScan)
+        XCTAssertEqual(app.buttons[ID.homeScan].label, "扫描相册")
+
+        app.buttons[ID.homeScan].tap()
+        XCTAssertTrue(app.buttons[ID.viewScanResults].waitForExistence(timeout: defaultTimeout))
+        app.buttons[ID.viewScanResults].tap()
+
+        assertHomeIsVisible()
+        assertButtonIsReady(ID.homeScan)
+        XCTAssertEqual(app.buttons[ID.homeScan].label, "重新扫描")
+    }
+
+    func testCompletedResultsExposeRescanAboveTabBar() {
+        launchForUITestScenario("-TrueKeepUITestLimitedCompletedScan")
+        XCTAssertTrue(app.buttons[ID.viewScanResults].waitForExistence(timeout: defaultTimeout))
+        app.buttons[ID.viewScanResults].tap()
+
+        assertHomeIsVisible()
+        let rescanButton = app.buttons[ID.homeScan]
+        XCTAssertTrue(rescanButton.waitForExistence(timeout: defaultTimeout))
+        XCTAssertTrue(rescanButton.isHittable)
+        XCTAssertEqual(rescanButton.label, "重新扫描")
+
+        let tabBar = app.tabBars.firstMatch
+        XCTAssertTrue(tabBar.waitForExistence(timeout: defaultTimeout))
+        XCTAssertLessThanOrEqual(rescanButton.frame.maxY, tabBar.frame.minY + 1)
+
+        rescanButton.tap()
+        XCTAssertTrue(app.buttons[ID.viewScanResults].waitForExistence(timeout: defaultTimeout))
+    }
+
     func testSettingsRowsNavigateToDetailPages() {
         openMainThroughSettings()
 
@@ -97,7 +137,7 @@ final class TrueKeepUITests: XCTestCase {
         app.tabBars.buttons["首页"].tap()
 
         assertHomeIsVisible()
-        XCTAssertTrue(app.staticTexts["暂未发现可清理项目"].waitForExistence(timeout: defaultTimeout))
+        XCTAssertTrue(app.staticTexts["尚未扫描相册"].waitForExistence(timeout: defaultTimeout))
         XCTAssertFalse(app.buttons[ID.taskSimilar].exists)
         XCTAssertFalse(app.buttons[ID.taskAccidental].exists)
         XCTAssertFalse(app.buttons[ID.taskBlurry].exists)
@@ -222,7 +262,7 @@ final class TrueKeepUITests: XCTestCase {
         app.buttons[ID.welcomeLearnMore].tap()
         app.tabBars.buttons["首页"].tap()
         assertHomeIsVisible()
-        XCTAssertTrue(app.staticTexts["暂未发现可清理项目"].waitForExistence(timeout: defaultTimeout))
+        XCTAssertTrue(app.staticTexts["尚未扫描相册"].waitForExistence(timeout: defaultTimeout))
         attachScreenshot(named: "08-default-empty-no-fixtures")
     }
 
@@ -514,6 +554,7 @@ private enum ID {
     static let retryScan = "truekeep.scan.retry"
     static let viewScanResults = "truekeep.scan.view-results"
     static let cleanupResultsScreen = "truekeep.cleanup.results"
+    static let homeScan = "truekeep.cleanup.scan"
     static let addToReviewBin = "truekeep.review.add-to-review-bin"
     static let reviewAll = "truekeep.review.review-all"
     static let restoreReviewBinSelection = "truekeep.review-bin.restore-selection"

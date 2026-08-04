@@ -19,6 +19,7 @@ enum TrueKeepAccessibility {
         case reviewBinTab = "truekeep.tab.review-bin"
         case privacySafetyTab = "truekeep.tab.privacy-safety"
         case cleanupResultsScreen = "truekeep.cleanup.results"
+        case homeScan = "truekeep.cleanup.scan"
         case addToReviewBin = "truekeep.review.add-to-review-bin"
         case reviewAllInGroup = "truekeep.review.review-all"
         case previousReviewGroup = "truekeep.review.previous-group"

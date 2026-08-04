@@ -28,6 +28,7 @@ struct AppLaunchConfiguration: Hashable {
     static let uiTestScanInterruptedArgument = "-TrueKeepUITestScanInterrupted"
     static let uiTestLimitedCompletedScanArgument = "-TrueKeepUITestLimitedCompletedScan"
     static let uiTestScanInProgressArgument = "-TrueKeepUITestScanInProgress"
+    static let uiTestAuthorizedHomeArgument = "-TrueKeepUITestAuthorizedHome"
     static let uiTestDelayedPhotoAccessArgument = "-TrueKeepUITestDelayPhotoAccess"
     static let uiTestDelayedPhotoDeletionArgument = "-TrueKeepUITestDelayPhotoDeletion"
 
@@ -61,6 +62,8 @@ struct AppLaunchConfiguration: Hashable {
             .permissionIssue(.denied)
         case .scanInterrupted, .limitedCompletedScan, .scanInProgress:
             .scan
+        case .authorizedHome:
+            .main
         case nil:
             if access.requiresSettings {
                 .permissionIssue(access)
@@ -78,7 +81,7 @@ struct AppLaunchConfiguration: Hashable {
             .denied
         case .limitedCompletedScan:
             .limited
-        case .scanInterrupted, .scanInProgress:
+        case .scanInterrupted, .scanInProgress, .authorizedHome:
             .full
         case nil:
             .notDetermined
@@ -91,9 +94,13 @@ struct AppLaunchConfiguration: Hashable {
             .interrupted(message: "用户已取消")
         case .limitedCompletedScan:
             .completed(candidateCount: state.tasks.map(\.candidateCount).reduce(0, +))
-        case .scanInProgress, .permissionDenied, nil:
+        case .scanInProgress, .authorizedHome, .permissionDenied, nil:
             .scanning
         }
+    }
+
+    var initialHasCompletedScan: Bool {
+        usesSampleCleanupData || uiTestScenario == .limitedCompletedScan
     }
 
     static func markIntroCompleted() {
@@ -106,6 +113,7 @@ enum AppUITestLaunchScenario: Hashable {
     case scanInterrupted
     case limitedCompletedScan
     case scanInProgress
+    case authorizedHome
 
     init?(arguments: [String]) {
         if arguments.contains(AppLaunchConfiguration.uiTestPermissionDeniedArgument) {
@@ -116,6 +124,8 @@ enum AppUITestLaunchScenario: Hashable {
             self = .limitedCompletedScan
         } else if arguments.contains(AppLaunchConfiguration.uiTestScanInProgressArgument) {
             self = .scanInProgress
+        } else if arguments.contains(AppLaunchConfiguration.uiTestAuthorizedHomeArgument) {
+            self = .authorizedHome
         } else {
             return nil
         }
@@ -142,6 +152,7 @@ struct AppRootView: View {
     @State private var cleanupState: CleanupFlowState
     @State private var isRequestingPhotoAccess = false
     @State private var photoAccess: PhotoLibraryAccess = .notDetermined
+    @State private var hasCompletedScan = false
     @State private var scanStatus: PhotoScanProgressStatus = .scanning
     @State private var scanTask: Task<Void, Never>?
     @State private var activeScanID = UUID()
@@ -170,6 +181,7 @@ struct AppRootView: View {
         }
         self._phase = State(initialValue: launchConfiguration.initialPhase(for: initialPhotoAccess))
         self._photoAccess = State(initialValue: initialPhotoAccess)
+        self._hasCompletedScan = State(initialValue: launchConfiguration.initialHasCompletedScan)
         self._scanStatus = State(initialValue: launchConfiguration.initialScanStatus(for: initialCleanupState))
         self._cleanupState = State(initialValue: initialCleanupState)
     }
@@ -252,6 +264,7 @@ struct AppRootView: View {
         activeScanID = scanID
         scanStatus = .scanning
         cleanupState = PhotoScanResultBuilder.state(from: [])
+        hasCompletedScan = false
         phase = .scan
 
         let photoScanner = photoScanner
@@ -266,6 +279,7 @@ struct AppRootView: View {
                     scanStatus = .interrupted(message: "用户已取消")
                 } else {
                     cleanupState = scannedState
+                    hasCompletedScan = true
                     scanStatus = .completed(candidateCount: scannedState.tasks.map(\.candidateCount).reduce(0, +))
                 }
                 scanTask = nil
@@ -303,8 +317,11 @@ struct AppRootView: View {
                     state: cleanupState,
                     scanLimitationWarning: photoAccess.scanLimitationWarning,
                     shouldShowPhotoAccessPrompt: photoAccess == .notDetermined,
+                    hasCompletedScan: hasCompletedScan,
+                    canScan: photoAccess.canScan,
                     isRequestingAccess: isRequestingPhotoAccess,
                     onRequestPhotoAccess: { requestPhotoAccess() },
+                    onScan: { startPhotoScan(access: photoAccess) },
                     onReviewTask: { task in
                         guard cleanupState.selectReviewGroup(for: task.category) else { return }
                         homePath.append(.reviewGroup(task.category))

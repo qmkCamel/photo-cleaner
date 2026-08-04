@@ -34,6 +34,27 @@ final class PhotoLibraryAuthorizationTests: XCTestCase {
         XCTAssertEqual(PhotoPermissionDecision.phase(after: .notDetermined), .main)
     }
 
+    func testAuthorizedHomeScenarioStartsWithoutCompletedScan() {
+        let configuration = AppLaunchConfiguration(
+            arguments: [AppLaunchConfiguration.uiTestAuthorizedHomeArgument],
+            environment: [:]
+        )
+
+        XCTAssertEqual(configuration.uiTestScenario, .authorizedHome)
+        XCTAssertEqual(configuration.initialPhase(for: .full), .main)
+        XCTAssertEqual(configuration.initialPhotoAccess, .full)
+        XCTAssertFalse(configuration.initialHasCompletedScan)
+    }
+
+    func testSampleCleanupDataRepresentsCompletedScanResults() {
+        let configuration = AppLaunchConfiguration(
+            arguments: [AppLaunchConfiguration.sampleCleanupDataArgument],
+            environment: [:]
+        )
+
+        XCTAssertTrue(configuration.initialHasCompletedScan)
+    }
+
     func testPhotoPermissionCopyDescribesOnDeviceVisualCandidatesWithSafetyLimits() throws {
         XCTAssertEqual(
             PhotoLibraryAccess.notDetermined.displayMessage,
