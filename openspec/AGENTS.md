@@ -1,24 +1,30 @@
 # OpenSpec 使用说明
 
-本仓库的产品、行为、架构和用户可见流程变更都使用 OpenSpec 管理。
+本仓库的产品、行为、架构和用户可见流程变更都使用 OpenSpec 管理。`openspec/config.yaml` 是 CLI 读取的 schema、项目上下文和制品规则来源；`openspec/project.md` 保留为便于人工阅读的项目概览。
 
-后续所有项目的 OpenSpec 内容都使用中文撰写；除非某个工具强制要求固定英文关键字，否则 proposal、tasks、spec、design 和归档说明都保持中文。
+OpenSpec 正文默认使用中文，但 CLI 解析依赖的固定标题和关键字必须保留英文。不要把 `Why`、`What Changes`、`Capabilities`、`Impact`、`ADDED Requirements`、`MODIFIED Requirements`、`REMOVED Requirements`、`Requirement`、`Scenario`、`MUST` 或 `SHALL` 翻译成中文。
 
 ## 工作流
 
-1. 先阅读 `openspec/project.md` 和 `openspec/specs/` 下的相关规格。
+1. 先阅读 `openspec/config.yaml`、`openspec/project.md` 和 `openspec/specs/` 下的相关正式规格。
 2. 选择唯一、动词开头的变更编号，例如 `add-vision-quality-scanning`。
-3. 创建 `openspec/changes/<change-id>/proposal.md`、`tasks.md`，并在 `openspec/changes/<change-id>/specs/<capability>/spec.md` 写规格增量。
-4. 只实现变更描述中的范围；如果范围变化，先更新 proposal 和 tasks。
-5. 使用聚焦测试和该变更要求的更广泛检查完成验证。
-6. 变更被接受或发布后，把增量合入 `openspec/specs/`，再归档该变更。
+3. 按 `spec-driven` schema 创建 `proposal.md`、规格增量、需要时的 `design.md` 和分组编号的 `tasks.md`。使用 `openspec instructions <artifact> --change <change-id>` 获取当前模板。
+4. 开始实现前运行 `openspec status --change <change-id> --json`，确认 apply 所需制品齐全；只实现提案和规格描述的范围。
+5. 范围或实现决策变化时，先同步 proposal、design、规格增量和 tasks，再继续实现。
+6. 完成聚焦测试和更广泛检查后更新任务状态，并运行 `openspec validate <change-id> --type change --strict --no-interactive`。
+7. 归档前重新比较 `MODIFIED Requirements` 与当前 `openspec/specs/`。增量必须包含完整的最终 Requirement，禁止用陈旧增量覆盖后续已接受的规格。
+8. 变更被接受或发布后运行 `openspec archive <change-id> --yes`，把增量合入正式规格并归档。新 capability 归档后必须把自动生成的 `TBD` Purpose 改成真实说明。
+9. 最后运行 `python3 openspec/check.py`。已完成任务但仍停留在活跃目录的 change、不可解析的 proposal、严格校验失败或正式规格中的归档 `TBD` 都必须阻断交付。
 
-## 规格格式
+## 制品格式
 
-- 变更增量使用 `## 新增需求`、`## 修改需求` 或 `## 移除需求`。
-- 每条需求至少包含一个 `#### 场景：` 小节。
-- 需求使用明确的约束词，例如“必须”“不得”“应该”“可以”。
-- 规格聚焦行为；复杂实现细节只在必要时写入 `design.md`。
+- Proposal 至少使用固定标题 `## Why`、`## What Changes`、`## Capabilities` 和 `## Impact`；标题下的内容使用中文。
+- `Capabilities` 必须明确列出 New Capabilities 和 Modified Capabilities，名称与 `specs/<capability>/spec.md` 目录完全一致。
+- 规格增量使用 `## ADDED Requirements`、`## MODIFIED Requirements`、`## REMOVED Requirements` 或 `## RENAMED Requirements`。
+- 每条需求使用 `### Requirement:`，至少包含一个 `#### Scenario:`；正文使用明确的 `MUST` 或 `SHALL` 约束。
+- `MODIFIED Requirements` 必须复制并更新完整 Requirement，包括所有仍然有效的场景；不能只写新增场景。
+- Tasks 使用 `## 1. ...` 分组以及 `- [ ] 1.1 ...` 编号复选框，并保留可复现的验证记录。
+- 跨模块、状态所有权、性能、安全、迁移或需要说明取舍的变更必须提供 `design.md`。
 
 ## 项目规则
 

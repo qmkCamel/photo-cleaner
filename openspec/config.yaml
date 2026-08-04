@@ -1,0 +1,25 @@
+schema: spec-driven
+
+context: |
+  TrueKeep / 留真是一个信任优先的 iOS 本地照片清理 app，最低支持 iOS 18。
+  SwiftUI 工程位于 iOS/TrueKeep，XcodeGen 源是 iOS/TrueKeep/project.yml。
+  照片扫描只在本地运行，只产出复核候选，不自动删除、移动或上传照片与视频。
+  核心流程是：信任说明 -> 权限说明 -> 本地扫描 -> 任务复核 -> 复核箱 -> 二次删除确认。
+  Limited Photos Access 是有效状态；低置信度视觉候选和推荐保留项默认不得选中删除。
+  长耗时用户操作必须显示动作局部状态、允许不相关导航并提供取消、重试或恢复路径。
+
+rules:
+  proposal:
+    - 正文使用中文，但固定标题 Why、What Changes、Capabilities 和 Impact 必须保留英文。
+    - Capabilities 必须区分 New Capabilities 与 Modified Capabilities，并使用与 specs 目录一致的 kebab-case 名称。
+    - 明确写出非目标、信任边界和破坏性测试边界。
+  design:
+    - 使用中文说明真实状态所有者、调用链、替代方案、风险缓解和回滚路径。
+    - 涉及超过 300ms 的用户动作时引用全局 user-action-contract，不在项目内复制通用规则。
+  specs:
+    - 正文使用中文，但 ADDED Requirements、MODIFIED Requirements、REMOVED Requirements、RENAMED Requirements、Requirement、Scenario、MUST 和 SHALL 保留英文。
+    - MODIFIED Requirements 必须包含完整最终 Requirement 和所有仍然有效的场景，归档前与正式规格重新协调。
+    - 需求保持保守默认值、本地处理、有限权限和二次删除确认边界。
+  tasks:
+    - 使用编号分组和编号复选框；每项必须能够独立验证。
+    - 记录 OpenSpec 严格校验、聚焦测试、更广泛检查和用户可见 smoke 的实际结果。

@@ -1,8 +1,11 @@
 # platform-support Specification
 
 ## Purpose
-TBD - created by archiving change adopt-vision-aesthetics-ios18. Update Purpose after archive.
+
+平台支持规格定义 TrueKeep 原生 App、测试目标和本地视觉能力共同依赖的最低 iOS 版本，确保工程配置与运行时 API 边界一致。
+
 ## Requirements
+
 ### Requirement: TrueKeep 最低支持 iOS 18
 
 原生 App、单元测试和 UI 测试 MUST 以 iOS 18 或更高版本为最低部署目标，以统一使用系统图片美学评分能力。
