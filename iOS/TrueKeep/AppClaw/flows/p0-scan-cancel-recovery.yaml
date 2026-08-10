@@ -1,0 +1,23 @@
+appId: app.truekeep.ios
+name: P0 扫描取消与恢复
+description: 验证长时间扫描中可取消，取消不会改动照片，并可回到首页。
+platform: ios
+---
+setup:
+  - launchApp
+  - waitUntil: truekeep.scan.in-progress
+    timeout: 10
+steps:
+  - assert: 正在扫描你的相册
+  - assert: truekeep.scan.cancel
+  - tap: truekeep.scan.cancel
+  - waitUntil: truekeep.scan.retry
+    timeout: 10
+  - assert: 扫描已停止
+  - assert: 取消扫描不会删除或移动任何照片或视频。
+  - tap: truekeep.permission-issue.return-to-permission
+assertions:
+  - waitUntil: truekeep.cleanup.results
+    timeout: 10
+  - assert: truekeep.cleanup.task.similar
+  - done

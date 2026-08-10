@@ -1,0 +1,25 @@
+appId: app.truekeep.ios
+name: P0 权限拒绝后的重试与恢复
+description: 验证权限关闭状态说明、重试中的局部进度，以及回到首页的恢复入口。
+platform: ios
+---
+setup:
+  - launchApp
+  - waitUntil: truekeep.permission-issue.retry
+    timeout: 10
+steps:
+  - assert: 照片权限已关闭
+  - assert: 照片或视频不会被上传
+  - assert: truekeep.permission-issue.open-settings
+  - tap: truekeep.permission-issue.retry
+  - waitUntil: 正在重新检查
+    timeout: 3
+  - assert: truekeep.permission-issue.open-settings
+  - waitUntil: 我已开启，重新检查
+    timeout: 8
+  - tap: truekeep.permission-issue.return-to-permission
+assertions:
+  - waitUntil: truekeep.cleanup.results
+    timeout: 10
+  - assert: truekeep.cleanup.task.similar
+  - done

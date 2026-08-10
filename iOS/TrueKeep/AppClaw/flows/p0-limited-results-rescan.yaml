@@ -1,0 +1,22 @@
+appId: app.truekeep.ios
+name: P0 有限权限结果页重新扫描
+description: 验证已有结果时重新扫描入口可见、位于 Tab Bar 上方，并能重新进入本地扫描流程。
+platform: ios
+---
+setup:
+  - launchApp
+  - waitUntil: truekeep.scan.view-results
+    timeout: 20
+  - assert: 访问范围有限
+  - tap: truekeep.scan.view-results
+  - waitUntil: truekeep.cleanup.results
+    timeout: 10
+steps:
+  - assert: truekeep.cleanup.scan
+  - assert: truekeep.cleanup.scan is above 首页
+  - tap: truekeep.cleanup.scan
+assertions:
+  - waitUntilGone: truekeep.cleanup.scan
+    timeout: 10
+  - assert: 本地扫描
+  - done

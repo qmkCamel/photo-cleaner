@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "id": "trust-intro-skip",
+      "tier": "p0",
+      "description": "授权前说明完整，用户暂不授权后仍可安全进入首页。",
+      "flow": "flows/p0-trust-intro-skip.yaml",
+      "launchArguments": [
+        "-TrueKeepDisablePhotoDeletion",
+        "-TrueKeepUseSampleCleanupData",
+        "-TrueKeepResetIntroState",
+        "-TrueKeepUITestForceNotDeterminedAccess"
+      ]
+    },
+    {
+      "id": "settings-trust-details",
+      "tier": "p0",
+      "description": "隐私与安全页的三项信任说明可发现，且隐私详情可进入。",
+      "flow": "flows/p0-settings-trust-details.yaml",
+      "launchArguments": [
+        "-TrueKeepDisablePhotoDeletion",
+        "-TrueKeepUseSampleCleanupData",
+        "-TrueKeepResetIntroState",
+        "-TrueKeepUITestForceNotDeterminedAccess"
+      ]
+    },
+    {
+      "id": "review-bin-deletion-safety",
+      "tier": "p0",
+      "description": "候选进入复核箱后必须二次确认，安全锁阻止真实删除。",
+      "flow": "flows/p0-review-bin-deletion-safety.yaml",
+      "launchArguments": [
+        "-TrueKeepDisablePhotoDeletion",
+        "-TrueKeepUseSampleCleanupData",
+        "-TrueKeepResetIntroState",
+        "-TrueKeepUITestForceNotDeterminedAccess"
+      ]
+    },
+    {
+      "id": "permission-denied-retry",
+      "tier": "p0",
+      "description": "照片权限关闭后可重试，并显示操作局部进度与恢复入口。",
+      "flow": "flows/p0-permission-denied-retry.yaml",
+      "launchArguments": [
+        "-TrueKeepDisablePhotoDeletion",
+        "-TrueKeepUseSampleCleanupData",
+        "-TrueKeepResetIntroState",
+        "-TrueKeepUITestPermissionDenied",
+        "-TrueKeepUITestDelayPhotoAccess"
+      ]
+    },
+    {
+      "id": "scan-cancel-recovery",
+      "tier": "p0",
+      "description": "扫描中可取消，取消后说明未改动照片并保留恢复路径。",
+      "flow": "flows/p0-scan-cancel-recovery.yaml",
+      "launchArguments": [
+        "-TrueKeepDisablePhotoDeletion",
+        "-TrueKeepUseSampleCleanupData",
+        "-TrueKeepResetIntroState",
+        "-TrueKeepUITestScanInProgress"
+      ]
+    },
+    {
+      "id": "limited-results-rescan",
+      "tier": "p0",
+      "description": "有限权限结果页显示重新扫描入口，且入口位于 Tab Bar 上方。",
+      "flow": "flows/p0-limited-results-rescan.yaml",
+      "launchArguments": [
+        "-TrueKeepDisablePhotoDeletion",
+        "-TrueKeepUseSampleCleanupData",
+        "-TrueKeepResetIntroState",
+        "-TrueKeepUITestLimitedCompletedScan"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+appId: app.truekeep.ios
+name: P0 复核箱二次确认与删除安全锁
+description: 验证候选从任务复核进入复核箱、二次确认，并由真机调试安全锁阻止真实删除。
+platform: ios
+---
+setup:
+  - launchApp
+  - waitUntil: truekeep.welcome.learn-more
+    timeout: 10
+  - tap: truekeep.welcome.learn-more
+  - waitUntil: 首页
+    timeout: 10
+  - tap: 首页
+  - waitUntil: truekeep.cleanup.task.similar
+    timeout: 10
+steps:
+  - tap: truekeep.cleanup.task.similar
+  - waitUntil: truekeep.review.review-all
+    timeout: 10
+  - tap: truekeep.review.review-all
+  - waitUntil: truekeep.review.add-to-review-bin
+    timeout: 10
+  - tap: truekeep.review.add-to-review-bin
+  - waitUntil: truekeep.review-bin.delete-selection
+    timeout: 10
+  - assert: 尚未删除任何内容
+  - tap: truekeep.review-bin.delete-selection
+  - waitUntil: truekeep.delete.confirm
+    timeout: 10
+  - assert: iCloud Photos 风险
+  - tap: truekeep.delete.confirm
+assertions:
+  - waitUntil: 删除未完成
+    timeout: 10
+  - assert: 真机调试删除安全锁已开启，未删除任何照片或视频。
+  - assert: truekeep.review-bin.restore-selection
+  - done

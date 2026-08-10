@@ -58,6 +58,13 @@ Add `--execute` only after the iPhone is available and the printed command is co
 
 Manual simulator smoke-test coverage is tracked in [TrueKeep manual QA](./TrueKeep/MANUAL_QA.md).
 
+Deterministic AppClaw P0 flows for physical-device regression are tracked in [TrueKeep AppClaw automation](./TrueKeep/AppClaw/README.md). They use stable accessibility identifiers, run without an LLM or visual locator, and force the real Photos deletion path off.
+
+```bash
+python3 iOS/TrueKeep/Scripts/appclaw_regression.py --list
+python3 iOS/TrueKeep/Scripts/appclaw_regression.py --udid <DEVICE_UDID> --wda-bundle-id <WDA_RUNNER_BUNDLE_ID> --execute
+```
+
 Fast local release preflight:
 
 ```bash

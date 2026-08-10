@@ -1,0 +1,22 @@
+appId: app.truekeep.ios
+name: P0 隐私与安全说明导航
+description: 验证三项隐私与安全说明均可发现，并可进入隐私详情。
+platform: ios
+---
+setup:
+  - launchApp
+  - waitUntil: truekeep.welcome.learn-more
+    timeout: 10
+  - tap: truekeep.welcome.learn-more
+  - waitUntil: truekeep.settings.topic.how-it-works
+    timeout: 10
+steps:
+  - assert: truekeep.settings.topic.privacy-details
+  - assert: truekeep.settings.topic.help-support
+  - tap: truekeep.settings.topic.privacy-details
+assertions:
+  - waitUntil: truekeep.settings.topic.privacy-details.detail
+    timeout: 10
+  - assert: 照片和视频不会上传到服务器。
+  - assert: 不做跨 App 追踪
+  - done

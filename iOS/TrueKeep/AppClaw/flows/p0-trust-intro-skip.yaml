@@ -1,0 +1,20 @@
+appId: app.truekeep.ios
+name: P0 授权说明与暂不授权
+description: 验证系统授权前先说明本地处理与删除边界，暂不授权后仍可进入首页。
+platform: ios
+---
+setup:
+  - launchApp
+  - waitUntil: truekeep.permission.not-now
+    timeout: 10
+steps:
+  - assert: 授权前先说清楚
+  - assert: 100% 本地处理
+  - assert: 删除前先复核
+  - tap: truekeep.permission.not-now
+assertions:
+  - waitUntil: truekeep.cleanup.results
+    timeout: 10
+  - assert: truekeep.permission.allow-photos
+  - assert: 需要照片访问才能扫描
+  - done
