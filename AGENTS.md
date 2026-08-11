@@ -26,4 +26,5 @@
 - Destructive actions require an explicit second confirmation. The confirmation must summarize the affected item count, explain removal from the system Photos library, and call out iCloud Photos sync plus Recently Deleted recovery behavior.
 - After deletion finishes, report succeeded, failed, and still-retained items. Failed items must remain recoverable in UI state with enough context for retry or manual review.
 - UI tests and manual smoke paths must keep real Photos deletion disabled by default. Any destructive-device test needs an explicit approved plan and opt-in launch configuration.
+- New or changed user-visible requirements must retain named screenshots in their automated-test artifacts. Capture at least the key success/result state and, when applicable, the failure or recovery state; use `XCTAttachment` with `keepAlways` for XCUITest and retain the AppClaw step report/screenshots for AppClaw runs.
 - Accessibility is part of the interaction contract. Critical flows must support Dynamic Type without clipping, expose meaningful VoiceOver labels for candidate category, reason, and selection state, and keep touch targets usable.

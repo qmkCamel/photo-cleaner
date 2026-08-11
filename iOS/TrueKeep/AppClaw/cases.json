@@ -73,6 +73,29 @@
         "-TrueKeepResetIntroState",
         "-TrueKeepUITestLimitedCompletedScan"
       ]
+    },
+    {
+      "id": "scan-date-range-selection",
+      "tier": "p0",
+      "description": "默认近一个月，可切换近三个月，并在扫描进度与完成结果中保留实际范围。",
+      "flow": "flows/p0-scan-date-range-selection.yaml",
+      "launchArguments": [
+        "-TrueKeepDisablePhotoDeletion",
+        "-TrueKeepResetIntroState",
+        "-TrueKeepUITestAuthorizedHome"
+      ]
+    },
+    {
+      "id": "post-deletion-home-sync",
+      "tier": "p0",
+      "description": "删除成功后首页移除已删除候选、展示可恢复摘要，并保留有限权限提醒和重扫入口。",
+      "flow": "flows/p0-post-deletion-home-sync.yaml",
+      "launchArguments": [
+        "-TrueKeepDisablePhotoDeletion",
+        "-TrueKeepUseSampleCleanupData",
+        "-TrueKeepResetIntroState",
+        "-TrueKeepUITestPostDeletionSuccess"
+      ]
     }
   ]
 }

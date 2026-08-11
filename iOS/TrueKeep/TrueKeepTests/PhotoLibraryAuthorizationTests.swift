@@ -2,6 +2,71 @@ import XCTest
 @testable import TrueKeep
 
 final class PhotoLibraryAuthorizationTests: XCTestCase {
+    func testPhotoScanDateRangeDefaultsToLastMonth() {
+        XCTAssertEqual(PhotoScanDateRange.defaultValue, .lastMonth)
+        XCTAssertEqual(PhotoScanDateRange.allCases, [.lastMonth, .lastThreeMonths, .all])
+    }
+
+    func testRecentPhotoScanDateRangesUseRollingCalendarMonthsAndClosedBounds() throws {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = try XCTUnwrap(TimeZone(secondsFromGMT: 0))
+        let referenceDate = try XCTUnwrap(
+            calendar.date(from: DateComponents(
+                year: 2026,
+                month: 8,
+                day: 11,
+                hour: 20
+            ))
+        )
+
+        let monthBounds = try XCTUnwrap(
+            PhotoScanDateRange.lastMonth.dateBounds(
+                endingAt: referenceDate,
+                calendar: calendar
+            )
+        )
+        XCTAssertEqual(
+            monthBounds.lowerBound,
+            calendar.date(byAdding: .month, value: -1, to: referenceDate)
+        )
+        XCTAssertEqual(monthBounds.upperBound, referenceDate)
+        XCTAssertTrue(
+            PhotoScanDateRange.lastMonth.includes(
+                creationDate: monthBounds.lowerBound,
+                endingAt: referenceDate,
+                calendar: calendar
+            )
+        )
+        XCTAssertTrue(
+            PhotoScanDateRange.lastMonth.includes(
+                creationDate: monthBounds.upperBound,
+                endingAt: referenceDate,
+                calendar: calendar
+            )
+        )
+
+        let threeMonthBounds = try XCTUnwrap(
+            PhotoScanDateRange.lastThreeMonths.dateBounds(
+                endingAt: referenceDate,
+                calendar: calendar
+            )
+        )
+        XCTAssertEqual(
+            threeMonthBounds.lowerBound,
+            calendar.date(byAdding: .month, value: -3, to: referenceDate)
+        )
+        XCTAssertEqual(threeMonthBounds.upperBound, referenceDate)
+    }
+
+    func testAllRangeHasNoDateBoundsAndRecentRangesExcludeUnknownDates() {
+        let referenceDate = Date(timeIntervalSince1970: 1_786_473_600)
+
+        XCTAssertNil(PhotoScanDateRange.all.dateBounds(endingAt: referenceDate))
+        XCTAssertTrue(PhotoScanDateRange.all.includes(creationDate: nil, endingAt: referenceDate))
+        XCTAssertFalse(PhotoScanDateRange.lastMonth.includes(creationDate: nil, endingAt: referenceDate))
+        XCTAssertFalse(PhotoScanDateRange.lastThreeMonths.includes(creationDate: nil, endingAt: referenceDate))
+    }
+
     func testFullAndLimitedAccessCanScan() {
         XCTAssertTrue(PhotoLibraryAccess.full.canScan)
         XCTAssertTrue(PhotoLibraryAccess.limited.canScan)
@@ -53,6 +118,21 @@ final class PhotoLibraryAuthorizationTests: XCTestCase {
         )
 
         XCTAssertTrue(configuration.initialHasCompletedScan)
+    }
+
+    func testPostDeletionSuccessScenarioStartsOnLimitedHomeWithReconciledResults() {
+        let configuration = AppLaunchConfiguration(
+            arguments: [AppLaunchConfiguration.uiTestPostDeletionSuccessArgument],
+            environment: [:]
+        )
+
+        XCTAssertEqual(configuration.uiTestScenario, .postDeletionSuccess)
+        XCTAssertEqual(configuration.initialPhase(for: .limited), .main)
+        XCTAssertEqual(configuration.initialPhotoAccess, .limited)
+        XCTAssertTrue(configuration.initialHasCompletedScan)
+        XCTAssertNotNil(configuration.initialCleanupState.deletionSummary)
+        XCTAssertTrue(configuration.initialCleanupState.tasks.isEmpty)
+        XCTAssertTrue(configuration.initialCleanupState.reviewGroups.isEmpty)
     }
 
     func testPhotoPermissionCopyDescribesOnDeviceVisualCandidatesWithSafetyLimits() throws {

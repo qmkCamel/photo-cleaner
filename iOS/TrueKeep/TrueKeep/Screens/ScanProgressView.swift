@@ -11,6 +11,7 @@ struct ScanProgressView: View {
     @ScaledMetric(relativeTo: .body) private var progressRingLineWidth: CGFloat = 10
 
     var status: PhotoScanProgressStatus = .scanning
+    var scanDateRange: PhotoScanDateRange = .defaultValue
     var scanLimitationWarning: String? = nil
     var onCancel: () -> Void
     var onRetry: () -> Void = {}
@@ -54,6 +55,11 @@ struct ScanProgressView: View {
 
                     TrustChip(title: "本地扫描", systemImage: "checkmark.circle")
                         .padding(.top, 20)
+                    Label("本次范围：\(scanDateRange.title)", systemImage: "calendar")
+                        .font(TrueKeepTheme.Font.bodySmall.weight(.medium))
+                        .foregroundStyle(TrueKeepTheme.greenStrong)
+                        .padding(.top, 12)
+                        .accessibilityIdentifier(TrueKeepAccessibility.Control.activeScanDateRange.id)
                     Text("照片和视频始终留在你的设备上。")
                         .font(TrueKeepTheme.Font.bodySmall)
                         .foregroundStyle(TrueKeepTheme.muted)
@@ -203,9 +209,9 @@ struct ScanProgressView: View {
     private var footerText: String {
         switch status {
         case .scanning:
-            "扫描在前台分批进行，可以随时取消。"
+            "\(scanDateRange.title)扫描在前台分批进行，可以随时取消。"
         case .completed:
-            "结果只来自当前可访问的照片和视频范围。"
+            "结果只来自\(scanDateRange.title)内当前可访问的照片和视频。"
         case .interrupted:
             "取消扫描不会删除或移动任何照片或视频。"
         }

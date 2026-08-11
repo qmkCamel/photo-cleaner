@@ -7,7 +7,10 @@ struct CleanupResultsView: View {
     var hasCompletedScan: Bool = true
     var canScan: Bool = false
     var isRequestingAccess: Bool = false
+    var selectedScanDateRange: PhotoScanDateRange = .defaultValue
+    var completedScanDateRange: PhotoScanDateRange? = nil
     var onRequestPhotoAccess: () -> Void = {}
+    var onSelectScanDateRange: (PhotoScanDateRange) -> Void = { _ in }
     var onScan: () -> Void = {}
     var onReviewTask: (CleanupTask) -> Void
 
@@ -23,9 +26,34 @@ struct CleanupResultsView: View {
                             .foregroundStyle(TrueKeepTheme.muted)
                             .lineLimit(nil)
                             .fixedSize(horizontal: false, vertical: true)
+
+                        if hasCompletedScan, let completedScanDateRange {
+                            Label(
+                                "本次范围：\(completedScanDateRange.title)",
+                                systemImage: "calendar"
+                            )
+                            .font(TrueKeepTheme.Font.caption.weight(.medium))
+                            .foregroundStyle(TrueKeepTheme.greenStrong)
+                            .accessibilityIdentifier(
+                                TrueKeepAccessibility.Control.completedScanDateRange.id
+                            )
+                        }
                     }
                     Spacer()
                     TrustChip(title: "本地", systemImage: "checkmark.circle")
+                }
+
+                if canScan {
+                    ScanDateRangeSelector(
+                        title: hasCompletedScan ? "下次扫描范围" : "扫描范围",
+                        selection: selectedScanDateRange,
+                        usesCompactLayout: hasCompletedScan,
+                        onSelect: onSelectScanDateRange
+                    )
+                }
+
+                if let deletionSummary = state.deletionSummary {
+                    PhotoDeletionSummaryNotice(summary: deletionSummary)
                 }
 
                 if let scanLimitationWarning {
@@ -43,13 +71,17 @@ struct CleanupResultsView: View {
                 }
 
                 if state.tasks.isEmpty {
-                    if canScan {
+                    if canScan, state.deletionSummary == nil {
                         scanAction
                     }
-                    EmptyResultsState(hasCompletedScan: hasCompletedScan)
+                    if state.deletionSummary != nil {
+                        PostDeletionEmptyState()
+                    } else {
+                        EmptyResultsState(hasCompletedScan: hasCompletedScan)
+                    }
                 } else {
                     HStack {
-                        Text("预计可释放空间")
+                        Text(state.deletionSummary == nil ? "预计可释放空间" : "剩余预计可释放空间")
                             .font(TrueKeepTheme.Font.bodySmall.weight(.medium))
                             .foregroundStyle(TrueKeepTheme.greenStrong)
                         Spacer()
@@ -76,7 +108,7 @@ struct CleanupResultsView: View {
         }
         .accessibilityIdentifier(TrueKeepAccessibility.Control.cleanupResultsScreen.id)
         .safeAreaInset(edge: .bottom) {
-            if canScan, !state.tasks.isEmpty {
+            if canScan, (!state.tasks.isEmpty || state.deletionSummary != nil) {
                 resultsRescanFooter
             }
         }
@@ -90,7 +122,13 @@ struct CleanupResultsView: View {
             return "扫描后，本地复核候选会显示在这里。"
         }
         if state.tasks.isEmpty {
+            if state.deletionSummary != nil {
+                return "本轮候选已处理完成。"
+            }
             return "本次扫描没有发现需要复核的项目。"
+        }
+        if state.deletionSummary != nil {
+            return "已更新当前扫描结果。"
         }
         return "我们找到了值得你复核的项目。"
     }
@@ -113,6 +151,154 @@ struct CleanupResultsView: View {
                     .fill(TrueKeepTheme.line)
                     .frame(height: 1)
             }
+    }
+}
+
+private struct ScanDateRangeSelector: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    var title: String
+    var selection: PhotoScanDateRange
+    var usesCompactLayout: Bool
+    var onSelect: (PhotoScanDateRange) -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(TrueKeepTheme.Font.cardTitle)
+                    .foregroundStyle(TrueKeepTheme.ink)
+                    .accessibilityIdentifier(TrueKeepAccessibility.Control.scanDateRangeSelector.id)
+                Text("只影响本地扫描，不改变照片权限。")
+                    .font(TrueKeepTheme.Font.caption)
+                    .foregroundStyle(TrueKeepTheme.muted)
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            if usesCompactLayout, !dynamicTypeSize.isAccessibilitySize {
+                HStack(spacing: 8) {
+                    ForEach(PhotoScanDateRange.allCases) { dateRange in
+                        option(dateRange, showsDetail: false)
+                    }
+                }
+            } else {
+                VStack(spacing: 8) {
+                    ForEach(PhotoScanDateRange.allCases) { dateRange in
+                        option(dateRange, showsDetail: true)
+                    }
+                }
+            }
+
+            Text("已选择：\(selection.title)")
+                .font(TrueKeepTheme.Font.caption.weight(.medium))
+                .foregroundStyle(TrueKeepTheme.greenStrong)
+                .accessibilityIdentifier(TrueKeepAccessibility.Control.selectedScanDateRange.id)
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(TrueKeepTheme.paper)
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).stroke(TrueKeepTheme.line))
+    }
+
+    private func option(
+        _ dateRange: PhotoScanDateRange,
+        showsDetail: Bool
+    ) -> some View {
+        let isSelected = selection == dateRange
+
+        return Button {
+            onSelect(dateRange)
+        } label: {
+            Group {
+                if showsDetail {
+                    HStack(alignment: .top, spacing: 10) {
+                        selectionImage(isSelected, size: 24)
+
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text(dateRange.title)
+                                .font(TrueKeepTheme.Font.bodySmall.weight(.semibold))
+                                .foregroundStyle(isSelected ? .white : TrueKeepTheme.ink)
+                                .lineLimit(nil)
+                                .fixedSize(horizontal: false, vertical: true)
+                            Text(dateRange.detail)
+                                .font(TrueKeepTheme.Font.caption)
+                                .foregroundStyle(isSelected ? .white : TrueKeepTheme.muted)
+                                .lineLimit(nil)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+
+                        Spacer(minLength: 8)
+                    }
+                } else {
+                    HStack(spacing: 5) {
+                        selectionImage(isSelected, size: 20)
+
+                        Text(dateRange.title)
+                            .font(TrueKeepTheme.Font.bodySmall.weight(.semibold))
+                            .foregroundStyle(isSelected ? .white : TrueKeepTheme.ink)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
+                    }
+                }
+            }
+            .padding(.horizontal, showsDetail ? 12 : 7)
+            .padding(.vertical, 10)
+            .frame(
+                maxWidth: .infinity,
+                minHeight: 52,
+                alignment: showsDetail ? .leading : .center
+            )
+            .background(isSelected ? TrueKeepTheme.greenStrong : TrueKeepTheme.page)
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .stroke(isSelected ? TrueKeepTheme.greenStrong : TrueKeepTheme.quiet)
+            )
+            .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier(TrueKeepAccessibility.scanDateRange(dateRange))
+        .accessibilityLabel("\(dateRange.title)，\(dateRange.detail)")
+        .accessibilityValue(isSelected ? "已选择" : "未选择")
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
+        .accessibilityHint(isSelected ? "当前扫描范围" : "双击选择为下一次扫描范围")
+    }
+
+    private func selectionImage(_ isSelected: Bool, size: CGFloat) -> some View {
+        Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+            .font(TrueKeepTheme.Font.iconSmall)
+            .foregroundStyle(isSelected ? .white : TrueKeepTheme.greenStrong)
+            .frame(width: size, height: size)
+            .accessibilityHidden(true)
+    }
+}
+
+private struct PostDeletionEmptyState: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Image(systemName: "checkmark.seal.fill")
+                .font(TrueKeepTheme.Font.iconLarge)
+                .foregroundStyle(TrueKeepTheme.green)
+                .accessibilityHidden(true)
+            Text("本轮没有待复核项目")
+                .font(TrueKeepTheme.Font.sectionTitle)
+                .foregroundStyle(TrueKeepTheme.ink)
+                .lineLimit(nil)
+                .fixedSize(horizontal: false, vertical: true)
+            Text("重新扫描后，会根据当前可访问的照片生成新的候选。")
+                .font(TrueKeepTheme.Font.bodySmall)
+                .foregroundStyle(TrueKeepTheme.muted)
+                .lineLimit(nil)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(TrueKeepTheme.paper)
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).stroke(TrueKeepTheme.line))
+        .accessibilityElement(children: .combine)
     }
 }
 

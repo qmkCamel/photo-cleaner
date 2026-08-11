@@ -18,7 +18,9 @@ class AppClawRegressionTests(unittest.TestCase):
     def test_manifest_has_unique_p0_cases_with_existing_flows_and_deletion_lock(self) -> None:
         cases = appclaw_regression.load_cases()
 
-        self.assertGreaterEqual(len(cases), 6)
+        self.assertGreaterEqual(len(cases), 8)
+        self.assertIn("post-deletion-home-sync", {case.id for case in cases})
+        self.assertIn("scan-date-range-selection", {case.id for case in cases})
         self.assertEqual(len({case.id for case in cases}), len(cases))
         for case in cases:
             self.assertEqual(case.tier, "p0")

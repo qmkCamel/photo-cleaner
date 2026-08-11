@@ -500,28 +500,37 @@ enum PhotoAssetSnapshotBatcher {
 }
 
 protocol PhotoLibraryScanning: Sendable {
-    func scan(access: PhotoLibraryAccess) async -> CleanupFlowState
+    func scan(access: PhotoLibraryAccess, dateRange: PhotoScanDateRange) async -> CleanupFlowState
 }
 
 struct SystemPhotoLibraryScanner: PhotoLibraryScanning {
     private let policy: PhotoLibraryScanPolicy
     private let qualityScorer: any PhotoQualityScoring
+    private let now: @Sendable () -> Date
 
     init(
         policy: PhotoLibraryScanPolicy = .init(),
-        qualityScorer: (any PhotoQualityScoring)? = nil
+        qualityScorer: (any PhotoQualityScoring)? = nil,
+        now: @escaping @Sendable () -> Date = { Date() }
     ) {
         self.policy = policy
         self.qualityScorer = qualityScorer ?? VisionPhotoQualityScorer()
+        self.now = now
     }
 
-    func scan(access: PhotoLibraryAccess) async -> CleanupFlowState {
+    func scan(access: PhotoLibraryAccess, dateRange: PhotoScanDateRange) async -> CleanupFlowState {
         guard access.canScan else {
             return PhotoScanResultBuilder.state(from: [])
         }
 
+        let referenceDate = now()
         do {
-            return PhotoScanResultBuilder.state(from: try await fetchAssetSnapshots())
+            return PhotoScanResultBuilder.state(
+                from: try await fetchAssetSnapshots(
+                    dateRange: dateRange,
+                    referenceDate: referenceDate
+                )
+            )
         } catch is CancellationError {
             return PhotoScanResultBuilder.state(from: [])
         } catch {
@@ -529,8 +538,12 @@ struct SystemPhotoLibraryScanner: PhotoLibraryScanning {
         }
     }
 
-    private func fetchAssetSnapshots() async throws -> [PhotoAssetSnapshot] {
-        let photoAssets = PHAsset.fetchAssets(with: .image, options: fetchOptions())
+    private func fetchAssetSnapshots(
+        dateRange: PhotoScanDateRange,
+        referenceDate: Date
+    ) async throws -> [PhotoAssetSnapshot] {
+        let options = fetchOptions(dateRange: dateRange, referenceDate: referenceDate)
+        let photoAssets = PHAsset.fetchAssets(with: .image, options: options)
         let visualClassifications = try await fetchVisualClassifications(from: photoAssets)
         let photoSnapshots = try await PhotoAssetSnapshotBatcher.collect(
             totalCount: photoAssets.count,
@@ -546,7 +559,7 @@ struct SystemPhotoLibraryScanner: PhotoLibraryScanning {
             )
         }
 
-        let videoAssets = PHAsset.fetchAssets(with: .video, options: fetchOptions())
+        let videoAssets = PHAsset.fetchAssets(with: .video, options: options)
         let videoSnapshots = try await PhotoAssetSnapshotBatcher.collect(
             totalCount: videoAssets.count,
             batchSize: policy.effectiveBatchSize
@@ -631,9 +644,20 @@ struct SystemPhotoLibraryScanner: PhotoLibraryScanning {
         return PhotoVisualAnalyzer.metrics(from: cgImage, qualityScorer: qualityScorer)
     }
 
-    private func fetchOptions() -> PHFetchOptions {
+    private func fetchOptions(
+        dateRange: PhotoScanDateRange,
+        referenceDate: Date,
+        calendar: Calendar = .current
+    ) -> PHFetchOptions {
         let options = PHFetchOptions()
         options.includeHiddenAssets = false
+        if let bounds = dateRange.dateBounds(endingAt: referenceDate, calendar: calendar) {
+            options.predicate = NSPredicate(
+                format: "creationDate >= %@ AND creationDate <= %@",
+                bounds.lowerBound as NSDate,
+                bounds.upperBound as NSDate
+            )
+        }
         options.sortDescriptors = [
             NSSortDescriptor(key: "creationDate", ascending: false)
         ]
@@ -939,17 +963,7 @@ enum PhotoScanResultBuilder {
             )
         ].compactMap { $0 }
 
-        let tasks = groups.map { group in
-            CleanupTask(
-                id: group.id,
-                category: group.category,
-                description: taskDescription(for: group.category, count: group.candidates.count),
-                candidateCount: group.candidates.count,
-                estimatedBytes: group.estimatedBytes,
-                confidenceLabel: confidenceLabel(for: group.category),
-                previewCandidates: Array(group.candidates.prefix(4))
-            )
-        }
+        let tasks = CleanupTaskBuilder.tasks(from: groups)
 
         return CleanupFlowState(
             tasks: tasks,
@@ -957,8 +971,7 @@ enum PhotoScanResultBuilder {
             currentReviewGroupIndex: 0,
             selectedCandidateIDs: Set(groups.first?.candidates.filter(\.defaultSelectedForDeletion).map(\.id) ?? []),
             reviewBinItems: [],
-            hasDeletedItems: false,
-            postDeletionRecoveryMessage: nil,
+            deletionSummary: nil,
             deletionErrorMessage: nil
         )
     }
@@ -1067,34 +1080,6 @@ enum PhotoScanResultBuilder {
             return max(120_000_000, Int64(snapshot.duration * 6_000_000))
         case .similar, .accidental, .blurry:
             return 2_500_000
-        }
-    }
-
-    private static func taskDescription(for category: CleanupCategory, count: Int) -> String {
-        switch category {
-        case .screenshots:
-            return "\(count) 张截图，优先复核临时内容"
-        case .largeVideos:
-            return "\(count) 个长视频或大视频，建议逐个确认"
-        case .similar:
-            return "\(count) 张本机识别的相似照片，已推荐保留一张"
-        case .accidental:
-            return "\(count) 张疑似误拍，低置信度复核"
-        case .blurry:
-            return "\(count) 张疑似模糊或遮挡，低置信度复核"
-        }
-    }
-
-    private static func confidenceLabel(for category: CleanupCategory) -> String {
-        switch category {
-        case .screenshots:
-            return "可快速清理"
-        case .largeVideos:
-            return "建议复核"
-        case .similar:
-            return "推荐复核"
-        case .accidental, .blurry:
-            return "谨慎复核"
         }
     }
 

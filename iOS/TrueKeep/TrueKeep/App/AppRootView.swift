@@ -29,6 +29,7 @@ struct AppLaunchConfiguration: Hashable {
     static let uiTestLimitedCompletedScanArgument = "-TrueKeepUITestLimitedCompletedScan"
     static let uiTestScanInProgressArgument = "-TrueKeepUITestScanInProgress"
     static let uiTestAuthorizedHomeArgument = "-TrueKeepUITestAuthorizedHome"
+    static let uiTestPostDeletionSuccessArgument = "-TrueKeepUITestPostDeletionSuccess"
     static let uiTestDelayedPhotoAccessArgument = "-TrueKeepUITestDelayPhotoAccess"
     static let uiTestDelayedPhotoDeletionArgument = "-TrueKeepUITestDelayPhotoDeletion"
 
@@ -53,7 +54,10 @@ struct AppLaunchConfiguration: Hashable {
     }
 
     var initialCleanupState: CleanupFlowState {
-        usesSampleCleanupData ? .sample() : PhotoScanResultBuilder.state(from: [])
+        if uiTestScenario == .postDeletionSuccess {
+            return Self.postDeletionSuccessState()
+        }
+        return usesSampleCleanupData ? .sample() : PhotoScanResultBuilder.state(from: [])
     }
 
     func initialPhase(for access: PhotoLibraryAccess) -> AppPhase {
@@ -62,7 +66,7 @@ struct AppLaunchConfiguration: Hashable {
             .permissionIssue(.denied)
         case .scanInterrupted, .limitedCompletedScan, .scanInProgress:
             .scan
-        case .authorizedHome:
+        case .authorizedHome, .postDeletionSuccess:
             .main
         case nil:
             if access.requiresSettings {
@@ -79,7 +83,7 @@ struct AppLaunchConfiguration: Hashable {
         switch uiTestScenario {
         case .permissionDenied:
             .denied
-        case .limitedCompletedScan:
+        case .limitedCompletedScan, .postDeletionSuccess:
             .limited
         case .scanInterrupted, .scanInProgress, .authorizedHome:
             .full
@@ -92,7 +96,7 @@ struct AppLaunchConfiguration: Hashable {
         switch uiTestScenario {
         case .scanInterrupted:
             .interrupted(message: "用户已取消")
-        case .limitedCompletedScan:
+        case .limitedCompletedScan, .postDeletionSuccess:
             .completed(candidateCount: state.tasks.map(\.candidateCount).reduce(0, +))
         case .scanInProgress, .authorizedHome, .permissionDenied, nil:
             .scanning
@@ -100,11 +104,27 @@ struct AppLaunchConfiguration: Hashable {
     }
 
     var initialHasCompletedScan: Bool {
-        usesSampleCleanupData || uiTestScenario == .limitedCompletedScan
+        usesSampleCleanupData || uiTestScenario == .limitedCompletedScan || uiTestScenario == .postDeletionSuccess
     }
 
     static func markIntroCompleted() {
         UserDefaults.standard.set(true, forKey: completedIntroDefaultsKey)
+    }
+
+    private static func postDeletionSuccessState() -> CleanupFlowState {
+        var state = CleanupFlowState.sample()
+        let deletedCandidates = state.reviewGroups
+            .flatMap(\.candidates)
+            .filter { !$0.recommendedKeep }
+        state.reviewBinItems = deletedCandidates.map {
+            ReviewBinItem(
+                candidate: $0,
+                selectedForDelete: true,
+                addedAt: Date(timeIntervalSince1970: 0)
+            )
+        }
+        state.applyDeletionResult(.success(deletedAssetIDs: deletedCandidates.map(\.id)))
+        return state
     }
 }
 
@@ -114,6 +134,7 @@ enum AppUITestLaunchScenario: Hashable {
     case limitedCompletedScan
     case scanInProgress
     case authorizedHome
+    case postDeletionSuccess
 
     init?(arguments: [String]) {
         if arguments.contains(AppLaunchConfiguration.uiTestPermissionDeniedArgument) {
@@ -126,6 +147,8 @@ enum AppUITestLaunchScenario: Hashable {
             self = .scanInProgress
         } else if arguments.contains(AppLaunchConfiguration.uiTestAuthorizedHomeArgument) {
             self = .authorizedHome
+        } else if arguments.contains(AppLaunchConfiguration.uiTestPostDeletionSuccessArgument) {
+            self = .postDeletionSuccess
         } else {
             return nil
         }
@@ -154,6 +177,9 @@ struct AppRootView: View {
     @State private var photoAccess: PhotoLibraryAccess = .notDetermined
     @State private var hasCompletedScan = false
     @State private var scanStatus: PhotoScanProgressStatus = .scanning
+    @State private var selectedScanDateRange: PhotoScanDateRange = .defaultValue
+    @State private var activeScanDateRange: PhotoScanDateRange = .defaultValue
+    @State private var completedScanDateRange: PhotoScanDateRange?
     @State private var scanTask: Task<Void, Never>?
     @State private var activeScanID = UUID()
 
@@ -183,6 +209,9 @@ struct AppRootView: View {
         self._photoAccess = State(initialValue: initialPhotoAccess)
         self._hasCompletedScan = State(initialValue: launchConfiguration.initialHasCompletedScan)
         self._scanStatus = State(initialValue: launchConfiguration.initialScanStatus(for: initialCleanupState))
+        self._completedScanDateRange = State(
+            initialValue: launchConfiguration.initialHasCompletedScan ? .defaultValue : nil
+        )
         self._cleanupState = State(initialValue: initialCleanupState)
     }
 
@@ -211,9 +240,15 @@ struct AppRootView: View {
             case .scan:
                 ScanProgressView(
                     status: scanStatus,
+                    scanDateRange: activeScanDateRange,
                     scanLimitationWarning: photoAccess.scanLimitationWarning,
                     onCancel: { handleScanCancelOrBack() },
-                    onRetry: { startPhotoScan(access: photoAccess) },
+                    onRetry: {
+                        startPhotoScan(
+                            access: photoAccess,
+                            dateRange: activeScanDateRange
+                        )
+                    },
                     onViewResults: {
                         guard case .completed = scanStatus else { return }
                         phase = .main
@@ -251,25 +286,30 @@ struct AppRootView: View {
             }
             guard access.canScan else { return }
             await MainActor.run {
-                startPhotoScan(access: access)
+                startPhotoScan(access: access, dateRange: selectedScanDateRange)
             }
         }
     }
 
-    private func startPhotoScan(access: PhotoLibraryAccess) {
+    private func startPhotoScan(
+        access: PhotoLibraryAccess,
+        dateRange: PhotoScanDateRange
+    ) {
         guard access.canScan else { return }
 
         scanTask?.cancel()
         let scanID = UUID()
         activeScanID = scanID
+        activeScanDateRange = dateRange
         scanStatus = .scanning
         cleanupState = PhotoScanResultBuilder.state(from: [])
         hasCompletedScan = false
+        completedScanDateRange = nil
         phase = .scan
 
         let photoScanner = photoScanner
         scanTask = Task {
-            let scannedState = await photoScanner.scan(access: access)
+            let scannedState = await photoScanner.scan(access: access, dateRange: dateRange)
             let wasCancelled = Task.isCancelled
 
             await MainActor.run {
@@ -280,6 +320,7 @@ struct AppRootView: View {
                 } else {
                     cleanupState = scannedState
                     hasCompletedScan = true
+                    completedScanDateRange = dateRange
                     scanStatus = .completed(candidateCount: scannedState.tasks.map(\.candidateCount).reduce(0, +))
                 }
                 scanTask = nil
@@ -320,8 +361,16 @@ struct AppRootView: View {
                     hasCompletedScan: hasCompletedScan,
                     canScan: photoAccess.canScan,
                     isRequestingAccess: isRequestingPhotoAccess,
+                    selectedScanDateRange: selectedScanDateRange,
+                    completedScanDateRange: completedScanDateRange,
                     onRequestPhotoAccess: { requestPhotoAccess() },
-                    onScan: { startPhotoScan(access: photoAccess) },
+                    onSelectScanDateRange: { selectedScanDateRange = $0 },
+                    onScan: {
+                        startPhotoScan(
+                            access: photoAccess,
+                            dateRange: selectedScanDateRange
+                        )
+                    },
                     onReviewTask: { task in
                         guard cleanupState.selectReviewGroup(for: task.category) else { return }
                         homePath.append(.reviewGroup(task.category))

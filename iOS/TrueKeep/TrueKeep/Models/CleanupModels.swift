@@ -1,6 +1,68 @@
 import Foundation
 import SwiftUI
 
+enum PhotoScanDateRange: String, CaseIterable, Identifiable, Hashable, Sendable {
+    case lastMonth
+    case lastThreeMonths
+    case all
+
+    static let defaultValue: PhotoScanDateRange = .lastMonth
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .lastMonth: "近一个月"
+        case .lastThreeMonths: "近三个月"
+        case .all: "全部"
+        }
+    }
+
+    var detail: String {
+        switch self {
+        case .lastMonth: "扫描最近一个自然月内拍摄的内容"
+        case .lastThreeMonths: "扫描最近三个自然月内拍摄的内容"
+        case .all: "全部可访问的照片和视频"
+        }
+    }
+
+    func dateBounds(
+        endingAt referenceDate: Date,
+        calendar: Calendar = .current
+    ) -> ClosedRange<Date>? {
+        let monthOffset: Int
+        switch self {
+        case .lastMonth:
+            monthOffset = -1
+        case .lastThreeMonths:
+            monthOffset = -3
+        case .all:
+            return nil
+        }
+
+        guard let lowerBound = calendar.date(
+            byAdding: .month,
+            value: monthOffset,
+            to: referenceDate
+        ) else {
+            return nil
+        }
+        return lowerBound...referenceDate
+    }
+
+    func includes(
+        creationDate: Date?,
+        endingAt referenceDate: Date,
+        calendar: Calendar = .current
+    ) -> Bool {
+        guard let bounds = dateBounds(endingAt: referenceDate, calendar: calendar) else {
+            return true
+        }
+        guard let creationDate else { return false }
+        return bounds.contains(creationDate)
+    }
+}
+
 enum CleanupCategory: String, CaseIterable, Identifiable, Hashable {
     case similar
     case screenshots
@@ -91,6 +153,54 @@ struct CleanupTask: Identifiable, Hashable {
     var previewCandidates: [CleanupCandidate]
 }
 
+enum CleanupTaskBuilder {
+    static func tasks(from groups: [CleanupGroup]) -> [CleanupTask] {
+        groups.compactMap(task(from:))
+    }
+
+    static func task(from group: CleanupGroup) -> CleanupTask? {
+        guard group.candidates.contains(where: { !$0.recommendedKeep }) else { return nil }
+
+        return CleanupTask(
+            id: group.id,
+            category: group.category,
+            description: taskDescription(for: group.category, count: group.candidates.count),
+            candidateCount: group.candidates.count,
+            estimatedBytes: group.estimatedBytes,
+            confidenceLabel: confidenceLabel(for: group.category),
+            previewCandidates: Array(group.candidates.prefix(4))
+        )
+    }
+
+    private static func taskDescription(for category: CleanupCategory, count: Int) -> String {
+        switch category {
+        case .screenshots:
+            return "\(count) 张截图，优先复核临时内容"
+        case .largeVideos:
+            return "\(count) 个长视频或大视频，建议逐个确认"
+        case .similar:
+            return "\(count) 张本机识别的相似照片，已推荐保留一张"
+        case .accidental:
+            return "\(count) 张疑似误拍，低置信度复核"
+        case .blurry:
+            return "\(count) 张疑似模糊或遮挡，低置信度复核"
+        }
+    }
+
+    private static func confidenceLabel(for category: CleanupCategory) -> String {
+        switch category {
+        case .screenshots:
+            return "可快速清理"
+        case .largeVideos:
+            return "建议复核"
+        case .similar:
+            return "推荐复核"
+        case .accidental, .blurry:
+            return "谨慎复核"
+        }
+    }
+}
+
 struct ReviewBinItem: Identifiable, Hashable {
     var id: String { candidate.id }
     var candidate: CleanupCandidate
@@ -127,15 +237,53 @@ enum PhotoDeletionResult: Hashable, Sendable {
     }
 }
 
+struct PhotoDeletionSummary: Hashable, Sendable {
+    private(set) var deletedAssetIDs: Set<String> = []
+    private(set) var estimatedBytes: Int64 = 0
+
+    var itemCount: Int {
+        deletedAssetIDs.count
+    }
+
+    var recoveryMessage: String {
+        "所选项目已移至 Photos 的“最近删除”。建议保留恢复窗口，不要立即清空。"
+    }
+
+    var detailMessage: String {
+        "这些项目仍可在 Photos 中恢复，空间可能尚未立即释放。"
+    }
+
+    var accessibilityAnnouncement: String {
+        "已移至最近删除，\(itemCount) 项，约 \(estimatedBytes.formattedStorage)。这些项目仍可恢复，空间可能尚未立即释放。"
+    }
+
+    mutating func record(
+        deletedAssetIDs assetIDs: [String],
+        candidatesByID: [String: CleanupCandidate]
+    ) {
+        for assetID in Set(assetIDs) where !deletedAssetIDs.contains(assetID) {
+            deletedAssetIDs.insert(assetID)
+            estimatedBytes += candidatesByID[assetID]?.estimatedBytes ?? 0
+        }
+    }
+}
+
 struct CleanupFlowState: Hashable {
     var tasks: [CleanupTask]
     var reviewGroups: [CleanupGroup]
     var currentReviewGroupIndex: Int
     var selectedCandidateIDs: Set<String>
     var reviewBinItems: [ReviewBinItem]
-    var hasDeletedItems: Bool
-    var postDeletionRecoveryMessage: String?
+    var deletionSummary: PhotoDeletionSummary?
     var deletionErrorMessage: String?
+
+    var hasDeletedItems: Bool {
+        deletionSummary != nil
+    }
+
+    var postDeletionRecoveryMessage: String? {
+        deletionSummary?.recoveryMessage
+    }
 
     var currentReviewGroup: CleanupGroup {
         reviewGroups[currentReviewGroupIndex]
@@ -233,24 +381,59 @@ struct CleanupFlowState: Hashable {
     }
 
     mutating func applyDeletionResult(_ result: PhotoDeletionResult) {
+        let candidatesByID = Dictionary(
+            uniqueKeysWithValues: reviewBinItems.map { ($0.id, $0.candidate) }
+        )
+
         switch result {
         case .success(let deletedAssetIDs):
-            removeDeletedReviewBinItems(deletedAssetIDs)
+            reconcileDeletedAssets(deletedAssetIDs, candidatesByID: candidatesByID)
             deletionErrorMessage = nil
-            markDeletedIfNeeded(deletedAssetIDs)
         case .partial(let deletedAssetIDs, let failedAssetIDs, let message):
-            removeDeletedReviewBinItems(deletedAssetIDs)
+            reconcileDeletedAssets(deletedAssetIDs, candidatesByID: candidatesByID)
             selectFailedReviewBinItems(failedAssetIDs)
             deletionErrorMessage = message
-            markDeletedIfNeeded(deletedAssetIDs)
         case .failure(_, let message):
             deletionErrorMessage = message
         }
     }
 
-    private mutating func removeDeletedReviewBinItems(_ deletedAssetIDs: [String]) {
+    private mutating func reconcileDeletedAssets(
+        _ deletedAssetIDs: [String],
+        candidatesByID: [String: CleanupCandidate]
+    ) {
         let deletedIDs = Set(deletedAssetIDs)
+        guard !deletedIDs.isEmpty else { return }
+        let currentGroupID = reviewGroups.indices.contains(currentReviewGroupIndex)
+            ? reviewGroups[currentReviewGroupIndex].id
+            : nil
+
         reviewBinItems.removeAll { deletedIDs.contains($0.id) }
+        selectedCandidateIDs.subtract(deletedIDs)
+
+        reviewGroups = reviewGroups.compactMap { group in
+            var updatedGroup = group
+            updatedGroup.candidates.removeAll { deletedIDs.contains($0.id) }
+            guard updatedGroup.candidates.contains(where: { !$0.recommendedKeep }) else { return nil }
+            return updatedGroup
+        }
+        normalizeReviewGroupMetadata()
+        tasks = CleanupTaskBuilder.tasks(from: reviewGroups)
+
+        let remainingCandidateIDs = Set(reviewGroups.flatMap { $0.candidates.map(\.id) })
+        selectedCandidateIDs.formIntersection(remainingCandidateIDs)
+        if reviewGroups.isEmpty {
+            currentReviewGroupIndex = 0
+        } else if let currentGroupID,
+                  let preservedIndex = reviewGroups.firstIndex(where: { $0.id == currentGroupID }) {
+            currentReviewGroupIndex = preservedIndex
+        } else {
+            currentReviewGroupIndex = min(currentReviewGroupIndex, reviewGroups.count - 1)
+        }
+
+        var summary = deletionSummary ?? PhotoDeletionSummary()
+        summary.record(deletedAssetIDs: Array(deletedIDs), candidatesByID: candidatesByID)
+        deletionSummary = summary
     }
 
     private mutating func selectDefaultCandidatesInCurrentGroup() {
@@ -266,10 +449,17 @@ struct CleanupFlowState: Hashable {
         }
     }
 
-    private mutating func markDeletedIfNeeded(_ deletedAssetIDs: [String]) {
-        guard !deletedAssetIDs.isEmpty else { return }
-        hasDeletedItems = true
-        postDeletionRecoveryMessage = "所选项目已移入 Photos 的 Recently Deleted。建议保留恢复窗口，不要立即清空。"
+    private mutating func normalizeReviewGroupMetadata() {
+        let totalsByCategory = Dictionary(grouping: reviewGroups.indices) { reviewGroups[$0].category }
+        for indices in totalsByCategory.values {
+            for (offset, index) in indices.enumerated() {
+                reviewGroups[index].groupIndex = offset + 1
+                reviewGroups[index].totalGroups = indices.count
+                reviewGroups[index].subtitle = indices.count == 1
+                    ? "\(reviewGroups[index].candidates.count) 项"
+                    : "第 \(offset + 1) 组 / \(indices.count) 组"
+            }
+        }
     }
 }
 

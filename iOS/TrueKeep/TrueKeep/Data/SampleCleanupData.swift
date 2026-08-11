@@ -143,8 +143,7 @@ extension CleanupFlowState {
             currentReviewGroupIndex: 0,
             selectedCandidateIDs: Set(similarGroup.candidates.filter(\.defaultSelectedForDeletion).map(\.id)),
             reviewBinItems: [],
-            hasDeletedItems: false,
-            postDeletionRecoveryMessage: nil,
+            deletionSummary: nil,
             deletionErrorMessage: nil
         )
     }

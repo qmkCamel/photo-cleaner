@@ -15,11 +15,16 @@ enum TrueKeepAccessibility {
         case cancelScan = "truekeep.scan.cancel"
         case retryScan = "truekeep.scan.retry"
         case viewScanResults = "truekeep.scan.view-results"
+        case activeScanDateRange = "truekeep.scan.date-range.active"
         case homeTab = "truekeep.tab.home"
         case reviewBinTab = "truekeep.tab.review-bin"
         case privacySafetyTab = "truekeep.tab.privacy-safety"
         case cleanupResultsScreen = "truekeep.cleanup.results"
         case homeScan = "truekeep.cleanup.scan"
+        case scanDateRangeSelector = "truekeep.cleanup.date-range.selector"
+        case selectedScanDateRange = "truekeep.cleanup.date-range.selected"
+        case completedScanDateRange = "truekeep.cleanup.date-range.completed"
+        case deletionSummary = "truekeep.cleanup.deletion-summary"
         case addToReviewBin = "truekeep.review.add-to-review-bin"
         case reviewAllInGroup = "truekeep.review.review-all"
         case previousReviewGroup = "truekeep.review.previous-group"
@@ -34,6 +39,10 @@ enum TrueKeepAccessibility {
 
     static func cleanupTask(category: CleanupCategory) -> String {
         "truekeep.cleanup.task.\(category.rawValue)"
+    }
+
+    static func scanDateRange(_ dateRange: PhotoScanDateRange) -> String {
+        "truekeep.cleanup.date-range.\(dateRange.rawValue)"
     }
 
     static func reviewCandidate(id: String) -> String {

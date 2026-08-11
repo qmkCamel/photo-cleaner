@@ -12,6 +12,8 @@
 | `permission-denied-retry` | 权限关闭与重试 | 重试按钮显示局部忙碌状态，失败后可继续重试或回到首页 |
 | `scan-cancel-recovery` | 扫描中取消 | 取消入口始终可用，明确未改动照片，能够回到首页 |
 | `limited-results-rescan` | 有限权限结果页重扫 | 入口位于 Tab Bar 上方，点击后重新进入本地扫描流程 |
+| `scan-date-range-selection` | 扫描时间范围 | 默认近一个月，可切换近三个月；进度页与结果页保留实际范围 |
+| `post-deletion-home-sync` | 删除成功后的首页同步 | 已删除候选和旧空间汇总消失，展示可恢复摘要、有限权限提醒与重新扫描入口 |
 
 启动参数集中维护在 `cases.json`，Flow 在 `flows/`。每条用例都必须包含 `-TrueKeepDisablePhotoDeletion`；运行器还会注入 `TRUEKEEP_DISABLE_PHOTO_DELETION=1` 作为第二道保护。
 
@@ -125,3 +127,4 @@ appclaw --report --report-dir .
 4. 优先使用 `truekeep.*` identifier；避免坐标、易变文案和模糊视觉定位。
 5. 长耗时操作必须断言操作局部进度、取消或重试入口以及失败后的恢复路径。
 6. 先运行脚本单元测试，再在模拟器或真机上执行新增 Flow。
+7. 新增或修改用户可见需求时必须保留命名截图：至少覆盖关键成功/结果状态，涉及失败或恢复时还要覆盖对应状态；AppClaw 运行报告及逐步截图作为自动化证据保留。

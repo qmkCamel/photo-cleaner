@@ -1,0 +1,24 @@
+appId: app.truekeep.ios
+name: P0 删除成功后的首页同步
+description: 验证删除成功后首页移除已删除候选、展示可恢复摘要，并保留有限权限提醒和重新扫描入口。
+platform: ios
+---
+setup:
+  - launchApp
+  - waitUntil: truekeep.cleanup.deletion-summary
+    timeout: 10
+steps:
+  - assert: truekeep.cleanup.deletion-summary
+  - assert: 本轮没有待复核项目
+  - assert: 访问范围有限
+  - waitUntilGone: truekeep.cleanup.task.screenshots
+    timeout: 3
+  - waitUntilGone: 预计可释放空间
+    timeout: 3
+  - assert: truekeep.cleanup.scan
+  - tap: truekeep.cleanup.scan
+assertions:
+  - waitUntilGone: truekeep.cleanup.deletion-summary
+    timeout: 10
+  - assert: 本地扫描
+  - done

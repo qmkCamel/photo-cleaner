@@ -381,3 +381,65 @@ struct SafetyNotice: View {
         )
     }
 }
+
+struct PhotoDeletionSummaryNotice: View {
+    var summary: PhotoDeletionSummary
+
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    var body: some View {
+        Group {
+            if dynamicTypeSize.isAccessibilitySize {
+                VStack(alignment: .leading, spacing: 10) {
+                    statusIcon
+                    summaryContent
+                }
+            } else {
+                HStack(alignment: .top, spacing: 12) {
+                    statusIcon
+                    summaryContent
+                }
+            }
+        }
+        .padding(13)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(TrueKeepTheme.greenSoft)
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .stroke(TrueKeepTheme.green.opacity(0.28))
+        )
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(summary.accessibilityAnnouncement)
+        .accessibilityIdentifier(TrueKeepAccessibility.Control.deletionSummary.id)
+    }
+
+    private var statusIcon: some View {
+        Image(systemName: "checkmark.circle.fill")
+            .font(TrueKeepTheme.Font.iconMedium)
+            .foregroundStyle(TrueKeepTheme.greenStrong)
+            .frame(width: 28, height: 28)
+            .accessibilityHidden(true)
+    }
+
+    private var summaryContent: some View {
+        VStack(alignment: .leading, spacing: 5) {
+            Text("已移至“最近删除”")
+                .font(TrueKeepTheme.Font.cardTitle)
+                .foregroundStyle(TrueKeepTheme.ink)
+                .lineLimit(nil)
+                .fixedSize(horizontal: false, vertical: true)
+            Text("\(summary.itemCount) 项 · 约 \(summary.estimatedBytes.formattedStorage)")
+                .font(TrueKeepTheme.Font.metric)
+                .foregroundStyle(TrueKeepTheme.greenStrong)
+                .lineLimit(nil)
+                .fixedSize(horizontal: false, vertical: true)
+            Text(summary.detailMessage)
+                .font(TrueKeepTheme.Font.caption)
+                .foregroundStyle(TrueKeepTheme.muted)
+                .lineLimit(nil)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}

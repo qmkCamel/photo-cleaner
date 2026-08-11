@@ -16,15 +16,22 @@ final class CleanupFlowStateTests: XCTestCase {
         XCTAssertFalse(state.hasDeletedItems)
     }
 
-    func testConfirmDeleteClearsReviewBinAndExposesRecoveryMessage() {
-        var state = CleanupFlowState.sample()
+    func testSuccessfulDeletionClearsAllDerivedResultsAndExposesStructuredSummary() {
+        var state = screenshotState()
         state.addCurrentSelectionToReviewBin()
+        let deletedIDs = state.selectedReviewBinAssetIDs
 
-        state.applyDeletionResult(.success(deletedAssetIDs: state.selectedReviewBinAssetIDs))
+        state.applyDeletionResult(.success(deletedAssetIDs: deletedIDs))
 
         XCTAssertEqual(state.reviewBinItems.count, 0)
+        XCTAssertEqual(state.reviewGroups.count, 0)
+        XCTAssertEqual(state.tasks.count, 0)
+        XCTAssertEqual(state.selectedCandidateIDs.count, 0)
         XCTAssertTrue(state.hasDeletedItems)
-        XCTAssertEqual(state.postDeletionRecoveryMessage, "所选项目已移入 Photos 的 Recently Deleted。建议保留恢复窗口，不要立即清空。")
+        XCTAssertEqual(state.deletionSummary?.deletedAssetIDs, Set(deletedIDs))
+        XCTAssertEqual(state.deletionSummary?.itemCount, 3)
+        XCTAssertEqual(state.deletionSummary?.estimatedBytes, 6_000_000)
+        XCTAssertEqual(state.postDeletionRecoveryMessage, "所选项目已移至 Photos 的“最近删除”。建议保留恢复窗口，不要立即清空。")
     }
 
     func testSelectedReviewBinAssetIDsOnlyIncludesSelectedItems() {
@@ -36,29 +43,131 @@ final class CleanupFlowStateTests: XCTestCase {
     }
 
     func testFailedPhotoDeletionKeepsItemsAndShowsError() {
-        var state = CleanupFlowState.sample()
+        var state = screenshotState()
         state.addCurrentSelectionToReviewBin()
-        let originalIDs = state.reviewBinItems.map(\.id)
+        let originalGroups = state.reviewGroups
+        let originalTasks = state.tasks
+        let originalReviewBin = state.reviewBinItems
+        let originalSelection = state.selectedCandidateIDs
 
         state.applyDeletionResult(.failure(assetIDs: state.selectedReviewBinAssetIDs, message: "Photos 删除失败，请稍后重试。"))
 
-        XCTAssertEqual(state.reviewBinItems.map(\.id), originalIDs)
+        XCTAssertEqual(state.reviewBinItems, originalReviewBin)
+        XCTAssertEqual(state.reviewGroups, originalGroups)
+        XCTAssertEqual(state.tasks, originalTasks)
+        XCTAssertEqual(state.selectedCandidateIDs, originalSelection)
         XCTAssertFalse(state.hasDeletedItems)
+        XCTAssertNil(state.deletionSummary)
         XCTAssertEqual(state.deletionErrorMessage, "Photos 删除失败，请稍后重试。")
     }
 
-    func testPartialPhotoDeletionRemovesDeletedItemsAndKeepsFailuresSelected() {
-        var state = CleanupFlowState.sample()
+    func testPartialPhotoDeletionRemovesOnlySuccessesAndRebuildsRemainingTask() {
+        var state = screenshotState()
         state.addCurrentSelectionToReviewBin()
         let deletedID = state.reviewBinItems[0].id
-        let failedID = state.reviewBinItems[1].id
+        let failedIDs = Array(state.reviewBinItems.dropFirst().map(\.id))
 
-        state.applyDeletionResult(.partial(deletedAssetIDs: [deletedID], failedAssetIDs: [failedID], message: "1 项未能删除。"))
+        state.applyDeletionResult(.partial(deletedAssetIDs: [deletedID], failedAssetIDs: failedIDs, message: "2 项未能删除。"))
 
         XCTAssertFalse(state.reviewBinItems.contains { $0.id == deletedID })
-        XCTAssertTrue(state.reviewBinItems.contains { $0.id == failedID && $0.selectedForDelete })
+        XCTAssertTrue(failedIDs.allSatisfy { failedID in
+            state.reviewBinItems.contains { $0.id == failedID && $0.selectedForDelete }
+        })
+        XCTAssertFalse(state.reviewGroups.flatMap(\.candidates).contains { $0.id == deletedID })
+        XCTAssertFalse(state.tasks.flatMap(\.previewCandidates).contains { $0.id == deletedID })
+        XCTAssertEqual(state.tasks.first?.candidateCount, 2)
+        XCTAssertEqual(state.totalEstimatedBytes, 5_000_000)
         XCTAssertTrue(state.hasDeletedItems)
-        XCTAssertEqual(state.deletionErrorMessage, "1 项未能删除。")
+        XCTAssertEqual(state.deletionSummary?.deletedAssetIDs, [deletedID])
+        XCTAssertEqual(state.deletionSummary?.estimatedBytes, 1_000_000)
+        XCTAssertEqual(state.deletionErrorMessage, "2 项未能删除。")
+    }
+
+    func testDeletingLastActionableCandidateDropsRecommendedKeepOnlyGroup() {
+        let keepCandidate = candidate(id: "keep", bytes: 0, selected: false, recommendedKeep: true)
+        let deleteCandidate = candidate(id: "delete", bytes: 2_000_000, selected: true)
+        let group = CleanupGroup(
+            id: "similar-group",
+            category: .similar,
+            title: "相似照片",
+            subtitle: "1 组",
+            groupIndex: 1,
+            totalGroups: 1,
+            explanation: "测试组",
+            candidates: [keepCandidate, deleteCandidate]
+        )
+        var state = CleanupFlowState(
+            tasks: CleanupTaskBuilder.tasks(from: [group]),
+            reviewGroups: [group],
+            currentReviewGroupIndex: 0,
+            selectedCandidateIDs: [deleteCandidate.id],
+            reviewBinItems: [],
+            deletionSummary: nil,
+            deletionErrorMessage: nil
+        )
+        state.addCurrentSelectionToReviewBin()
+
+        state.applyDeletionResult(.success(deletedAssetIDs: [deleteCandidate.id]))
+
+        XCTAssertTrue(state.tasks.isEmpty)
+        XCTAssertTrue(state.reviewGroups.isEmpty)
+        XCTAssertEqual(state.deletionSummary?.itemCount, 1)
+        XCTAssertFalse(state.deletionSummary?.deletedAssetIDs.contains(keepCandidate.id) ?? true)
+    }
+
+    func testDeletionSummaryAccumulatesUniqueAssetsAcrossBatches() {
+        var state = screenshotState(count: 2)
+        state.addCurrentSelectionToReviewBin()
+        let firstItem = state.reviewBinItems[0]
+        let secondItem = state.reviewBinItems[1]
+        state.toggleReviewBinItem(secondItem)
+
+        state.applyDeletionResult(.success(deletedAssetIDs: [firstItem.id]))
+        state.toggleReviewBinItem(secondItem)
+        state.applyDeletionResult(.success(deletedAssetIDs: [secondItem.id, secondItem.id]))
+
+        XCTAssertEqual(state.deletionSummary?.deletedAssetIDs, [firstItem.id, secondItem.id])
+        XCTAssertEqual(state.deletionSummary?.itemCount, 2)
+        XCTAssertEqual(state.deletionSummary?.estimatedBytes, 3_000_000)
+        XCTAssertTrue(state.tasks.isEmpty)
+    }
+
+    func testDeletingEarlierGroupPreservesCurrentReviewGroupByIdentity() {
+        let firstGroup = reviewGroup(id: "screenshots", category: .screenshots, candidateID: "screen-1")
+        let secondGroup = reviewGroup(id: "large-videos", category: .largeVideos, candidateID: "video-1")
+        var state = CleanupFlowState(
+            tasks: CleanupTaskBuilder.tasks(from: [firstGroup, secondGroup]),
+            reviewGroups: [firstGroup, secondGroup],
+            currentReviewGroupIndex: 1,
+            selectedCandidateIDs: ["video-1"],
+            reviewBinItems: [
+                ReviewBinItem(
+                    candidate: firstGroup.candidates[0],
+                    selectedForDelete: true,
+                    addedAt: Date(timeIntervalSince1970: 0)
+                )
+            ],
+            deletionSummary: nil,
+            deletionErrorMessage: nil
+        )
+
+        state.applyDeletionResult(.success(deletedAssetIDs: ["screen-1"]))
+
+        XCTAssertEqual(state.currentReviewGroup.id, secondGroup.id)
+        XCTAssertEqual(state.currentReviewGroupIndex, 0)
+        XCTAssertEqual(state.selectedCandidateIDs, ["video-1"])
+    }
+
+    func testNewScanStateDoesNotCarryDeletionSummary() {
+        var deletedState = screenshotState(count: 1)
+        deletedState.addCurrentSelectionToReviewBin()
+        deletedState.applyDeletionResult(.success(deletedAssetIDs: deletedState.selectedReviewBinAssetIDs))
+
+        let newScanState = PhotoScanResultBuilder.state(from: [])
+
+        XCTAssertNotNil(deletedState.deletionSummary)
+        XCTAssertNil(newScanState.deletionSummary)
+        XCTAssertFalse(newScanState.hasDeletedItems)
     }
 
     func testRecommendedKeepCandidateIsNeverSelectedForDeletionByDefault() {
@@ -126,8 +235,7 @@ final class CleanupFlowStateTests: XCTestCase {
             currentReviewGroupIndex: 0,
             selectedCandidateIDs: ["screen-1"],
             reviewBinItems: [],
-            hasDeletedItems: false,
-            postDeletionRecoveryMessage: nil,
+            deletionSummary: nil,
             deletionErrorMessage: nil
         )
 
@@ -166,6 +274,38 @@ final class CleanupFlowStateTests: XCTestCase {
                     thumbnail: .screenshot
                 )
             ]
+        )
+    }
+
+    private func screenshotState(count: Int = 3) -> CleanupFlowState {
+        PhotoScanResultBuilder.state(
+            from: (1...count).map { index in
+                PhotoAssetSnapshot(
+                    id: "screen-\(index)",
+                    kind: .photo,
+                    isScreenshot: true,
+                    duration: 0,
+                    estimatedBytes: Int64(index) * 1_000_000
+                )
+            }
+        )
+    }
+
+    private func candidate(
+        id: String,
+        bytes: Int64,
+        selected: Bool,
+        recommendedKeep: Bool = false
+    ) -> CleanupCandidate {
+        CleanupCandidate(
+            id: id,
+            category: .similar,
+            confidence: .high,
+            defaultSelectedForDeletion: selected,
+            recommendedKeep: recommendedKeep,
+            reason: "测试候选",
+            estimatedBytes: bytes,
+            thumbnail: .screenshot
         )
     }
 }

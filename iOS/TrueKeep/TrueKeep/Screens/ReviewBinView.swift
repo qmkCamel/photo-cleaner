@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct ReviewBinView: View {
     @Binding var state: CleanupFlowState
@@ -57,7 +58,16 @@ struct ReviewBinView: View {
                 .foregroundStyle(TrueKeepTheme.muted)
                 .frame(maxWidth: .infinity, alignment: .center)
 
-            SafetyNotice(title: "尚未删除任何内容", message: "复核箱中的项目只会在你确认后移除。")
+            if let deletionSummary = state.deletionSummary {
+                PhotoDeletionSummaryNotice(summary: deletionSummary)
+            }
+
+            SafetyNotice(
+                title: state.deletionSummary == nil ? "尚未删除任何内容" : "剩余项目尚未删除",
+                message: state.deletionSummary == nil
+                    ? "复核箱中的项目只会在你确认后移除。"
+                    : "以下项目仍在复核箱中，可重试删除或返回继续复核。"
+            )
 
             if let deletionErrorMessage = state.deletionErrorMessage {
                 SafetyNotice(title: "删除未完成", message: deletionErrorMessage)
@@ -146,6 +156,11 @@ struct ReviewBinView: View {
         }
 
         isDeleting = true
+        let selectedCandidatesByID = Dictionary(
+            uniqueKeysWithValues: state.reviewBinItems
+                .filter(\.selectedForDelete)
+                .map { ($0.id, $0.candidate) }
+        )
         let photoDeletion = photoDeletion
         Task {
             let result = await photoDeletion.deleteAssets(withLocalIdentifiers: assetIDs)
@@ -153,8 +168,40 @@ struct ReviewBinView: View {
                 state.applyDeletionResult(result)
                 isDeleting = false
                 showsDeleteConfirmation = false
+                UIAccessibility.post(
+                    notification: .announcement,
+                    argument: deletionAnnouncement(
+                        for: result,
+                        selectedCandidatesByID: selectedCandidatesByID
+                    )
+                )
             }
         }
+    }
+
+    private func deletionAnnouncement(
+        for result: PhotoDeletionResult,
+        selectedCandidatesByID: [String: CleanupCandidate]
+    ) -> String {
+        switch result {
+        case .success(let deletedAssetIDs):
+            let bytes = estimatedBytes(for: deletedAssetIDs, candidatesByID: selectedCandidatesByID)
+            return "删除完成，\(Set(deletedAssetIDs).count) 项已移至最近删除，约 \(bytes.formattedStorage)。这些项目仍可恢复，空间可能尚未立即释放。"
+        case .partial(let deletedAssetIDs, let failedAssetIDs, let message):
+            let bytes = estimatedBytes(for: deletedAssetIDs, candidatesByID: selectedCandidatesByID)
+            return "部分删除完成，成功 \(Set(deletedAssetIDs).count) 项，约 \(bytes.formattedStorage)，失败 \(Set(failedAssetIDs).count) 项。\(message)"
+        case .failure(_, let message):
+            return "删除未完成。\(message)"
+        }
+    }
+
+    private func estimatedBytes(
+        for assetIDs: [String],
+        candidatesByID: [String: CleanupCandidate]
+    ) -> Int64 {
+        Set(assetIDs)
+            .compactMap { candidatesByID[$0]?.estimatedBytes }
+            .reduce(0, +)
     }
 
     private func reviewBinItemAccessibilityLabel(_ item: ReviewBinItem) -> String {
