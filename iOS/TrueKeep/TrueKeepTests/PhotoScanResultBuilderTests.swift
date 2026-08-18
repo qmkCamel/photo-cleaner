@@ -1,9 +1,57 @@
 import XCTest
 import CoreML
 import CoreGraphics
+import Photos
 @testable import TrueKeep
 
 final class PhotoScanResultBuilderTests: XCTestCase {
+    func testPhotoImageRequestOptionsStayLocalForBothDeliveryModes() {
+        for deliveryMode in PhotoImageRequestStrategy.deliveryModes {
+            let options = PhotoImageRequestStrategy.requestOptions(deliveryMode: deliveryMode)
+
+            XCTAssertEqual(options.deliveryMode, deliveryMode)
+            XCTAssertEqual(options.resizeMode, .fast)
+            XCTAssertFalse(options.isNetworkAccessAllowed)
+            XCTAssertTrue(options.isSynchronous)
+        }
+    }
+
+    func testPhotoImageRequestStrategyStopsAfterFastImageIsAvailable() {
+        var requestedModes: [PHImageRequestOptionsDeliveryMode] = []
+
+        let image = PhotoImageRequestStrategy.firstAvailable { deliveryMode in
+            requestedModes.append(deliveryMode)
+            return deliveryMode == .fastFormat ? "fast-image" : "high-quality-image"
+        }
+
+        XCTAssertEqual(image, "fast-image")
+        XCTAssertEqual(requestedModes, [.fastFormat])
+    }
+
+    func testPhotoImageRequestStrategyFallsBackToHighQualityImage() {
+        var requestedModes: [PHImageRequestOptionsDeliveryMode] = []
+
+        let image = PhotoImageRequestStrategy.firstAvailable { deliveryMode in
+            requestedModes.append(deliveryMode)
+            return deliveryMode == .highQualityFormat ? "high-quality-image" : nil
+        }
+
+        XCTAssertEqual(image, "high-quality-image")
+        XCTAssertEqual(requestedModes, [.fastFormat, .highQualityFormat])
+    }
+
+    func testPhotoImageRequestStrategyReturnsNilAfterBothLocalRequestsFail() {
+        var requestedModes: [PHImageRequestOptionsDeliveryMode] = []
+
+        let image: String? = PhotoImageRequestStrategy.firstAvailable { deliveryMode in
+            requestedModes.append(deliveryMode)
+            return nil
+        }
+
+        XCTAssertNil(image)
+        XCTAssertEqual(requestedModes, [.fastFormat, .highQualityFormat])
+    }
+
     func testBuildsScreenshotAndLargeVideoTasksFromAssetSnapshots() {
         let state = PhotoScanResultBuilder.state(
             from: [

@@ -464,6 +464,36 @@ struct PhotoLibraryScanPolicy: Hashable, Sendable {
     }
 }
 
+enum PhotoImageRequestStrategy {
+    static let deliveryModes: [PHImageRequestOptionsDeliveryMode] = [
+        .fastFormat,
+        .highQualityFormat
+    ]
+
+    static func firstAvailable<Value>(
+        request: (PHImageRequestOptionsDeliveryMode) -> Value?
+    ) -> Value? {
+        for deliveryMode in deliveryModes {
+            if let value = request(deliveryMode) {
+                return value
+            }
+        }
+
+        return nil
+    }
+
+    static func requestOptions(
+        deliveryMode: PHImageRequestOptionsDeliveryMode
+    ) -> PHImageRequestOptions {
+        let options = PHImageRequestOptions()
+        options.deliveryMode = deliveryMode
+        options.resizeMode = .fast
+        options.isNetworkAccessAllowed = false
+        options.isSynchronous = true
+        return options
+    }
+}
+
 enum PhotoAssetSnapshotBatcher {
     static func batchRanges(totalCount: Int, batchSize: Int) -> [Range<Int>] {
         guard totalCount > 0 else { return [] }
@@ -621,11 +651,25 @@ struct SystemPhotoLibraryScanner: PhotoLibraryScanning {
         imageManager: PHImageManager,
         qualityScorer: any PhotoQualityScoring
     ) -> PhotoVisualMetrics? {
-        let options = PHImageRequestOptions()
-        options.deliveryMode = .fastFormat
-        options.resizeMode = .fast
-        options.isNetworkAccessAllowed = false
-        options.isSynchronous = true
+        guard let cgImage = PhotoImageRequestStrategy.firstAvailable(request: { deliveryMode in
+            requestImage(
+                for: asset,
+                imageManager: imageManager,
+                deliveryMode: deliveryMode
+            )?.cgImage
+        }) else {
+            return nil
+        }
+
+        return PhotoVisualAnalyzer.metrics(from: cgImage, qualityScorer: qualityScorer)
+    }
+
+    private static func requestImage(
+        for asset: PHAsset,
+        imageManager: PHImageManager,
+        deliveryMode: PHImageRequestOptionsDeliveryMode
+    ) -> UIImage? {
+        let options = PhotoImageRequestStrategy.requestOptions(deliveryMode: deliveryMode)
 
         var requestedImage: UIImage?
         imageManager.requestImage(
@@ -640,8 +684,7 @@ struct SystemPhotoLibraryScanner: PhotoLibraryScanning {
             requestedImage = image
         }
 
-        guard let cgImage = requestedImage?.cgImage else { return nil }
-        return PhotoVisualAnalyzer.metrics(from: cgImage, qualityScorer: qualityScorer)
+        return requestedImage
     }
 
     private func fetchOptions(
