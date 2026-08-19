@@ -37,8 +37,8 @@ enum TrueKeepAccessibility {
         var id: String { rawValue }
     }
 
-    static func cleanupTask(category: CleanupCategory) -> String {
-        "truekeep.cleanup.task.\(category.rawValue)"
+    static func cleanupTask(id: CleanupTask.ID) -> String {
+        "truekeep.cleanup.task.\(id)"
     }
 
     static func scanDateRange(_ dateRange: PhotoScanDateRange) -> String {

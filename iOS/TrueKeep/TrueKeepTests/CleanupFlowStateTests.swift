@@ -178,7 +178,7 @@ final class CleanupFlowStateTests: XCTestCase {
         XCTAssertFalse(keepCandidate?.defaultSelectedForDeletion ?? true)
     }
 
-    func testSelectingReviewGroupByCategoryRefreshesDefaultSelection() {
+    func testSelectingReviewGroupByIDRefreshesDefaultSelection() throws {
         var state = PhotoScanResultBuilder.state(
             from: [
                 PhotoAssetSnapshot(
@@ -198,7 +198,10 @@ final class CleanupFlowStateTests: XCTestCase {
             ]
         )
 
-        state.selectReviewGroup(for: .largeVideos)
+        let videoGroupID = try XCTUnwrap(
+            state.reviewGroups.first(where: { $0.category == .largeVideos })?.id
+        )
+        XCTAssertTrue(state.selectReviewGroup(id: videoGroupID))
 
         XCTAssertEqual(state.currentReviewGroup.category, .largeVideos)
         XCTAssertEqual(state.currentReviewSelectionCount, 1)
@@ -206,11 +209,47 @@ final class CleanupFlowStateTests: XCTestCase {
         XCTAssertFalse(state.selectedCandidateIDs.contains("screen-1"))
     }
 
+    func testSelectingReviewGroupByIDTargetsMatchingGroupWhenCategoriesRepeat() {
+        let firstGroup = reviewGroup(
+            id: "similar-first",
+            category: .similar,
+            candidateID: "similar-first-candidate"
+        )
+        let secondGroup = reviewGroup(
+            id: "similar-second",
+            category: .similar,
+            candidateID: "similar-second-candidate"
+        )
+        var state = CleanupFlowState(
+            tasks: [],
+            reviewGroups: [firstGroup, secondGroup],
+            currentReviewGroupIndex: 0,
+            selectedCandidateIDs: ["similar-first-candidate"],
+            reviewBinItems: [],
+            deletionSummary: nil,
+            deletionErrorMessage: nil
+        )
+
+        XCTAssertTrue(state.selectReviewGroup(id: secondGroup.id))
+        XCTAssertEqual(state.currentReviewGroup.id, secondGroup.id)
+        XCTAssertEqual(state.selectedCandidateIDs, ["similar-second-candidate"])
+    }
+
+    func testSelectingMissingReviewGroupIDPreservesCurrentState() {
+        var state = CleanupFlowState.sample()
+        let originalState = state
+
+        XCTAssertFalse(state.selectReviewGroup(id: "missing-group"))
+        XCTAssertEqual(state, originalState)
+    }
+
     func testSampleTasksEachOpenAReviewGroup() {
         let state = CleanupFlowState.sample()
         let reviewCategories = Set(state.reviewGroups.map(\.category))
+        let reviewGroupIDs = Set(state.reviewGroups.map(\.id))
 
         XCTAssertEqual(Set(state.tasks.map(\.category)), reviewCategories)
+        XCTAssertEqual(Set(state.tasks.map(\.id)), reviewGroupIDs)
     }
 
     func testSelectingAllReviewCandidatesExcludesRecommendedKeepItems() {

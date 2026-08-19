@@ -15,7 +15,7 @@ enum AppTab: Hashable {
 }
 
 enum CleanupRoute: Hashable {
-    case reviewGroup(CleanupCategory)
+    case reviewGroup(CleanupGroup.ID)
 }
 
 struct AppLaunchConfiguration: Hashable {
@@ -30,6 +30,7 @@ struct AppLaunchConfiguration: Hashable {
     static let uiTestScanInProgressArgument = "-TrueKeepUITestScanInProgress"
     static let uiTestAuthorizedHomeArgument = "-TrueKeepUITestAuthorizedHome"
     static let uiTestPostDeletionSuccessArgument = "-TrueKeepUITestPostDeletionSuccess"
+    static let uiTestMultipleSimilarGroupsArgument = "-TrueKeepUITestMultipleSimilarGroups"
     static let uiTestDelayedPhotoAccessArgument = "-TrueKeepUITestDelayPhotoAccess"
     static let uiTestDelayedPhotoDeletionArgument = "-TrueKeepUITestDelayPhotoDeletion"
 
@@ -57,6 +58,9 @@ struct AppLaunchConfiguration: Hashable {
         if uiTestScenario == .postDeletionSuccess {
             return Self.postDeletionSuccessState()
         }
+        if uiTestScenario == .multipleSimilarGroups {
+            return .multipleSimilarGroupsSample()
+        }
         return usesSampleCleanupData ? .sample() : PhotoScanResultBuilder.state(from: [])
     }
 
@@ -66,7 +70,7 @@ struct AppLaunchConfiguration: Hashable {
             .permissionIssue(.denied)
         case .scanInterrupted, .limitedCompletedScan, .scanInProgress:
             .scan
-        case .authorizedHome, .postDeletionSuccess:
+        case .authorizedHome, .postDeletionSuccess, .multipleSimilarGroups:
             .main
         case nil:
             if access.requiresSettings {
@@ -85,7 +89,7 @@ struct AppLaunchConfiguration: Hashable {
             .denied
         case .limitedCompletedScan, .postDeletionSuccess:
             .limited
-        case .scanInterrupted, .scanInProgress, .authorizedHome:
+        case .scanInterrupted, .scanInProgress, .authorizedHome, .multipleSimilarGroups:
             .full
         case nil:
             .notDetermined
@@ -96,7 +100,7 @@ struct AppLaunchConfiguration: Hashable {
         switch uiTestScenario {
         case .scanInterrupted:
             .interrupted(message: "用户已取消")
-        case .limitedCompletedScan, .postDeletionSuccess:
+        case .limitedCompletedScan, .postDeletionSuccess, .multipleSimilarGroups:
             .completed(candidateCount: state.tasks.map(\.candidateCount).reduce(0, +))
         case .scanInProgress, .authorizedHome, .permissionDenied, nil:
             .scanning
@@ -104,7 +108,10 @@ struct AppLaunchConfiguration: Hashable {
     }
 
     var initialHasCompletedScan: Bool {
-        usesSampleCleanupData || uiTestScenario == .limitedCompletedScan || uiTestScenario == .postDeletionSuccess
+        usesSampleCleanupData
+            || uiTestScenario == .limitedCompletedScan
+            || uiTestScenario == .postDeletionSuccess
+            || uiTestScenario == .multipleSimilarGroups
     }
 
     static func markIntroCompleted() {
@@ -135,6 +142,7 @@ enum AppUITestLaunchScenario: Hashable {
     case scanInProgress
     case authorizedHome
     case postDeletionSuccess
+    case multipleSimilarGroups
 
     init?(arguments: [String]) {
         if arguments.contains(AppLaunchConfiguration.uiTestPermissionDeniedArgument) {
@@ -149,6 +157,8 @@ enum AppUITestLaunchScenario: Hashable {
             self = .authorizedHome
         } else if arguments.contains(AppLaunchConfiguration.uiTestPostDeletionSuccessArgument) {
             self = .postDeletionSuccess
+        } else if arguments.contains(AppLaunchConfiguration.uiTestMultipleSimilarGroupsArgument) {
+            self = .multipleSimilarGroups
         } else {
             return nil
         }
@@ -372,8 +382,8 @@ struct AppRootView: View {
                         )
                     },
                     onReviewTask: { task in
-                        guard cleanupState.selectReviewGroup(for: task.category) else { return }
-                        homePath.append(.reviewGroup(task.category))
+                        guard cleanupState.selectReviewGroup(id: task.id) else { return }
+                        homePath.append(.reviewGroup(task.id))
                     }
                 )
                 .navigationDestination(for: CleanupRoute.self) { route in

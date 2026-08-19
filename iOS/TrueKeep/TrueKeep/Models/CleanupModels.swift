@@ -325,11 +325,8 @@ struct CleanupFlowState: Hashable {
     }
 
     @discardableResult
-    mutating func selectReviewGroup(for category: CleanupCategory) -> Bool {
-        guard let index = reviewGroups.firstIndex(where: { $0.category == category }) else {
-            selectedCandidateIDs.removeAll()
-            return false
-        }
+    mutating func selectReviewGroup(id groupID: CleanupGroup.ID) -> Bool {
+        guard let index = reviewGroups.firstIndex(where: { $0.id == groupID }) else { return false }
 
         currentReviewGroupIndex = index
         selectDefaultCandidatesInCurrentGroup()

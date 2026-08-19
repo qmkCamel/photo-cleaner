@@ -28,8 +28,8 @@ final class TrueKeepAccessibilityTests: XCTestCase {
 
     func testDynamicIdentifiersRemainStableForAutomation() {
         XCTAssertEqual(
-            TrueKeepAccessibility.cleanupTask(category: .screenshots),
-            "truekeep.cleanup.task.screenshots"
+            TrueKeepAccessibility.cleanupTask(id: "screenshots-chat-03"),
+            "truekeep.cleanup.task.screenshots-chat-03"
         )
         XCTAssertEqual(
             TrueKeepAccessibility.reviewCandidate(id: "asset-1"),

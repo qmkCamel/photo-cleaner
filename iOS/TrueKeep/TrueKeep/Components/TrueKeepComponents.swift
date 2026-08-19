@@ -194,6 +194,7 @@ struct ThumbnailView: View {
     var assetID: String? = nil
     var isSelected: Bool = false
     var isRecommendedKeep: Bool = false
+    var showsSelectionIndicator: Bool = true
     var videoLabel: String?
     var thumbnailProvider: any PhotoThumbnailProviding = SystemPhotoThumbnailProvider.shared
 
@@ -236,7 +237,9 @@ struct ThumbnailView: View {
                 VStack {
                     HStack {
                         Spacer()
-                        selectionIndicator
+                        if showsSelectionIndicator {
+                            selectionIndicator
+                        }
                     }
                     Spacer()
                     if let videoLabel {

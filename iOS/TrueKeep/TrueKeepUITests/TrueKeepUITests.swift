@@ -209,6 +209,25 @@ final class TrueKeepUITests: XCTestCase {
         assertTaskOpensReviewGroup(taskID: ID.taskLargeVideos, title: "大视频复核")
     }
 
+    func testHomePreviewsHideSelectionCirclesAndSecondSimilarTaskOpensSecondGroup() {
+        launchForUITestScenario("-TrueKeepUITestMultipleSimilarGroups")
+
+        assertHomeIsVisible()
+        let secondSimilarTask = app.buttons[ID.taskSimilarSecond]
+        scrollToMakeHittable(secondSimilarTask)
+        attachScreenshot(named: "home-similar-task-previews-without-selection-circles")
+
+        secondSimilarTask.tap()
+
+        XCTAssertTrue(app.staticTexts["第 2 组 / 2 组"].waitForExistence(timeout: defaultTimeout))
+        XCTAssertTrue(
+            app.buttons["truekeep.review.candidate.similar-13-delete"]
+                .waitForExistence(timeout: defaultTimeout)
+        )
+        XCTAssertFalse(app.staticTexts["第 1 组 / 2 组"].exists)
+        attachScreenshot(named: "review-second-similar-task-opened-from-home")
+    }
+
     func testLargeVisualControlsRespondNearTheirEdges() {
         launchWithArguments([
             "-TrueKeepDisablePhotoDeletion",
@@ -701,11 +720,12 @@ private enum ID {
     static let settingsPrivacyDetails = "truekeep.settings.topic.privacy-details"
     static let settingsHelpSupport = "truekeep.settings.topic.help-support"
 
-    static let taskSimilar = "truekeep.cleanup.task.similar"
-    static let taskScreenshots = "truekeep.cleanup.task.screenshots"
-    static let taskAccidental = "truekeep.cleanup.task.accidental"
-    static let taskBlurry = "truekeep.cleanup.task.blurry"
-    static let taskLargeVideos = "truekeep.cleanup.task.largeVideos"
+    static let taskSimilar = "truekeep.cleanup.task.similar-family-12"
+    static let taskSimilarSecond = "truekeep.cleanup.task.similar-family-13"
+    static let taskScreenshots = "truekeep.cleanup.task.screenshots-chat-03"
+    static let taskAccidental = "truekeep.cleanup.task.accidental-pocket-07"
+    static let taskBlurry = "truekeep.cleanup.task.blurry-low-confidence-02"
+    static let taskLargeVideos = "truekeep.cleanup.task.large-videos-01"
     static let reviewCandidateBlur1 = "truekeep.review.candidate.blur-01"
     static let reviewBinScreenshotItem = "truekeep.review-bin.item.shot-01"
 

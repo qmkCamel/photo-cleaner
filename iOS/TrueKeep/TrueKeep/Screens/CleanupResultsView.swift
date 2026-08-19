@@ -397,7 +397,7 @@ private struct CleanupTaskCard: View {
             .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).stroke(TrueKeepTheme.line))
         }
         .buttonStyle(.plain)
-        .accessibilityIdentifier(TrueKeepAccessibility.cleanupTask(category: task.category))
+        .accessibilityIdentifier(TrueKeepAccessibility.cleanupTask(id: task.id))
         .accessibilityLabel("\(task.category.title)，\(task.description)，\(task.candidateCount) 项，\(task.confidenceLabel)")
         .accessibilityHint("打开复核列表")
     }
@@ -459,7 +459,8 @@ private struct CleanupTaskCard: View {
             ForEach(task.previewCandidates.prefix(4)) { candidate in
                 ThumbnailView(
                     style: candidate.thumbnail,
-                    assetID: candidate.thumbnailAssetID
+                    assetID: candidate.thumbnailAssetID,
+                    showsSelectionIndicator: false
                 )
                 .frame(width: 37, height: 37)
             }

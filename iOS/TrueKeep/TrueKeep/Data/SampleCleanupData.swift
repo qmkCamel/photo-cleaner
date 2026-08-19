@@ -91,7 +91,7 @@ extension CleanupFlowState {
 
         let tasks = [
             CleanupTask(
-                id: "similar",
+                id: similarGroup.id,
                 category: .similar,
                 description: "67 组，建议保留最佳照片",
                 candidateCount: 1_284,
@@ -100,7 +100,7 @@ extension CleanupFlowState {
                 previewCandidates: Array(similarGroup.candidates.prefix(4))
             ),
             CleanupTask(
-                id: "screenshots",
+                id: screenshotGroup.id,
                 category: .screenshots,
                 description: "旧截图、重复截图和临时信息",
                 candidateCount: 568,
@@ -109,7 +109,7 @@ extension CleanupFlowState {
                 previewCandidates: screenshotCandidates
             ),
             CleanupTask(
-                id: "accidental",
+                id: accidentalGroup.id,
                 category: .accidental,
                 description: "口袋、地板、天花板等低价值照片",
                 candidateCount: 342,
@@ -118,7 +118,7 @@ extension CleanupFlowState {
                 previewCandidates: accidentalCandidates
             ),
             CleanupTask(
-                id: "blurry",
+                id: blurryGroup.id,
                 category: .blurry,
                 description: "低清晰度或手指遮挡",
                 candidateCount: 213,
@@ -127,7 +127,7 @@ extension CleanupFlowState {
                 previewCandidates: blurryCandidates
             ),
             CleanupTask(
-                id: "large-videos",
+                id: videoGroup.id,
                 category: .largeVideos,
                 description: "大于 500 MB 的视频",
                 candidateCount: 24,
@@ -146,6 +146,51 @@ extension CleanupFlowState {
             deletionSummary: nil,
             deletionErrorMessage: nil
         )
+    }
+
+    static func multipleSimilarGroupsSample() -> CleanupFlowState {
+        var state = sample()
+        var firstGroup = state.reviewGroups[0]
+        firstGroup.subtitle = "第 1 组 / 2 组"
+        firstGroup.groupIndex = 1
+        firstGroup.totalGroups = 2
+
+        let secondGroup = CleanupGroup(
+            id: "similar-family-13",
+            category: .similar,
+            title: "相似照片",
+            subtitle: "第 2 组 / 2 组",
+            groupIndex: 2,
+            totalGroups: 2,
+            explanation: "第二组确定性相似照片用于验证首页任务会打开对应分组。",
+            candidates: [
+                candidate(
+                    "keep-13",
+                    .similar,
+                    .high,
+                    false,
+                    true,
+                    "第二组推荐保留照片。",
+                    0,
+                    .garden
+                ),
+                candidate(
+                    "similar-13-delete",
+                    .similar,
+                    .high,
+                    true,
+                    false,
+                    "第二组待复核照片。",
+                    4_100_000,
+                    .kidsOutdoor
+                )
+            ]
+        )
+
+        state.reviewGroups[0] = firstGroup
+        state.reviewGroups.insert(secondGroup, at: 1)
+        state.tasks = CleanupTaskBuilder.tasks(from: state.reviewGroups)
+        return state
     }
 
     private static func candidate(
