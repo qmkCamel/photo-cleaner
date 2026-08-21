@@ -1,0 +1,27 @@
+appId: app.truekeep.ios
+name: P0 候选复核离页继续与取消恢复
+description: 验证候选复核阶段的真实进度、离页继续、返回进度页及取消后的恢复说明；AppClaw 报告保留每一步截图。
+platform: ios
+---
+setup:
+  - launchApp
+  - waitUntil: truekeep.scan.stage
+    timeout: 10
+  - assert: 正在复核候选
+  - assert: 候选复核
+  - assert: truekeep.scan.cancel
+steps:
+  - tap: truekeep.scan.continue-browsing
+  - waitUntil: truekeep.cleanup.active-scan
+    timeout: 10
+  - assert: 候选复核
+  - tap: truekeep.cleanup.active-scan
+  - waitUntil: truekeep.scan.cancel
+    timeout: 10
+  - tap: truekeep.scan.cancel
+assertions:
+  - waitUntil: truekeep.scan.retry
+    timeout: 10
+  - assert: 扫描已停止
+  - assert: 取消扫描不会删除或移动任何照片或视频。
+  - done

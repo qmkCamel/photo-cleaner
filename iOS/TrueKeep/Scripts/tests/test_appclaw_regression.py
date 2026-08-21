@@ -21,6 +21,7 @@ class AppClawRegressionTests(unittest.TestCase):
         self.assertGreaterEqual(len(cases), 8)
         self.assertIn("post-deletion-home-sync", {case.id for case in cases})
         self.assertIn("scan-date-range-selection", {case.id for case in cases})
+        self.assertIn("candidate-refinement-continuity", {case.id for case in cases})
         self.assertEqual(len({case.id for case in cases}), len(cases))
         for case in cases:
             self.assertEqual(case.tier, "p0")

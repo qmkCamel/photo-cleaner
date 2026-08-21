@@ -63,6 +63,18 @@
       ]
     },
     {
+      "id": "candidate-refinement-continuity",
+      "tier": "p0",
+      "description": "候选复核阶段显示真实进度，可离页继续、返回进度页，并安全取消恢复。",
+      "flow": "flows/p0-candidate-refinement-continuity.yaml",
+      "launchArguments": [
+        "-TrueKeepDisablePhotoDeletion",
+        "-TrueKeepUseSampleCleanupData",
+        "-TrueKeepResetIntroState",
+        "-TrueKeepUITestScanRefining"
+      ]
+    },
+    {
       "id": "limited-results-rescan",
       "tier": "p0",
       "description": "有限权限结果页显示重新扫描入口，且入口位于 Tab Bar 上方。",

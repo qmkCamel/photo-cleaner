@@ -1,6 +1,7 @@
 import Foundation
 @preconcurrency import CoreML
 import CoreGraphics
+import CryptoKit
 import Photos
 @preconcurrency import UIKit
 @preconcurrency import Vision
@@ -40,17 +41,23 @@ struct PhotoVisualClassification: Hashable, Sendable {
     var recommendedKeep: Bool
     var isAccidental: Bool
     var isBlurry: Bool
+    var isExactDuplicate: Bool
+    var wasRefined: Bool
 
     init(
         similarGroupID: String? = nil,
         recommendedKeep: Bool = false,
         isAccidental: Bool = false,
-        isBlurry: Bool = false
+        isBlurry: Bool = false,
+        isExactDuplicate: Bool = false,
+        wasRefined: Bool = true
     ) {
         self.similarGroupID = similarGroupID
         self.recommendedKeep = recommendedKeep
         self.isAccidental = isAccidental
         self.isBlurry = isBlurry
+        self.isExactDuplicate = isExactDuplicate
+        self.wasRefined = wasRefined
     }
 
     var hasFindings: Bool {
@@ -64,6 +71,7 @@ struct PhotoVisualMetrics: Hashable, Sendable {
     var brightness: Double
     var saturation: Double
     var sharpness: Double
+    var aspectRatio: Double
     var quality: PhotoQualityAssessment
 
     init(
@@ -72,6 +80,7 @@ struct PhotoVisualMetrics: Hashable, Sendable {
         brightness: Double,
         saturation: Double,
         sharpness: Double,
+        aspectRatio: Double = 1,
         quality: PhotoQualityAssessment? = nil
     ) {
         self.perceptualHash = perceptualHash
@@ -79,6 +88,7 @@ struct PhotoVisualMetrics: Hashable, Sendable {
         self.brightness = brightness
         self.saturation = saturation
         self.sharpness = sharpness
+        self.aspectRatio = max(0.01, aspectRatio)
         let features = PhotoQualityFeatures(
             brightness: brightness,
             saturation: saturation,
@@ -213,26 +223,35 @@ struct PhotoQualityAssessment: Hashable, Sendable {
         return (overallQuality * 0.8) + (faceCaptureQuality * 0.2)
     }
 
-    static func heuristic(from features: PhotoQualityFeatures) -> PhotoQualityAssessment {
-        let sharpnessScore = clamp(features.sharpness / 0.08)
+    static func heuristic(
+        from features: PhotoQualityFeatures,
+        thresholds: PhotoQualityThresholds = .coarse
+    ) -> PhotoQualityAssessment {
+        let sharpnessScore = clamp(features.sharpness / thresholds.sharpnessExcellent)
         let exposureScore = clamp(1.0 - abs(features.brightness - 0.5) / 0.5)
         let saturationScore = clamp(features.saturation / 0.35)
         let overallQuality = (sharpnessScore * 0.65) + (exposureScore * 0.25) + (saturationScore * 0.10)
 
-        let blurRisk = features.sharpness <= 0.018
+        let blurRisk = features.sharpness <= thresholds.blurCertain
             ? 1.0
-            : clamp((0.028 - features.sharpness) / 0.010)
+            : clamp(
+                (thresholds.blurClear - features.sharpness)
+                    / max(0.0001, thresholds.blurClear - thresholds.blurCertain)
+            )
         let accidentalRisk: Double
         if features.brightness < 0.11
             || features.brightness > 0.92
-            || (features.saturation < 0.045 && features.sharpness < 0.015) {
+            || (features.saturation < 0.045 && features.sharpness < thresholds.lowInformationCertain) {
             accidentalRisk = 1.0
         } else {
             let darkRisk = clamp((0.16 - features.brightness) / 0.16)
             let brightRisk = clamp((features.brightness - 0.86) / 0.14)
             let lowInformationRisk = min(
                 clamp((0.07 - features.saturation) / 0.07),
-                clamp((0.024 - features.sharpness) / 0.024)
+                clamp(
+                    (thresholds.lowInformationClear - features.sharpness)
+                        / thresholds.lowInformationClear
+                )
             )
             accidentalRisk = max(darkRisk, brightRisk, lowInformationRisk)
         }
@@ -247,6 +266,65 @@ struct PhotoQualityAssessment: Hashable, Sendable {
 
     private static func clamp(_ value: Double) -> Double {
         min(1.0, max(0.0, value))
+    }
+}
+
+struct PhotoQualityThresholds: Hashable, Sendable {
+    var sharpnessExcellent: Double
+    var blurCertain: Double
+    var blurClear: Double
+    var lowInformationCertain: Double
+    var lowInformationClear: Double
+
+    static let coarse = PhotoQualityThresholds(
+        sharpnessExcellent: 0.08,
+        blurCertain: 0.018,
+        blurClear: 0.028,
+        lowInformationCertain: 0.015,
+        lowInformationClear: 0.024
+    )
+
+    // Refined sharpness is normalized back to the coarse reference scale, but it
+    // keeps a separate policy so future calibration cannot silently change both stages.
+    static let refined = PhotoQualityThresholds(
+        sharpnessExcellent: 0.08,
+        blurCertain: 0.018,
+        blurClear: 0.028,
+        lowInformationCertain: 0.015,
+        lowInformationClear: 0.024
+    )
+}
+
+enum PhotoVisualAnalysisStage: Hashable, Sendable {
+    case coarse
+    case refined
+}
+
+struct PhotoVisualAnalysisPolicy: Hashable, Sendable {
+    var coarseTargetLongSide: CGFloat = 224
+    var refinedTargetLongSide: CGFloat = 512
+    var coarseRasterLongSide: Int = 64
+    var refinedRasterLongSide: Int = 128
+    var similarHashDistance: Int = 8
+    var similarFeaturePrintDistance: Double = 0.16
+    var exactFeaturePrintDistance: Double = 0.025
+    var similarTimeWindow: TimeInterval = 180
+    var blurryRiskThreshold: Double = 0.85
+    var accidentalRiskThreshold: Double = 0.85
+    var coarseBoundaryRiskThreshold: Double = 0.70
+    var aspectRatioLogTolerance: Double = 0.16
+
+    func targetSize(for stage: PhotoVisualAnalysisStage) -> CGSize {
+        let side = stage == .coarse ? coarseTargetLongSide : refinedTargetLongSide
+        return CGSize(width: side, height: side)
+    }
+
+    func rasterLongSide(for stage: PhotoVisualAnalysisStage) -> Int {
+        stage == .coarse ? coarseRasterLongSide : refinedRasterLongSide
+    }
+
+    func qualityThresholds(for stage: PhotoVisualAnalysisStage) -> PhotoQualityThresholds {
+        stage == .coarse ? .coarse : .refined
     }
 }
 
@@ -529,26 +607,252 @@ enum PhotoAssetSnapshotBatcher {
     }
 }
 
+enum PhotoResourceDigestKind: Hashable, Sendable {
+    case stillPhoto
+    case livePhoto
+}
+
+struct PhotoResourceDigestSet: Hashable, Sendable {
+    var kind: PhotoResourceDigestKind
+    var photoDigest: Data
+    var pairedVideoDigest: Data? = nil
+
+    var isComplete: Bool {
+        switch kind {
+        case .stillPhoto:
+            return !photoDigest.isEmpty
+        case .livePhoto:
+            return !photoDigest.isEmpty && pairedVideoDigest?.isEmpty == false
+        }
+    }
+}
+
+enum PhotoExactDuplicateGrouper {
+    static func groups(
+        candidateAssetIDs: [String],
+        digestsByAssetID: [String: PhotoResourceDigestSet]
+    ) -> [[String]] {
+        let comparable = candidateAssetIDs.compactMap { assetID -> (String, PhotoResourceDigestSet)? in
+            guard let digest = digestsByAssetID[assetID], digest.isComplete else { return nil }
+            return (assetID, digest)
+        }
+        let grouped = Dictionary(grouping: comparable, by: { $0.1 })
+        return grouped.values
+            .map { $0.map(\.0).sorted() }
+            .filter { $0.count >= 2 }
+            .sorted { $0.lexicographicallyPrecedes($1) }
+    }
+}
+
+struct SystemPhotoDuplicateVerifier {
+    func exactDuplicateGroups(
+        candidateGroups: [[String]],
+        assetsByID: [String: PHAsset]
+    ) async throws -> [[String]] {
+        var exactGroups: [[String]] = []
+
+        for candidateGroup in candidateGroups {
+            try Task.checkCancellation()
+            var digestsByAssetID: [String: PhotoResourceDigestSet] = [:]
+
+            for assetID in candidateGroup.sorted() {
+                try Task.checkCancellation()
+                guard let asset = assetsByID[assetID] else { continue }
+                do {
+                    if let digest = try await digestSet(for: asset) {
+                        digestsByAssetID[assetID] = digest
+                    }
+                } catch {
+                    try Task.checkCancellation()
+                    // A single unavailable local resource only removes exact-duplicate evidence.
+                }
+            }
+
+            exactGroups.append(
+                contentsOf: PhotoExactDuplicateGrouper.groups(
+                    candidateAssetIDs: candidateGroup,
+                    digestsByAssetID: digestsByAssetID
+                )
+            )
+        }
+        return exactGroups
+    }
+
+    private func digestSet(for asset: PHAsset) async throws -> PhotoResourceDigestSet? {
+        let resources = PHAssetResource.assetResources(for: asset)
+        guard let photoResource = primaryPhotoResource(from: resources) else { return nil }
+        let photoDigest = try await PhotoAssetResourceDigester.digest(for: photoResource)
+
+        if asset.mediaSubtypes.contains(.photoLive) {
+            guard let pairedVideo = pairedVideoResource(from: resources) else { return nil }
+            let videoDigest = try await PhotoAssetResourceDigester.digest(for: pairedVideo)
+            return PhotoResourceDigestSet(
+                kind: .livePhoto,
+                photoDigest: photoDigest,
+                pairedVideoDigest: videoDigest
+            )
+        }
+
+        return PhotoResourceDigestSet(
+            kind: .stillPhoto,
+            photoDigest: photoDigest,
+            pairedVideoDigest: nil
+        )
+    }
+
+    private func primaryPhotoResource(from resources: [PHAssetResource]) -> PHAssetResource? {
+        for type in [PHAssetResourceType.fullSizePhoto, .photo, .alternatePhoto] {
+            if let resource = resources.first(where: { $0.type == type }) {
+                return resource
+            }
+        }
+        return nil
+    }
+
+    private func pairedVideoResource(from resources: [PHAssetResource]) -> PHAssetResource? {
+        for type in [PHAssetResourceType.fullSizePairedVideo, .pairedVideo] {
+            if let resource = resources.first(where: { $0.type == type }) {
+                return resource
+            }
+        }
+        return nil
+    }
+}
+
+private enum PhotoAssetResourceDigester {
+    static func digest(for resource: PHAssetResource) async throws -> Data {
+        let manager = PHAssetResourceManager.default()
+        let accumulator = PhotoResourceSHA256Accumulator()
+        let request = PhotoRequestCancellation<PHAssetResourceDataRequestID> { requestID in
+            manager.cancelDataRequest(requestID)
+        }
+        let options = PhotoAssetResourceRequestStrategy.localOnlyOptions()
+
+        return try await withTaskCancellationHandler {
+            try await withCheckedThrowingContinuation { continuation in
+                let requestID = manager.requestData(
+                    for: resource,
+                    options: options,
+                    dataReceivedHandler: { data in
+                        accumulator.update(data)
+                    },
+                    completionHandler: { error in
+                        if let error {
+                            continuation.resume(throwing: error)
+                        } else {
+                            continuation.resume(returning: accumulator.finalize())
+                        }
+                    }
+                )
+                request.store(requestID)
+            }
+        } onCancel: {
+            request.cancel()
+        }
+    }
+}
+
+enum PhotoAssetResourceRequestStrategy {
+    static func localOnlyOptions() -> PHAssetResourceRequestOptions {
+        let options = PHAssetResourceRequestOptions()
+        options.isNetworkAccessAllowed = false
+        return options
+    }
+}
+
+final class PhotoResourceSHA256Accumulator: @unchecked Sendable {
+    private let lock = NSLock()
+    private var hasher = SHA256()
+
+    func update(_ data: Data) {
+        lock.lock()
+        hasher.update(data: data)
+        lock.unlock()
+    }
+
+    func finalize() -> Data {
+        lock.lock()
+        defer { lock.unlock() }
+        return Data(hasher.finalize())
+    }
+}
+
+final class PhotoRequestCancellation<RequestID: Sendable>: @unchecked Sendable {
+    private let lock = NSLock()
+    private let cancelAction: @Sendable (RequestID) -> Void
+    private var requestID: RequestID?
+    private var isCancelled = false
+
+    init(cancelAction: @escaping @Sendable (RequestID) -> Void) {
+        self.cancelAction = cancelAction
+    }
+
+    func store(_ requestID: RequestID) {
+        lock.lock()
+        self.requestID = requestID
+        let shouldCancel = isCancelled
+        lock.unlock()
+        if shouldCancel {
+            cancelAction(requestID)
+        }
+    }
+
+    func cancel() {
+        lock.lock()
+        isCancelled = true
+        let requestID = requestID
+        lock.unlock()
+        if let requestID {
+            cancelAction(requestID)
+        }
+    }
+}
+
+enum PhotoScanProgress: Hashable, Sendable {
+    case coarseAnalysis(completed: Int, total: Int)
+    case candidateRefinement(completed: Int, total: Int)
+    case finalizing
+}
+
+typealias PhotoScanProgressHandler = @Sendable (PhotoScanProgress) async -> Void
+
 protocol PhotoLibraryScanning: Sendable {
-    func scan(access: PhotoLibraryAccess, dateRange: PhotoScanDateRange) async -> CleanupFlowState
+    func scan(
+        access: PhotoLibraryAccess,
+        dateRange: PhotoScanDateRange,
+        onProgress: @escaping PhotoScanProgressHandler
+    ) async -> CleanupFlowState
+}
+
+extension PhotoLibraryScanning {
+    func scan(access: PhotoLibraryAccess, dateRange: PhotoScanDateRange) async -> CleanupFlowState {
+        await scan(access: access, dateRange: dateRange, onProgress: { _ in })
+    }
 }
 
 struct SystemPhotoLibraryScanner: PhotoLibraryScanning {
     private let policy: PhotoLibraryScanPolicy
+    private let analysisPolicy: PhotoVisualAnalysisPolicy
     private let qualityScorer: any PhotoQualityScoring
     private let now: @Sendable () -> Date
 
     init(
         policy: PhotoLibraryScanPolicy = .init(),
+        analysisPolicy: PhotoVisualAnalysisPolicy = .init(),
         qualityScorer: (any PhotoQualityScoring)? = nil,
         now: @escaping @Sendable () -> Date = { Date() }
     ) {
         self.policy = policy
+        self.analysisPolicy = analysisPolicy
         self.qualityScorer = qualityScorer ?? VisionPhotoQualityScorer()
         self.now = now
     }
 
-    func scan(access: PhotoLibraryAccess, dateRange: PhotoScanDateRange) async -> CleanupFlowState {
+    func scan(
+        access: PhotoLibraryAccess,
+        dateRange: PhotoScanDateRange,
+        onProgress: @escaping PhotoScanProgressHandler
+    ) async -> CleanupFlowState {
         guard access.canScan else {
             return PhotoScanResultBuilder.state(from: [])
         }
@@ -558,7 +862,8 @@ struct SystemPhotoLibraryScanner: PhotoLibraryScanning {
             return PhotoScanResultBuilder.state(
                 from: try await fetchAssetSnapshots(
                     dateRange: dateRange,
-                    referenceDate: referenceDate
+                    referenceDate: referenceDate,
+                    onProgress: onProgress
                 )
             )
         } catch is CancellationError {
@@ -570,11 +875,15 @@ struct SystemPhotoLibraryScanner: PhotoLibraryScanning {
 
     private func fetchAssetSnapshots(
         dateRange: PhotoScanDateRange,
-        referenceDate: Date
+        referenceDate: Date,
+        onProgress: @escaping PhotoScanProgressHandler
     ) async throws -> [PhotoAssetSnapshot] {
         let options = fetchOptions(dateRange: dateRange, referenceDate: referenceDate)
         let photoAssets = PHAsset.fetchAssets(with: .image, options: options)
-        let visualClassifications = try await fetchVisualClassifications(from: photoAssets)
+        let visualClassifications = try await fetchVisualClassifications(
+            from: photoAssets,
+            onProgress: onProgress
+        )
         let photoSnapshots = try await PhotoAssetSnapshotBatcher.collect(
             totalCount: photoAssets.count,
             batchSize: policy.effectiveBatchSize
@@ -603,79 +912,162 @@ struct SystemPhotoLibraryScanner: PhotoLibraryScanning {
             )
         }
 
+        await onProgress(.finalizing)
         return photoSnapshots + videoSnapshots
     }
 
     private func fetchVisualClassifications(
-        from photoAssets: PHFetchResult<PHAsset>
+        from photoAssets: PHFetchResult<PHAsset>,
+        onProgress: @escaping PhotoScanProgressHandler
     ) async throws -> [String: PhotoVisualClassification] {
         guard policy.effectiveVisualClassificationLimit > 0 else { return [:] }
 
-        let imageManager = PHImageManager.default()
+        let imageManager = PHCachingImageManager()
         let maxCount = min(photoAssets.count, policy.effectiveVisualClassificationLimit)
-        var inputs: [PhotoVisualInput] = []
-        inputs.reserveCapacity(maxCount)
+        var coarseInputs: [PhotoVisualInput] = []
+        coarseInputs.reserveCapacity(maxCount)
+        var assetsByID: [String: PHAsset] = [:]
+        await onProgress(.coarseAnalysis(completed: 0, total: maxCount))
 
         for index in 0..<maxCount {
             try Task.checkCancellation()
 
             let asset = photoAssets.object(at: index)
-            guard !asset.mediaSubtypes.contains(.photoScreenshot),
-                  let metrics = Self.visualMetrics(
+            assetsByID[asset.localIdentifier] = asset
+            if !asset.mediaSubtypes.contains(.photoScreenshot),
+               let metrics = Self.visualMetrics(
                     for: asset,
                     imageManager: imageManager,
-                    qualityScorer: qualityScorer
-                  )
-            else {
-                continue
+                    qualityScorer: qualityScorer,
+                    stage: .coarse,
+                    policy: analysisPolicy
+               ) {
+                coarseInputs.append(
+                    PhotoVisualInput(
+                        assetID: asset.localIdentifier,
+                        creationDate: asset.creationDate,
+                        metrics: metrics
+                    )
+                )
             }
 
-            inputs.append(
-                PhotoVisualInput(
-                    assetID: asset.localIdentifier,
-                    creationDate: asset.creationDate,
-                    metrics: metrics
-                )
-            )
+            await onProgress(.coarseAnalysis(completed: index + 1, total: maxCount))
 
             if index.isMultiple(of: 25) {
                 await Task.yield()
             }
         }
 
-        return PhotoVisualClassifier.classifications(from: inputs)
+        let refinementIDs = PhotoVisualClassifier.refinementAssetIDs(
+            from: coarseInputs,
+            policy: analysisPolicy
+        )
+        let orderedRefinementIDs = coarseInputs
+            .map(\.assetID)
+            .filter { refinementIDs.contains($0) }
+        var refinedInputsByID: [String: PhotoVisualInput] = [:]
+        refinedInputsByID.reserveCapacity(orderedRefinementIDs.count)
+        await onProgress(
+            .candidateRefinement(completed: 0, total: orderedRefinementIDs.count)
+        )
+
+        for (index, assetID) in orderedRefinementIDs.enumerated() {
+            try Task.checkCancellation()
+            if let asset = assetsByID[assetID],
+               let metrics = Self.visualMetrics(
+                    for: asset,
+                    imageManager: imageManager,
+                    qualityScorer: qualityScorer,
+                    stage: .refined,
+                    policy: analysisPolicy
+               ) {
+                refinedInputsByID[assetID] = PhotoVisualInput(
+                    assetID: assetID,
+                    creationDate: asset.creationDate,
+                    metrics: metrics
+                )
+            }
+            await onProgress(
+                .candidateRefinement(
+                    completed: index + 1,
+                    total: orderedRefinementIDs.count
+                )
+            )
+            if index.isMultiple(of: 10) {
+                await Task.yield()
+            }
+        }
+
+        let coarseByID = Dictionary(uniqueKeysWithValues: coarseInputs.map { ($0.assetID, $0) })
+        let resolvedInputs = orderedRefinementIDs.compactMap { id in
+            refinedInputsByID[id] ?? coarseByID[id]
+        }
+        let provisionalClassifications = PhotoVisualClassifier.classifications(
+            from: resolvedInputs,
+            policy: analysisPolicy
+        )
+        let refinedInputs = orderedRefinementIDs.compactMap { refinedInputsByID[$0] }
+        let exactCandidates = PhotoVisualClassifier.exactDuplicateCandidateGroups(
+            from: refinedInputs,
+            classifications: provisionalClassifications,
+            policy: analysisPolicy
+        )
+        let exactGroups = try await SystemPhotoDuplicateVerifier().exactDuplicateGroups(
+            candidateGroups: exactCandidates,
+            assetsByID: assetsByID
+        )
+
+        return PhotoVisualClassifier.finalClassifications(
+            coarseInputs: coarseInputs,
+            refinedInputsByID: refinedInputsByID,
+            exactDuplicateGroups: exactGroups,
+            policy: analysisPolicy
+        )
     }
 
     private static func visualMetrics(
         for asset: PHAsset,
         imageManager: PHImageManager,
-        qualityScorer: any PhotoQualityScoring
+        qualityScorer: any PhotoQualityScoring,
+        stage: PhotoVisualAnalysisStage,
+        policy: PhotoVisualAnalysisPolicy
     ) -> PhotoVisualMetrics? {
-        guard let cgImage = PhotoImageRequestStrategy.firstAvailable(request: { deliveryMode in
-            requestImage(
+        guard let cgImage = PhotoImageRequestStrategy.firstAvailable(request: {
+            (deliveryMode: PHImageRequestOptionsDeliveryMode) -> CGImage? in
+            guard let image = requestImage(
                 for: asset,
                 imageManager: imageManager,
-                deliveryMode: deliveryMode
-            )?.cgImage
+                deliveryMode: deliveryMode,
+                stage: stage,
+                policy: policy
+            ) else { return nil }
+            return PhotoImageOrientationNormalizer.normalizedCGImage(from: image)
         }) else {
             return nil
         }
 
-        return PhotoVisualAnalyzer.metrics(from: cgImage, qualityScorer: qualityScorer)
+        return PhotoVisualAnalyzer.metrics(
+            from: cgImage,
+            qualityScorer: qualityScorer,
+            stage: stage,
+            policy: policy
+        )
     }
 
     private static func requestImage(
         for asset: PHAsset,
         imageManager: PHImageManager,
-        deliveryMode: PHImageRequestOptionsDeliveryMode
+        deliveryMode: PHImageRequestOptionsDeliveryMode,
+        stage: PhotoVisualAnalysisStage,
+        policy: PhotoVisualAnalysisPolicy
     ) -> UIImage? {
         let options = PhotoImageRequestStrategy.requestOptions(deliveryMode: deliveryMode)
 
         var requestedImage: UIImage?
         imageManager.requestImage(
             for: asset,
-            targetSize: CGSize(width: 224, height: 224),
-            contentMode: .aspectFill,
+            targetSize: policy.targetSize(for: stage),
+            contentMode: .aspectFit,
             options: options
         ) { image, info in
             let isCancelled = (info?[PHImageCancelledKey] as? Bool) == true
@@ -709,13 +1101,10 @@ struct SystemPhotoLibraryScanner: PhotoLibraryScanning {
 }
 
 enum PhotoVisualClassifier {
-    private static let similarHashDistance = 8
-    private static let similarFeaturePrintDistance = 0.16
-    private static let similarTimeWindow: TimeInterval = 180
-    private static let blurryQualityRiskThreshold = 0.85
-    private static let accidentalQualityRiskThreshold = 0.85
-
-    static func classifications(from inputs: [PhotoVisualInput]) -> [String: PhotoVisualClassification] {
+    static func classifications(
+        from inputs: [PhotoVisualInput],
+        policy: PhotoVisualAnalysisPolicy = .init()
+    ) -> [String: PhotoVisualClassification] {
         guard !inputs.isEmpty else { return [:] }
 
         var classifications: [String: PhotoVisualClassification] = [:]
@@ -727,7 +1116,7 @@ enum PhotoVisualClassifier {
         for input in sortedInputs where !groupedAssetIDs.contains(input.assetID) {
             let cluster = sortedInputs.filter { candidate in
                 guard !groupedAssetIDs.contains(candidate.assetID) else { return false }
-                return isSimilar(input, candidate)
+                return isSimilar(input, candidate, policy: policy)
             }
 
             guard cluster.count >= 2 else { continue }
@@ -735,7 +1124,7 @@ enum PhotoVisualClassifier {
             let keepAssetID = cluster.max { lhs, rhs in
                 lhs.metrics.quality.recommendedKeepScore < rhs.metrics.quality.recommendedKeepScore
             }?.assetID
-            let groupID = stableGroupID(for: cluster.map(\.assetID))
+            let groupID = stableGroupID(for: cluster.map(\.assetID), prefix: "similar")
 
             for member in cluster {
                 groupedAssetIDs.insert(member.assetID)
@@ -748,8 +1137,8 @@ enum PhotoVisualClassifier {
 
         for input in inputs where !groupedAssetIDs.contains(input.assetID) {
             var classification = classifications[input.assetID] ?? PhotoVisualClassification()
-            classification.isAccidental = isAccidental(input.metrics)
-            classification.isBlurry = !classification.isAccidental && isBlurry(input.metrics)
+            classification.isAccidental = isAccidental(input.metrics, policy: policy)
+            classification.isBlurry = !classification.isAccidental && isBlurry(input.metrics, policy: policy)
 
             if classification.hasFindings {
                 classifications[input.assetID] = classification
@@ -759,14 +1148,117 @@ enum PhotoVisualClassifier {
         return classifications
     }
 
-    private static func isSimilar(_ lhs: PhotoVisualInput, _ rhs: PhotoVisualInput) -> Bool {
+    static func refinementAssetIDs(
+        from inputs: [PhotoVisualInput],
+        policy: PhotoVisualAnalysisPolicy = .init()
+    ) -> Set<String> {
+        let preliminary = classifications(from: inputs, policy: policy)
+        var ids = Set(preliminary.keys)
+
+        for input in inputs {
+            let boundaryRisk = max(
+                input.metrics.quality.blurRisk,
+                input.metrics.quality.accidentalRisk
+            )
+            if boundaryRisk >= policy.coarseBoundaryRiskThreshold {
+                ids.insert(input.assetID)
+            }
+        }
+        return ids
+    }
+
+    static func finalClassifications(
+        coarseInputs: [PhotoVisualInput],
+        refinedInputsByID: [String: PhotoVisualInput],
+        exactDuplicateGroups: [[String]],
+        policy: PhotoVisualAnalysisPolicy = .init()
+    ) -> [String: PhotoVisualClassification] {
+        let refinementIDs = refinementAssetIDs(from: coarseInputs, policy: policy)
+        let coarseByID = Dictionary(uniqueKeysWithValues: coarseInputs.map { ($0.assetID, $0) })
+        let validExactDuplicateGroups = exactDuplicateGroups
+            .map { group in
+                group.filter { refinedInputsByID[$0] != nil }
+            }
+            .filter { $0.count >= 2 }
+        let exactIDs = Set(validExactDuplicateGroups.flatMap { $0 })
+        let resolvedInputs = refinementIDs.compactMap { id in
+            refinedInputsByID[id] ?? coarseByID[id]
+        }
+        var classifications = Self.classifications(
+            from: resolvedInputs.filter { !exactIDs.contains($0.assetID) },
+            policy: policy
+        )
+
+        let coarseClassifications = Self.classifications(from: coarseInputs, policy: policy)
+        for id in refinementIDs where refinedInputsByID[id] == nil && !exactIDs.contains(id) {
+            guard var fallback = coarseClassifications[id] else { continue }
+            fallback.wasRefined = false
+            classifications[id] = fallback
+        }
+
+        let resolvedByID = Dictionary(uniqueKeysWithValues: resolvedInputs.map { ($0.assetID, $0) })
+        for group in validExactDuplicateGroups {
+            let members = group.compactMap { resolvedByID[$0] }
+            guard members.count >= 2 else { continue }
+            let keepAssetID = members.max { lhs, rhs in
+                lhs.metrics.quality.recommendedKeepScore < rhs.metrics.quality.recommendedKeepScore
+            }?.assetID
+            let groupID = stableGroupID(for: members.map(\.assetID), prefix: "exact")
+
+            for member in members {
+                classifications[member.assetID] = PhotoVisualClassification(
+                    similarGroupID: groupID,
+                    recommendedKeep: member.assetID == keepAssetID,
+                    isExactDuplicate: true,
+                    wasRefined: refinedInputsByID[member.assetID] != nil
+                )
+            }
+        }
+        return classifications
+    }
+
+    static func exactDuplicateCandidateGroups(
+        from inputs: [PhotoVisualInput],
+        classifications: [String: PhotoVisualClassification],
+        policy: PhotoVisualAnalysisPolicy = .init()
+    ) -> [[String]] {
+        let inputsByGroup = Dictionary(grouping: inputs) { input in
+            classifications[input.assetID]?.similarGroupID
+        }
+        var result: [[String]] = []
+
+        for (groupID, groupInputs) in inputsByGroup {
+            guard groupID != nil, groupInputs.count >= 2 else { continue }
+            var remaining = groupInputs.sorted { $0.assetID < $1.assetID }
+
+            while let anchor = remaining.first {
+                remaining.removeFirst()
+                let matches = remaining.filter {
+                    isPotentialExactDuplicate(anchor, $0, policy: policy)
+                }
+                let matchIDs = Set(matches.map(\.assetID))
+                remaining.removeAll { matchIDs.contains($0.assetID) }
+                let cluster = [anchor.assetID] + matches.map(\.assetID)
+                if cluster.count >= 2 {
+                    result.append(cluster.sorted())
+                }
+            }
+        }
+        return result.sorted { $0.lexicographicallyPrecedes($1) }
+    }
+
+    private static func isSimilar(
+        _ lhs: PhotoVisualInput,
+        _ rhs: PhotoVisualInput,
+        policy: PhotoVisualAnalysisPolicy
+    ) -> Bool {
         if lhs.assetID == rhs.assetID {
             return true
         }
 
         guard let lhsDate = lhs.creationDate,
               let rhsDate = rhs.creationDate,
-              abs(lhsDate.timeIntervalSince(rhsDate)) <= similarTimeWindow
+              abs(lhsDate.timeIntervalSince(rhsDate)) <= policy.similarTimeWindow
         else {
             return false
         }
@@ -774,76 +1266,90 @@ enum PhotoVisualClassifier {
         if let lhsFeaturePrint = lhs.metrics.featurePrint,
            let rhsFeaturePrint = rhs.metrics.featurePrint,
            let distance = lhsFeaturePrint.distance(to: rhsFeaturePrint) {
-            return distance <= similarFeaturePrintDistance
+            return distance <= policy.similarFeaturePrintDistance
         }
 
-        return hammingDistance(lhs.metrics.perceptualHash, rhs.metrics.perceptualHash) <= similarHashDistance
+        guard aspectRatiosAreComparable(lhs.metrics.aspectRatio, rhs.metrics.aspectRatio, policy: policy) else {
+            return false
+        }
+        return hammingDistance(lhs.metrics.perceptualHash, rhs.metrics.perceptualHash)
+            <= policy.similarHashDistance
     }
 
-    private static func isBlurry(_ metrics: PhotoVisualMetrics) -> Bool {
-        metrics.quality.blurRisk >= blurryQualityRiskThreshold
+    private static func isPotentialExactDuplicate(
+        _ lhs: PhotoVisualInput,
+        _ rhs: PhotoVisualInput,
+        policy: PhotoVisualAnalysisPolicy
+    ) -> Bool {
+        if let lhsFeaturePrint = lhs.metrics.featurePrint,
+           let rhsFeaturePrint = rhs.metrics.featurePrint,
+           let distance = lhsFeaturePrint.distance(to: rhsFeaturePrint) {
+            return distance <= policy.exactFeaturePrintDistance
+        }
+
+        return aspectRatiosAreComparable(lhs.metrics.aspectRatio, rhs.metrics.aspectRatio, policy: policy)
+            && hammingDistance(lhs.metrics.perceptualHash, rhs.metrics.perceptualHash) == 0
     }
 
-    private static func isAccidental(_ metrics: PhotoVisualMetrics) -> Bool {
-        metrics.quality.accidentalRisk >= accidentalQualityRiskThreshold
+    private static func aspectRatiosAreComparable(
+        _ lhs: Double,
+        _ rhs: Double,
+        policy: PhotoVisualAnalysisPolicy
+    ) -> Bool {
+        abs(log(max(0.01, lhs) / max(0.01, rhs))) <= policy.aspectRatioLogTolerance
+    }
+
+    private static func isBlurry(
+        _ metrics: PhotoVisualMetrics,
+        policy: PhotoVisualAnalysisPolicy
+    ) -> Bool {
+        metrics.quality.blurRisk >= policy.blurryRiskThreshold
+    }
+
+    private static func isAccidental(
+        _ metrics: PhotoVisualMetrics,
+        policy: PhotoVisualAnalysisPolicy
+    ) -> Bool {
+        metrics.quality.accidentalRisk >= policy.accidentalRiskThreshold
     }
 
     private static func hammingDistance(_ lhs: UInt64, _ rhs: UInt64) -> Int {
         (lhs ^ rhs).nonzeroBitCount
     }
 
-    private static func stableGroupID(for assetIDs: [String]) -> String {
+    private static func stableGroupID(for assetIDs: [String], prefix: String) -> String {
         var hash: UInt64 = 1_469_598_103_934_665_603
         for byte in assetIDs.sorted().joined(separator: "|").utf8 {
             hash ^= UInt64(byte)
             hash &*= 1_099_511_628_211
         }
-        return "similar-\(String(hash, radix: 16))"
+        return "\(prefix)-\(String(hash, radix: 16))"
     }
 }
 
 enum PhotoVisualAnalyzer {
-    private static let sampleWidth = 32
-    private static let sampleHeight = 32
     private static let bytesPerPixel = 4
 
     static func metrics(
         from cgImage: CGImage,
-        qualityScorer: any PhotoQualityScoring = HeuristicPhotoQualityScorer()
+        qualityScorer: any PhotoQualityScoring = HeuristicPhotoQualityScorer(),
+        stage: PhotoVisualAnalysisStage = .coarse,
+        policy: PhotoVisualAnalysisPolicy = .init()
     ) -> PhotoVisualMetrics? {
-        let bytesPerRow = sampleWidth * bytesPerPixel
-        var pixels = [UInt8](repeating: 0, count: sampleHeight * bytesPerRow)
-        let colorSpace = CGColorSpaceCreateDeviceRGB()
-
-        let rendered = pixels.withUnsafeMutableBytes { buffer -> Bool in
-            guard let context = CGContext(
-                data: buffer.baseAddress,
-                width: sampleWidth,
-                height: sampleHeight,
-                bitsPerComponent: 8,
-                bytesPerRow: bytesPerRow,
-                space: colorSpace,
-                bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
-            ) else {
-                return false
-            }
-
-            context.interpolationQuality = .low
-            context.draw(cgImage, in: CGRect(x: 0, y: 0, width: sampleWidth, height: sampleHeight))
-            return true
-        }
-
-        guard rendered else { return nil }
+        guard let raster = PhotoAspectPreservingRasterizer.raster(
+            from: cgImage,
+            maxLongSide: policy.rasterLongSide(for: stage)
+        ) else { return nil }
 
         var luminance = [Double]()
-        luminance.reserveCapacity(sampleWidth * sampleHeight)
+        luminance.reserveCapacity(raster.width * raster.height)
         var brightnessSum = 0.0
         var saturationSum = 0.0
 
-        for pixelIndex in stride(from: 0, to: pixels.count, by: bytesPerPixel) {
-            let red = Double(pixels[pixelIndex]) / 255.0
-            let green = Double(pixels[pixelIndex + 1]) / 255.0
-            let blue = Double(pixels[pixelIndex + 2]) / 255.0
+        for pixelIndex in stride(from: 0, to: raster.pixels.count, by: bytesPerPixel) {
+            let red = Double(raster.pixels[pixelIndex]) / 255.0
+            let green = Double(raster.pixels[pixelIndex + 1]) / 255.0
+            let blue = Double(raster.pixels[pixelIndex + 2]) / 255.0
             let luma = 0.2126 * red + 0.7152 * green + 0.0722 * blue
             let maxChannel = max(red, green, blue)
             let minChannel = min(red, green, blue)
@@ -856,15 +1362,31 @@ enum PhotoVisualAnalyzer {
 
         let pixelCount = Double(luminance.count)
         guard pixelCount > 0 else { return nil }
-        let perceptualHash = perceptualHash(from: luminance)
+        let perceptualHash = perceptualHash(
+            from: luminance,
+            width: raster.width,
+            height: raster.height
+        )
         let brightness = brightnessSum / pixelCount
         let saturation = saturationSum / pixelCount
-        let sharpness = edgeSharpness(from: luminance)
+        let sharpness = edgeSharpness(
+            from: luminance,
+            width: raster.width,
+            height: raster.height
+        )
         let qualityFeatures = PhotoQualityFeatures(
             brightness: brightness,
             saturation: saturation,
             sharpness: sharpness,
             hashBitDensity: Double(perceptualHash.nonzeroBitCount) / 64.0
+        )
+        let heuristic = PhotoQualityAssessment.heuristic(
+            from: qualityFeatures,
+            thresholds: policy.qualityThresholds(for: stage)
+        )
+        let quality = adjustedQuality(
+            qualityScorer.assessment(for: cgImage, features: qualityFeatures),
+            heuristic: heuristic
         )
 
         return PhotoVisualMetrics(
@@ -873,20 +1395,47 @@ enum PhotoVisualAnalyzer {
             brightness: brightness,
             saturation: saturation,
             sharpness: sharpness,
-            quality: qualityScorer.assessment(for: cgImage, features: qualityFeatures)
-                ?? PhotoQualityAssessment.heuristic(from: qualityFeatures)
+            aspectRatio: Double(cgImage.width) / Double(max(1, cgImage.height)),
+            quality: quality
         )
     }
 
-    private static func edgeSharpness(from luminance: [Double]) -> Double {
-        guard luminance.count == sampleWidth * sampleHeight else { return 0 }
+    private static func adjustedQuality(
+        _ assessment: PhotoQualityAssessment?,
+        heuristic: PhotoQualityAssessment
+    ) -> PhotoQualityAssessment {
+        guard let assessment else { return heuristic }
+
+        switch assessment.source {
+        case .heuristic:
+            return heuristic
+        case .visionAesthetics:
+            return PhotoQualityAssessment(
+                overallQuality: assessment.overallQuality,
+                blurRisk: heuristic.blurRisk,
+                accidentalRisk: max(heuristic.accidentalRisk, assessment.accidentalRisk),
+                faceCaptureQuality: assessment.faceCaptureQuality,
+                isUtility: assessment.isUtility,
+                source: assessment.source
+            )
+        case .customCoreML:
+            return assessment
+        }
+    }
+
+    private static func edgeSharpness(
+        from luminance: [Double],
+        width: Int,
+        height: Int
+    ) -> Double {
+        guard width > 0, height > 0, luminance.count == width * height else { return 0 }
 
         var edgeSum = 0.0
         var comparisons = 0
 
-        for y in 0..<sampleHeight {
-            for x in 0..<sampleWidth {
-                let index = y * sampleWidth + x
+        for y in 0..<height {
+            for x in 0..<width {
+                let index = y * width + x
 
                 if x > 0 {
                     edgeSum += abs(luminance[index] - luminance[index - 1])
@@ -894,23 +1443,41 @@ enum PhotoVisualAnalyzer {
                 }
 
                 if y > 0 {
-                    edgeSum += abs(luminance[index] - luminance[index - sampleWidth])
+                    edgeSum += abs(luminance[index] - luminance[index - width])
                     comparisons += 1
                 }
             }
         }
 
-        return comparisons == 0 ? 0 : edgeSum / Double(comparisons)
+        guard comparisons > 0 else { return 0 }
+        let referenceScale = Double(max(1, min(width, height))) / 32.0
+        return (edgeSum / Double(comparisons)) * referenceScale
     }
 
-    private static func perceptualHash(from luminance: [Double]) -> UInt64 {
-        guard luminance.count == sampleWidth * sampleHeight else { return 0 }
+    private static func perceptualHash(
+        from luminance: [Double],
+        width: Int,
+        height: Int
+    ) -> UInt64 {
+        guard width > 0, height > 0, luminance.count == width * height else { return 0 }
 
         var hash: UInt64 = 0
         for y in 0..<8 {
             for x in 0..<8 {
-                let left = sampledLuminance(luminance, x: x, y: y)
-                let right = sampledLuminance(luminance, x: x + 1, y: y)
+                let left = sampledLuminance(
+                    luminance,
+                    sampleX: x,
+                    sampleY: y,
+                    width: width,
+                    height: height
+                )
+                let right = sampledLuminance(
+                    luminance,
+                    sampleX: x + 1,
+                    sampleY: y,
+                    width: width,
+                    height: height
+                )
                 if left > right {
                     hash |= UInt64(1) << UInt64(y * 8 + x)
                 }
@@ -920,10 +1487,93 @@ enum PhotoVisualAnalyzer {
         return hash
     }
 
-    private static func sampledLuminance(_ luminance: [Double], x: Int, y: Int) -> Double {
-        let sourceX = min(sampleWidth - 1, Int((Double(x) / 8.0) * Double(sampleWidth - 1)))
-        let sourceY = min(sampleHeight - 1, Int((Double(y) / 7.0) * Double(sampleHeight - 1)))
-        return luminance[sourceY * sampleWidth + sourceX]
+    private static func sampledLuminance(
+        _ luminance: [Double],
+        sampleX: Int,
+        sampleY: Int,
+        width: Int,
+        height: Int
+    ) -> Double {
+        let sourceX = min(width - 1, Int((Double(sampleX) / 8.0) * Double(width - 1)))
+        let sourceY = min(height - 1, Int((Double(sampleY) / 7.0) * Double(height - 1)))
+        return luminance[sourceY * width + sourceX]
+    }
+}
+
+struct PhotoAnalysisRaster: Sendable {
+    var width: Int
+    var height: Int
+    var pixels: [UInt8]
+}
+
+enum PhotoAspectPreservingRasterizer {
+    static func dimensions(
+        sourceWidth: Int,
+        sourceHeight: Int,
+        maxLongSide: Int
+    ) -> (width: Int, height: Int) {
+        guard sourceWidth > 0, sourceHeight > 0, maxLongSide > 0 else {
+            return (0, 0)
+        }
+
+        let scale = min(
+            Double(maxLongSide) / Double(sourceWidth),
+            Double(maxLongSide) / Double(sourceHeight)
+        )
+        return (
+            max(1, Int((Double(sourceWidth) * scale).rounded())),
+            max(1, Int((Double(sourceHeight) * scale).rounded()))
+        )
+    }
+
+    static func raster(from cgImage: CGImage, maxLongSide: Int) -> PhotoAnalysisRaster? {
+        let size = dimensions(
+            sourceWidth: cgImage.width,
+            sourceHeight: cgImage.height,
+            maxLongSide: maxLongSide
+        )
+        guard size.width > 0, size.height > 0 else { return nil }
+
+        let bytesPerRow = size.width * 4
+        var pixels = [UInt8](repeating: 0, count: size.height * bytesPerRow)
+        let rendered = pixels.withUnsafeMutableBytes { buffer -> Bool in
+            guard let context = CGContext(
+                data: buffer.baseAddress,
+                width: size.width,
+                height: size.height,
+                bitsPerComponent: 8,
+                bytesPerRow: bytesPerRow,
+                space: CGColorSpaceCreateDeviceRGB(),
+                bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+            ) else { return false }
+
+            context.interpolationQuality = .medium
+            context.draw(
+                cgImage,
+                in: CGRect(x: 0, y: 0, width: size.width, height: size.height)
+            )
+            return true
+        }
+
+        guard rendered else { return nil }
+        return PhotoAnalysisRaster(width: size.width, height: size.height, pixels: pixels)
+    }
+}
+
+enum PhotoImageOrientationNormalizer {
+    static func normalizedCGImage(from image: UIImage) -> CGImage? {
+        guard image.imageOrientation != .up else { return image.cgImage }
+
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        format.opaque = true
+        let pixelSize = CGSize(
+            width: max(1, (image.size.width * image.scale).rounded()),
+            height: max(1, (image.size.height * image.scale).rounded())
+        )
+        return UIGraphicsImageRenderer(size: pixelSize, format: format)
+            .image { _ in image.draw(in: CGRect(origin: .zero, size: pixelSize)) }
+            .cgImage
     }
 }
 
@@ -1025,19 +1675,23 @@ enum PhotoScanResultBuilder {
     ) -> [CleanupCandidate] {
         snapshots.enumerated().map { index, snapshot in
             let recommendedKeep = category == .similar && snapshot.visualClassification?.recommendedKeep == true
+            let wasRefined = snapshot.visualClassification?.wasRefined ?? true
+            let isExactDuplicate = snapshot.visualClassification?.isExactDuplicate == true
             return CleanupCandidate(
                 id: snapshot.id,
                 category: category,
-                confidence: confidence(for: category),
+                confidence: confidence(for: category, snapshot: snapshot),
                 defaultSelectedForDeletion: defaultSelectedForDeletion(
                     category: category,
-                    recommendedKeep: recommendedKeep
+                    recommendedKeep: recommendedKeep,
+                    wasRefined: wasRefined
                 ),
                 recommendedKeep: recommendedKeep,
-                reason: reason(for: category),
+                reason: reason(for: category, snapshot: snapshot),
                 estimatedBytes: estimatedBytes(for: snapshot, category: category),
                 thumbnail: thumbnail(for: category, index: index),
-                thumbnailAssetID: snapshot.id
+                thumbnailAssetID: snapshot.id,
+                isExactDuplicate: isExactDuplicate
             )
         }
     }
@@ -1056,14 +1710,17 @@ enum PhotoScanResultBuilder {
 
         return groups.enumerated().map { index, group in
             let candidates = candidates(from: group.1, category: .similar)
+            let isExactDuplicate = candidates.allSatisfy(\.isExactDuplicate)
             return CleanupGroup(
                 id: group.0,
                 category: .similar,
-                title: "相似照片",
+                title: isExactDuplicate ? "精确重复照片" : "相似照片",
                 subtitle: "第 \(index + 1) 组 / \(groups.count) 组",
                 groupIndex: index + 1,
                 totalGroups: groups.count,
-                explanation: "这些照片来自短时间内的相似画面。留真会推荐保留清晰度最高的一张，其余项目需要你确认后才能加入复核箱。",
+                explanation: isExactDuplicate
+                    ? "这些照片的本地底层资源内容完全一致。留真会推荐保留一张，其他项目仍需你确认后才能加入复核箱。"
+                    : "这些照片来自短时间内的相似画面。留真会综合清晰度和可用的人脸质量推荐保留一张，其余项目需要你确认后才能加入复核箱。",
                 candidates: candidates
             )
         }
@@ -1097,8 +1754,12 @@ enum PhotoScanResultBuilder {
         return snapshot.duration >= 300
     }
 
-    private static func defaultSelectedForDeletion(category: CleanupCategory, recommendedKeep: Bool) -> Bool {
-        guard !recommendedKeep else { return false }
+    private static func defaultSelectedForDeletion(
+        category: CleanupCategory,
+        recommendedKeep: Bool,
+        wasRefined: Bool
+    ) -> Bool {
+        guard !recommendedKeep, wasRefined else { return false }
 
         switch category {
         case .similar, .screenshots, .largeVideos:
@@ -1126,7 +1787,16 @@ enum PhotoScanResultBuilder {
         }
     }
 
-    private static func confidence(for category: CleanupCategory) -> CandidateConfidence {
+    private static func confidence(
+        for category: CleanupCategory,
+        snapshot: PhotoAssetSnapshot
+    ) -> CandidateConfidence {
+        if snapshot.visualClassification?.isExactDuplicate == true {
+            return .high
+        }
+        if snapshot.visualClassification?.wasRefined == false {
+            return .low
+        }
         switch category {
         case .screenshots:
             return .high
@@ -1137,7 +1807,16 @@ enum PhotoScanResultBuilder {
         }
     }
 
-    private static func reason(for category: CleanupCategory) -> String {
+    private static func reason(
+        for category: CleanupCategory,
+        snapshot: PhotoAssetSnapshot
+    ) -> String {
+        if snapshot.visualClassification?.isExactDuplicate == true {
+            return "本机底层资源摘要一致，确认为内容完全相同的照片。"
+        }
+        if snapshot.visualClassification?.wasRefined == false {
+            return "本机未能读取复核图片，仅保留粗筛结果供你谨慎检查。"
+        }
         switch category {
         case .screenshots:
             return "系统识别为截图，可能是临时信息。"

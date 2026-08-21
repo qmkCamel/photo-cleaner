@@ -16,9 +16,12 @@ final class TrueKeepAccessibilityTests: XCTestCase {
 
         XCTAssertTrue(controls.contains(.allowPhotos))
         XCTAssertTrue(controls.contains(.scanInProgress))
+        XCTAssertTrue(controls.contains(.scanStage))
         XCTAssertTrue(controls.contains(.cancelScan))
+        XCTAssertTrue(controls.contains(.continueBrowsing))
         XCTAssertTrue(controls.contains(.viewScanResults))
         XCTAssertTrue(controls.contains(.homeScan))
+        XCTAssertTrue(controls.contains(.homeActiveScan))
         XCTAssertTrue(controls.contains(.deletionSummary))
         XCTAssertTrue(controls.contains(.addToReviewBin))
         XCTAssertTrue(controls.contains(.deleteReviewBinSelection))

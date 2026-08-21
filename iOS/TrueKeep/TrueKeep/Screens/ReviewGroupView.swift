@@ -79,10 +79,21 @@ struct ReviewGroupView: View {
             .opacity(state.currentReviewSelectionCount == 0 ? 0.55 : 1)
             .accessibilityIdentifier(TrueKeepAccessibility.Control.addToReviewBin.id)
 
-            SecondaryActionButton(title: "复核本组全部") {
-                state.selectAllCandidatesInCurrentGroup()
+            SecondaryActionButton(
+                title: state.areAllCandidatesInCurrentGroupSelected
+                    ? "取消全选"
+                    : "全选本组可清理项"
+            ) {
+                state.toggleAllCandidatesInCurrentGroup()
             }
+            .disabled(!state.canToggleAllCandidatesInCurrentGroup)
+            .opacity(state.canToggleAllCandidatesInCurrentGroup ? 1 : 0.55)
             .accessibilityIdentifier(TrueKeepAccessibility.Control.reviewAllInGroup.id)
+            .accessibilityHint(
+                state.areAllCandidatesInCurrentGroupSelected
+                    ? "取消当前分组所有可清理项的选择"
+                    : "选择当前分组所有可清理项，推荐保留项不会被选择"
+            )
 
             if state.canMoveToPreviousReviewGroup || state.canMoveToNextReviewGroup {
                 HStack {

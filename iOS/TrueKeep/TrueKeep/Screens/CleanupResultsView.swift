@@ -9,9 +9,11 @@ struct CleanupResultsView: View {
     var isRequestingAccess: Bool = false
     var selectedScanDateRange: PhotoScanDateRange = .defaultValue
     var completedScanDateRange: PhotoScanDateRange? = nil
+    var activeScanProgress: PhotoScanProgress? = nil
     var onRequestPhotoAccess: () -> Void = {}
     var onSelectScanDateRange: (PhotoScanDateRange) -> Void = { _ in }
     var onScan: () -> Void = {}
+    var onViewScanProgress: () -> Void = {}
     var onReviewTask: (CleanupTask) -> Void
 
     var body: some View {
@@ -43,9 +45,15 @@ struct CleanupResultsView: View {
                     TrustChip(title: "本地", systemImage: "checkmark.circle")
                 }
 
+                if let activeScanProgress {
+                    ActiveScanNotice(progress: activeScanProgress, action: onViewScanProgress)
+                }
+
                 if canScan {
                     ScanDateRangeSelector(
-                        title: hasCompletedScan ? "下次扫描范围" : "扫描范围",
+                        title: hasCompletedScan || activeScanProgress != nil
+                            ? "下次扫描范围"
+                            : "扫描范围",
                         selection: selectedScanDateRange,
                         usesCompactLayout: hasCompletedScan,
                         onSelect: onSelectScanDateRange
@@ -135,12 +143,20 @@ struct CleanupResultsView: View {
 
     @ViewBuilder
     private var scanAction: some View {
-        PrimaryActionButton(title: hasCompletedScan ? "重新扫描" : "扫描相册", action: onScan)
+        PrimaryActionButton(
+            title: activeScanProgress == nil
+                ? (hasCompletedScan ? "重新扫描" : "扫描相册")
+                : "查看扫描进度",
+            action: activeScanProgress == nil ? onScan : onViewScanProgress
+        )
             .accessibilityIdentifier(TrueKeepAccessibility.Control.homeScan.id)
     }
 
     private var resultsRescanFooter: some View {
-        PrimaryActionButton(title: "重新扫描", action: onScan)
+        PrimaryActionButton(
+            title: activeScanProgress == nil ? "重新扫描" : "查看扫描进度",
+            action: activeScanProgress == nil ? onScan : onViewScanProgress
+        )
             .accessibilityIdentifier(TrueKeepAccessibility.Control.homeScan.id)
             .padding(.horizontal, 20)
             .padding(.top, 12)
@@ -151,6 +167,47 @@ struct CleanupResultsView: View {
                     .fill(TrueKeepTheme.line)
                     .frame(height: 1)
             }
+    }
+}
+
+private struct ActiveScanNotice: View {
+    var progress: PhotoScanProgress
+    var action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(alignment: .center, spacing: 12) {
+                ProgressView()
+                    .tint(TrueKeepTheme.greenStrong)
+                    .accessibilityHidden(true)
+
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("正在\(progress.stageTitle)")
+                        .font(TrueKeepTheme.Font.bodySmall.weight(.semibold))
+                        .foregroundStyle(TrueKeepTheme.ink)
+                    Text("\(progress.progressDescription)，点击查看或取消")
+                        .font(TrueKeepTheme.Font.caption)
+                        .foregroundStyle(TrueKeepTheme.muted)
+                        .lineLimit(nil)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+
+                Spacer(minLength: 8)
+                Image(systemName: "chevron.right")
+                    .font(TrueKeepTheme.Font.iconSmall)
+                    .foregroundStyle(TrueKeepTheme.greenStrong)
+                    .accessibilityHidden(true)
+            }
+            .padding(14)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(TrueKeepTheme.greenSoft)
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).stroke(TrueKeepTheme.quiet))
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier(TrueKeepAccessibility.Control.homeActiveScan.id)
+        .accessibilityLabel("正在\(progress.stageTitle)，\(progress.progressDescription)")
+        .accessibilityHint("打开扫描进度，可取消扫描")
     }
 }
 

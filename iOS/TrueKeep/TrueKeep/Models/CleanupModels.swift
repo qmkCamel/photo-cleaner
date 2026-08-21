@@ -123,6 +123,7 @@ struct CleanupCandidate: Identifiable, Hashable {
     var estimatedBytes: Int64
     var thumbnail: ThumbnailStyle
     var thumbnailAssetID: String? = nil
+    var isExactDuplicate: Bool = false
 }
 
 struct CleanupGroup: Identifiable, Hashable {
@@ -164,7 +165,11 @@ enum CleanupTaskBuilder {
         return CleanupTask(
             id: group.id,
             category: group.category,
-            description: taskDescription(for: group.category, count: group.candidates.count),
+            description: taskDescription(
+                for: group.category,
+                count: group.candidates.count,
+                isExactDuplicate: group.candidates.allSatisfy(\.isExactDuplicate)
+            ),
             candidateCount: group.candidates.count,
             estimatedBytes: group.estimatedBytes,
             confidenceLabel: confidenceLabel(for: group.category),
@@ -172,13 +177,20 @@ enum CleanupTaskBuilder {
         )
     }
 
-    private static func taskDescription(for category: CleanupCategory, count: Int) -> String {
+    private static func taskDescription(
+        for category: CleanupCategory,
+        count: Int,
+        isExactDuplicate: Bool
+    ) -> String {
         switch category {
         case .screenshots:
             return "\(count) 张截图，优先复核临时内容"
         case .largeVideos:
             return "\(count) 个长视频或大视频，建议逐个确认"
         case .similar:
+            if isExactDuplicate {
+                return "\(count) 张本机确认内容完全相同的照片，已推荐保留一张"
+            }
             return "\(count) 张本机识别的相似照片，已推荐保留一张"
         case .accidental:
             return "\(count) 张疑似误拍，低置信度复核"
@@ -293,6 +305,19 @@ struct CleanupFlowState: Hashable {
         selectedCandidateIDs.count
     }
 
+    var currentReviewSelectableCandidateIDs: Set<String> {
+        Set(currentReviewGroup.candidates.filter { !$0.recommendedKeep }.map(\.id))
+    }
+
+    var canToggleAllCandidatesInCurrentGroup: Bool {
+        !currentReviewSelectableCandidateIDs.isEmpty
+    }
+
+    var areAllCandidatesInCurrentGroupSelected: Bool {
+        let selectableIDs = currentReviewSelectableCandidateIDs
+        return !selectableIDs.isEmpty && selectableIDs.isSubset(of: selectedCandidateIDs)
+    }
+
     var totalEstimatedBytes: Int64 {
         tasks.map(\.estimatedBytes).reduce(0, +)
     }
@@ -320,8 +345,15 @@ struct CleanupFlowState: Hashable {
         }
     }
 
-    mutating func selectAllCandidatesInCurrentGroup() {
-        selectedCandidateIDs = Set(currentReviewGroup.candidates.filter { !$0.recommendedKeep }.map(\.id))
+    mutating func toggleAllCandidatesInCurrentGroup() {
+        let selectableIDs = currentReviewSelectableCandidateIDs
+        guard !selectableIDs.isEmpty else { return }
+
+        if selectableIDs.isSubset(of: selectedCandidateIDs) {
+            selectedCandidateIDs.subtract(selectableIDs)
+        } else {
+            selectedCandidateIDs.formUnion(selectableIDs)
+        }
     }
 
     @discardableResult

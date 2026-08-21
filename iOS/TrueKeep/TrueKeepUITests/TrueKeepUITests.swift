@@ -331,6 +331,30 @@ final class TrueKeepUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["扫描已停止"].waitForExistence(timeout: defaultTimeout))
     }
 
+    func testCandidateRefinementCanContinueBrowsingReturnAndCancelWithScreenshots() {
+        launchForUITestScenario("-TrueKeepUITestScanRefining")
+
+        XCTAssertTrue(app.staticTexts["正在复核候选"].waitForExistence(timeout: defaultTimeout))
+        XCTAssertTrue(app.staticTexts["候选复核"].exists)
+        XCTAssertTrue(app.buttons[ID.cancelScan].isEnabled)
+        attachScreenshot(named: "scan-candidate-refinement")
+
+        app.buttons[ID.continueBrowsing].tap()
+
+        assertHomeIsVisible()
+        let activeScan = app.buttons[ID.homeActiveScan]
+        XCTAssertTrue(activeScan.waitForExistence(timeout: defaultTimeout))
+        XCTAssertTrue(activeScan.label.contains("候选复核"))
+        attachScreenshot(named: "home-active-candidate-refinement")
+
+        activeScan.tap()
+        XCTAssertTrue(app.buttons[ID.cancelScan].waitForExistence(timeout: defaultTimeout))
+        app.buttons[ID.cancelScan].tap()
+
+        XCTAssertTrue(app.staticTexts["扫描已停止"].waitForExistence(timeout: defaultTimeout))
+        attachScreenshot(named: "scan-candidate-refinement-cancelled")
+    }
+
     func testInterruptedScanStateIsReachableForAutomation() {
         launchForUITestScenario("-TrueKeepUITestScanInterrupted")
 
@@ -371,7 +395,6 @@ final class TrueKeepUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["截图复核"].waitForExistence(timeout: defaultTimeout))
         attachScreenshot(named: "05-screenshot-review")
 
-        app.buttons[ID.reviewAll].tap()
         XCTAssertTrue(app.buttons[ID.addToReviewBin].waitForExistence(timeout: defaultTimeout))
         app.buttons[ID.addToReviewBin].tap()
         XCTAssertTrue(app.buttons[ID.deleteReviewBinSelection].waitForExistence(timeout: defaultTimeout))
@@ -496,6 +519,33 @@ final class TrueKeepUITests: XCTestCase {
         XCTAssertTrue(addButton.label.contains("1"))
     }
 
+    func testReviewGroupBulkSelectionTogglesWithVisibleFeedback() {
+        openHome()
+        app.buttons[ID.taskScreenshots].tap()
+        XCTAssertTrue(app.staticTexts["截图复核"].waitForExistence(timeout: defaultTimeout))
+
+        let bulkSelectionButton = app.buttons[ID.reviewAll]
+        let addButton = app.buttons[ID.addToReviewBin]
+        XCTAssertTrue(bulkSelectionButton.waitForExistence(timeout: defaultTimeout))
+        XCTAssertEqual(bulkSelectionButton.label, "取消全选")
+        XCTAssertTrue(addButton.isEnabled)
+        XCTAssertTrue(addButton.label.contains("3"))
+
+        bulkSelectionButton.tap()
+
+        XCTAssertTrue(waitForButtonLabel(ID.reviewAll, contains: "全选本组可清理项"))
+        XCTAssertTrue(waitForButtonEnabled(ID.addToReviewBin, false))
+        XCTAssertEqual(addButton.label, "选择项目后加入复核箱")
+        attachScreenshot(named: "review-group-bulk-selection-cleared")
+
+        bulkSelectionButton.tap()
+
+        XCTAssertTrue(waitForButtonLabel(ID.reviewAll, contains: "取消全选"))
+        XCTAssertTrue(waitForButtonEnabled(ID.addToReviewBin, true))
+        XCTAssertTrue(addButton.label.contains("3"))
+        attachScreenshot(named: "review-group-bulk-selection-restored")
+    }
+
     func testCriticalScreensPassAccessibilityAudit() throws {
         try assertAccessibilityAuditPasses("welcome")
 
@@ -517,7 +567,6 @@ final class TrueKeepUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["截图复核"].waitForExistence(timeout: defaultTimeout))
         try assertAccessibilityAuditPasses("screenshot-review")
 
-        app.buttons[ID.reviewAll].tap()
         XCTAssertTrue(app.buttons[ID.addToReviewBin].waitForExistence(timeout: defaultTimeout))
         app.buttons[ID.addToReviewBin].tap()
         XCTAssertTrue(app.buttons[ID.deleteReviewBinSelection].waitForExistence(timeout: defaultTimeout))
@@ -696,12 +745,15 @@ private enum ID {
     static let retryPhotoAccess = "truekeep.permission-issue.retry"
     static let returnToPermission = "truekeep.permission-issue.return-to-permission"
     static let scanInProgress = "truekeep.scan.in-progress"
+    static let scanStage = "truekeep.scan.stage"
     static let cancelScan = "truekeep.scan.cancel"
+    static let continueBrowsing = "truekeep.scan.continue-browsing"
     static let retryScan = "truekeep.scan.retry"
     static let viewScanResults = "truekeep.scan.view-results"
     static let cleanupResultsScreen = "truekeep.cleanup.results"
     static let deletionSummary = "truekeep.cleanup.deletion-summary"
     static let homeScan = "truekeep.cleanup.scan"
+    static let homeActiveScan = "truekeep.cleanup.active-scan"
     static let scanDateRangeSelector = "truekeep.cleanup.date-range.selector"
     static let selectedScanDateRange = "truekeep.cleanup.date-range.selected"
     static let completedScanDateRange = "truekeep.cleanup.date-range.completed"

@@ -252,15 +252,30 @@ final class CleanupFlowStateTests: XCTestCase {
         XCTAssertEqual(Set(state.tasks.map(\.id)), reviewGroupIDs)
     }
 
-    func testSelectingAllReviewCandidatesExcludesRecommendedKeepItems() {
+    func testTogglingAllReviewCandidatesCompletesSelectionAndExcludesRecommendedKeepItems() {
         var state = CleanupFlowState.sample()
 
-        state.selectAllCandidatesInCurrentGroup()
+        XCTAssertFalse(state.areAllCandidatesInCurrentGroupSelected)
+        state.toggleAllCandidatesInCurrentGroup()
 
         XCTAssertEqual(
             state.selectedCandidateIDs,
             Set(state.currentReviewGroup.candidates.filter { !$0.recommendedKeep }.map(\.id))
         )
+        XCTAssertTrue(state.areAllCandidatesInCurrentGroupSelected)
+        XCTAssertFalse(state.selectedCandidateIDs.contains("keep-01"))
+    }
+
+    func testTogglingFullySelectedReviewGroupClearsOnlyCurrentSelectableCandidates() {
+        var state = CleanupFlowState.sample()
+        state.toggleAllCandidatesInCurrentGroup()
+        state.selectedCandidateIDs.insert("selection-from-another-group")
+
+        XCTAssertTrue(state.areAllCandidatesInCurrentGroupSelected)
+        state.toggleAllCandidatesInCurrentGroup()
+
+        XCTAssertEqual(state.selectedCandidateIDs, ["selection-from-another-group"])
+        XCTAssertFalse(state.areAllCandidatesInCurrentGroupSelected)
         XCTAssertFalse(state.selectedCandidateIDs.contains("keep-01"))
     }
 

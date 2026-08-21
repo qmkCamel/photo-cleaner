@@ -36,7 +36,7 @@ Verified flows:
   - Task cards open their review groups directly, without a fixed footer covering the list content.
 - Review group:
   - Candidate selection toggles update the add-to-Review-Bin count.
-  - `复核本组全部` selects all non-recommended candidates and no longer switches tabs by mistake.
+  - The bulk-selection button shows `全选本组可清理项` when selection is incomplete and `取消全选` when all non-recommended candidates are selected; each tap immediately updates the candidate indicators and Review Bin count.
   - `上一组` and `下一组` move between review groups and refresh default selections.
   - When zero candidates are selected, the add-to-Review-Bin button is disabled and not exposed as a tappable target.
 - Review Bin:

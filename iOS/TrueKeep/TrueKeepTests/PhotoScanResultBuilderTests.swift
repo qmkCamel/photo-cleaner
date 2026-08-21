@@ -1,7 +1,9 @@
 import XCTest
 import CoreML
 import CoreGraphics
+import CryptoKit
 import Photos
+import UIKit
 @testable import TrueKeep
 
 final class PhotoScanResultBuilderTests: XCTestCase {
@@ -605,6 +607,382 @@ final class PhotoScanResultBuilderTests: XCTestCase {
         XCTAssertEqual(metrics?.quality.source, .heuristic)
     }
 
+    func testAspectPreservingRasterDimensionsKeepLandscapePortraitAndPanoramaComposition() {
+        XCTAssertEqual(
+            PhotoAspectPreservingRasterizer.dimensions(
+                sourceWidth: 400,
+                sourceHeight: 200,
+                maxLongSide: 64
+            ).width,
+            64
+        )
+        XCTAssertEqual(
+            PhotoAspectPreservingRasterizer.dimensions(
+                sourceWidth: 400,
+                sourceHeight: 200,
+                maxLongSide: 64
+            ).height,
+            32
+        )
+        XCTAssertEqual(
+            PhotoAspectPreservingRasterizer.dimensions(
+                sourceWidth: 200,
+                sourceHeight: 400,
+                maxLongSide: 64
+            ).width,
+            32
+        )
+        XCTAssertEqual(
+            PhotoAspectPreservingRasterizer.dimensions(
+                sourceWidth: 800,
+                sourceHeight: 100,
+                maxLongSide: 64
+            ).height,
+            8
+        )
+    }
+
+    func testVisualAnalyzerRetainsSourceAspectRatioAtBothStages() throws {
+        let landscape = try makeImage(width: 400, height: 200)
+        let portrait = try makeImage(width: 150, height: 450)
+
+        let coarse = PhotoVisualAnalyzer.metrics(
+            from: landscape,
+            qualityScorer: NilPhotoQualityScorer(),
+            stage: .coarse
+        )
+        let refined = PhotoVisualAnalyzer.metrics(
+            from: portrait,
+            qualityScorer: NilPhotoQualityScorer(),
+            stage: .refined
+        )
+
+        XCTAssertEqual(coarse?.aspectRatio ?? 0, 2, accuracy: 0.001)
+        XCTAssertEqual(refined?.aspectRatio ?? 0, 1.0 / 3.0, accuracy: 0.001)
+    }
+
+    func testOrientationNormalizerAppliesRightRotationBeforeAnalysis() throws {
+        let source = try makeImage(width: 40, height: 20)
+        let orientedImage = UIImage(cgImage: source, scale: 1, orientation: .right)
+
+        let normalized = try XCTUnwrap(
+            PhotoImageOrientationNormalizer.normalizedCGImage(from: orientedImage)
+        )
+
+        XCTAssertEqual(normalized.width, 20)
+        XCTAssertEqual(normalized.height, 40)
+    }
+
+    func testHashFallbackRejectsMateriallyDifferentAspectRatios() {
+        let now = Date(timeIntervalSince1970: 1_780_000_000)
+        let inputs = [
+            visualInput(id: "landscape", date: now, hash: 0b1010, aspectRatio: 2.0),
+            visualInput(id: "portrait", date: now.addingTimeInterval(5), hash: 0b1010, aspectRatio: 0.5)
+        ]
+
+        let classifications = PhotoVisualClassifier.classifications(from: inputs)
+
+        XCTAssertNil(classifications["landscape"]?.similarGroupID)
+        XCTAssertNil(classifications["portrait"]?.similarGroupID)
+    }
+
+    func testRefinementSelectionIncludesAllSimilarMembersAndRiskBoundaryCandidates() {
+        let now = Date(timeIntervalSince1970: 1_780_000_000)
+        let inputs = [
+            visualInput(id: "similar-a", date: now, hash: 0b1010),
+            visualInput(id: "similar-b", date: now.addingTimeInterval(5), hash: 0b1011),
+            visualInput(
+                id: "risk-boundary",
+                date: nil,
+                hash: UInt64.max,
+                blurRisk: 0.72
+            ),
+            visualInput(id: "clean", date: nil, hash: 0x00ff_00ff)
+        ]
+
+        let ids = PhotoVisualClassifier.refinementAssetIDs(from: inputs)
+
+        XCTAssertEqual(ids, Set(["similar-a", "similar-b", "risk-boundary"]))
+    }
+
+    func testRefinedFeaturePrintCanSplitCoarseSimilarGroup() {
+        let now = Date(timeIntervalSince1970: 1_780_000_000)
+        let coarse = [
+            visualInput(id: "first", date: now, hash: 0b1010),
+            visualInput(id: "second", date: now.addingTimeInterval(5), hash: 0b1011)
+        ]
+        let refined = [
+            "first": visualInput(
+                id: "first",
+                date: now,
+                hash: 0b1010,
+                featurePrint: featurePrint([0, 0, 0, 0])
+            ),
+            "second": visualInput(
+                id: "second",
+                date: now.addingTimeInterval(5),
+                hash: 0b1011,
+                featurePrint: featurePrint([1, 1, 1, 1])
+            )
+        ]
+
+        let classifications = PhotoVisualClassifier.finalClassifications(
+            coarseInputs: coarse,
+            refinedInputsByID: refined,
+            exactDuplicateGroups: []
+        )
+
+        XCTAssertNil(classifications["first"]?.similarGroupID)
+        XCTAssertNil(classifications["second"]?.similarGroupID)
+    }
+
+    func testRefinementCanRemoveCoarseBlurAndAccidentalFindings() {
+        let coarse = [
+            visualInput(
+                id: "risk",
+                date: nil,
+                hash: 0,
+                blurRisk: 0.95,
+                accidentalRisk: 0.90
+            )
+        ]
+        let refined = [
+            "risk": visualInput(
+                id: "risk",
+                date: nil,
+                hash: 0,
+                blurRisk: 0.05,
+                accidentalRisk: 0.04
+            )
+        ]
+
+        let classifications = PhotoVisualClassifier.finalClassifications(
+            coarseInputs: coarse,
+            refinedInputsByID: refined,
+            exactDuplicateGroups: []
+        )
+
+        XCTAssertNil(classifications["risk"])
+    }
+
+    func testRefinedQualityCanChangeRecommendedKeep() {
+        let now = Date(timeIntervalSince1970: 1_780_000_000)
+        let coarse = [
+            visualInput(id: "first", date: now, hash: 0b1010, overallQuality: 0.9),
+            visualInput(id: "second", date: now.addingTimeInterval(5), hash: 0b1011, overallQuality: 0.4)
+        ]
+        let refined = [
+            "first": visualInput(id: "first", date: now, hash: 0b1010, overallQuality: 0.3),
+            "second": visualInput(
+                id: "second",
+                date: now.addingTimeInterval(5),
+                hash: 0b1011,
+                overallQuality: 0.95
+            )
+        ]
+
+        let classifications = PhotoVisualClassifier.finalClassifications(
+            coarseInputs: coarse,
+            refinedInputsByID: refined,
+            exactDuplicateGroups: []
+        )
+
+        XCTAssertFalse(classifications["first"]?.recommendedKeep ?? true)
+        XCTAssertTrue(classifications["second"]?.recommendedKeep ?? false)
+    }
+
+    func testUnavailableRefinementKeepsCandidateLowConfidenceAndUnselected() {
+        let now = Date(timeIntervalSince1970: 1_780_000_000)
+        let coarse = [
+            visualInput(id: "refined", date: now, hash: 0b1010, overallQuality: 0.9),
+            visualInput(id: "coarse-only", date: now.addingTimeInterval(5), hash: 0b1011, overallQuality: 0.4)
+        ]
+        let refined = [
+            "refined": visualInput(
+                id: "refined",
+                date: now,
+                hash: 0b1010,
+                overallQuality: 0.9
+            )
+        ]
+        let classifications = PhotoVisualClassifier.finalClassifications(
+            coarseInputs: coarse,
+            refinedInputsByID: refined,
+            exactDuplicateGroups: []
+        )
+        let state = PhotoScanResultBuilder.state(
+            from: coarse.map { input in
+                PhotoAssetSnapshot(
+                    id: input.assetID,
+                    kind: .photo,
+                    isScreenshot: false,
+                    duration: 0,
+                    visualClassification: classifications[input.assetID]
+                )
+            }
+        )
+        let coarseCandidate = state.reviewGroups
+            .flatMap(\.candidates)
+            .first { $0.id == "coarse-only" }
+
+        XCTAssertEqual(coarseCandidate?.confidence, .low)
+        XCTAssertFalse(coarseCandidate?.defaultSelectedForDeletion ?? true)
+        XCTAssertTrue(coarseCandidate?.reason.contains("仅保留粗筛结果") ?? false)
+    }
+
+    func testExactDuplicateGroupUsesDistinctUserFacingCopy() {
+        let classifications = PhotoVisualClassifier.finalClassifications(
+            coarseInputs: [
+                visualInput(id: "exact-a", date: Date(), hash: 0),
+                visualInput(id: "exact-b", date: Date(), hash: 0)
+            ],
+            refinedInputsByID: [
+                "exact-a": visualInput(id: "exact-a", date: Date(), hash: 0),
+                "exact-b": visualInput(id: "exact-b", date: Date(), hash: 0)
+            ],
+            exactDuplicateGroups: [["exact-a", "exact-b"]]
+        )
+        let state = PhotoScanResultBuilder.state(
+            from: ["exact-a", "exact-b"].map { id in
+                PhotoAssetSnapshot(
+                    id: id,
+                    kind: .photo,
+                    isScreenshot: false,
+                    duration: 0,
+                    visualClassification: classifications[id]
+                )
+            }
+        )
+
+        XCTAssertEqual(state.reviewGroups.first?.title, "精确重复照片")
+        XCTAssertTrue(state.tasks.first?.description.contains("内容完全相同") ?? false)
+        XCTAssertTrue(state.reviewGroups.first?.candidates.allSatisfy(\.isExactDuplicate) ?? false)
+    }
+
+    func testExactDuplicateRequiresCompletedRefinementForEveryMarkedMember() {
+        let now = Date(timeIntervalSince1970: 1_780_000_000)
+        let coarse = [
+            visualInput(id: "refined", date: now, hash: 0),
+            visualInput(id: "coarse-only", date: now.addingTimeInterval(5), hash: 0)
+        ]
+
+        let classifications = PhotoVisualClassifier.finalClassifications(
+            coarseInputs: coarse,
+            refinedInputsByID: [
+                "refined": visualInput(id: "refined", date: now, hash: 0)
+            ],
+            exactDuplicateGroups: [["refined", "coarse-only"]]
+        )
+
+        XCTAssertFalse(classifications["refined"]?.isExactDuplicate ?? false)
+        XCTAssertFalse(classifications["coarse-only"]?.isExactDuplicate ?? false)
+        XCTAssertFalse(classifications["coarse-only"]?.wasRefined ?? true)
+    }
+
+    func testExactDuplicateGrouperSeparatesStillLiveAndIncompleteResources() {
+        let samePhoto = Data([1, 2, 3])
+        let sameVideo = Data([4, 5, 6])
+        let groups = PhotoExactDuplicateGrouper.groups(
+            candidateAssetIDs: ["still-a", "still-b", "live-a", "live-b", "incomplete"],
+            digestsByAssetID: [
+                "still-a": PhotoResourceDigestSet(kind: .stillPhoto, photoDigest: samePhoto),
+                "still-b": PhotoResourceDigestSet(kind: .stillPhoto, photoDigest: samePhoto),
+                "live-a": PhotoResourceDigestSet(
+                    kind: .livePhoto,
+                    photoDigest: samePhoto,
+                    pairedVideoDigest: sameVideo
+                ),
+                "live-b": PhotoResourceDigestSet(
+                    kind: .livePhoto,
+                    photoDigest: samePhoto,
+                    pairedVideoDigest: sameVideo
+                ),
+                "incomplete": PhotoResourceDigestSet(
+                    kind: .livePhoto,
+                    photoDigest: samePhoto,
+                    pairedVideoDigest: nil
+                )
+            ]
+        )
+
+        XCTAssertEqual(groups, [["live-a", "live-b"], ["still-a", "still-b"]])
+    }
+
+    func testResourceDigestOptionsNeverAllowNetworkAccess() {
+        let options = PhotoAssetResourceRequestStrategy.localOnlyOptions()
+
+        XCTAssertFalse(options.isNetworkAccessAllowed)
+    }
+
+    func testResourceDigestAccumulatorHashesIncrementalChunks() {
+        let accumulator = PhotoResourceSHA256Accumulator()
+        accumulator.update(Data("first-".utf8))
+        accumulator.update(Data("second".utf8))
+
+        XCTAssertEqual(
+            accumulator.finalize(),
+            Data(SHA256.hash(data: Data("first-second".utf8)))
+        )
+    }
+
+    func testResourceRequestCancellationHandlesCancellationBeforeRequestIDArrives() {
+        let recorder = CancelledRequestRecorder()
+        let cancellation = PhotoRequestCancellation<Int> { requestID in
+            recorder.append(requestID)
+        }
+
+        cancellation.cancel()
+        cancellation.store(42)
+
+        XCTAssertEqual(recorder.values, [42])
+    }
+
+    private func visualInput(
+        id: String,
+        date: Date?,
+        hash: UInt64,
+        featurePrint: PhotoFeaturePrint? = nil,
+        aspectRatio: Double = 1,
+        overallQuality: Double = 0.6,
+        blurRisk: Double = 0,
+        accidentalRisk: Double = 0
+    ) -> PhotoVisualInput {
+        PhotoVisualInput(
+            assetID: id,
+            creationDate: date,
+            metrics: PhotoVisualMetrics(
+                perceptualHash: hash,
+                featurePrint: featurePrint,
+                brightness: 0.5,
+                saturation: 0.3,
+                sharpness: 0.06,
+                aspectRatio: aspectRatio,
+                quality: PhotoQualityAssessment(
+                    overallQuality: overallQuality,
+                    blurRisk: blurRisk,
+                    accidentalRisk: accidentalRisk
+                )
+            )
+        )
+    }
+
+    private func makeImage(width: Int, height: Int) throws -> CGImage {
+        let context = try XCTUnwrap(
+            CGContext(
+                data: nil,
+                width: width,
+                height: height,
+                bitsPerComponent: 8,
+                bytesPerRow: width * 4,
+                space: CGColorSpaceCreateDeviceRGB(),
+                bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+            )
+        )
+        context.setFillColor(CGColor(red: 0.3, green: 0.5, blue: 0.7, alpha: 1))
+        context.fill(CGRect(x: 0, y: 0, width: width, height: height))
+        return try XCTUnwrap(context.makeImage())
+    }
+
     private func featurePrint(_ values: [Float]) -> PhotoFeaturePrint {
         var mutableValues = values
         let data = mutableValues.withUnsafeMutableBytes { buffer in
@@ -624,6 +1002,23 @@ private struct NilPhotoQualityScorer: PhotoQualityScoring {
         features: PhotoQualityFeatures
     ) -> PhotoQualityAssessment? {
         nil
+    }
+}
+
+private final class CancelledRequestRecorder: @unchecked Sendable {
+    private let lock = NSLock()
+    private var storedValues: [Int] = []
+
+    var values: [Int] {
+        lock.lock()
+        defer { lock.unlock() }
+        return storedValues
+    }
+
+    func append(_ value: Int) {
+        lock.lock()
+        storedValues.append(value)
+        lock.unlock()
     }
 }
 

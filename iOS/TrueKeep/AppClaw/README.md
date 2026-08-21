@@ -11,6 +11,7 @@
 | `review-bin-deletion-safety` | 任务复核到复核箱 | 必须二次确认并展示 iCloud 风险；测试安全锁阻止真实删除 |
 | `permission-denied-retry` | 权限关闭与重试 | 重试按钮显示局部忙碌状态，失败后可继续重试或回到首页 |
 | `scan-cancel-recovery` | 扫描中取消 | 取消入口始终可用，明确未改动照片，能够回到首页 |
+| `candidate-refinement-continuity` | 候选复核离页继续 | 展示真实候选复核进度；离页后首页可返回进度页，取消后保留恢复路径 |
 | `limited-results-rescan` | 有限权限结果页重扫 | 入口位于 Tab Bar 上方，点击后重新进入本地扫描流程 |
 | `scan-date-range-selection` | 扫描时间范围 | 默认近一个月，可切换近三个月；进度页与结果页保留实际范围 |
 | `post-deletion-home-sync` | 删除成功后的首页同步 | 已删除候选和旧空间汇总消失，展示可恢复摘要、有限权限提醒与重新扫描入口 |
@@ -111,6 +112,8 @@ AppClaw 的截图、页面树和步骤报告写入仓库根目录的 `.appclaw/r
 ```bash
 appclaw --report --report-dir .
 ```
+
+`candidate-refinement-continuity` 的 AppClaw 报告会保留候选复核、首页继续扫描、返回进度页和取消恢复各步骤截图。对应 XCUITest 还会用 `XCTAttachment.keepAlways` 固化 `scan-candidate-refinement`、`home-active-candidate-refinement`、`scan-candidate-refinement-cancelled` 三张命名截图，便于后续按状态检索。
 
 定位失败时按以下顺序检查：
 

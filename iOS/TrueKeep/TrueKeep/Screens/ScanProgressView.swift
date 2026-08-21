@@ -11,9 +11,11 @@ struct ScanProgressView: View {
     @ScaledMetric(relativeTo: .body) private var progressRingLineWidth: CGFloat = 10
 
     var status: PhotoScanProgressStatus = .scanning
+    var scanProgress: PhotoScanProgress = .coarseAnalysis(completed: 0, total: 0)
     var scanDateRange: PhotoScanDateRange = .defaultValue
     var scanLimitationWarning: String? = nil
     var onCancel: () -> Void
+    var onContinueBrowsing: () -> Void = {}
     var onRetry: () -> Void = {}
     var onViewResults: () -> Void
 
@@ -52,6 +54,9 @@ struct ScanProgressView: View {
                     }
                     .frame(width: progressRingSize, height: progressRingSize)
                     .padding(.top, 24)
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel(scanProgressAccessibilityLabel)
+                    .accessibilityIdentifier(TrueKeepAccessibility.Control.scanStage.id)
 
                     TrustChip(title: "本地扫描", systemImage: "checkmark.circle")
                         .padding(.top, 20)
@@ -92,6 +97,7 @@ struct ScanProgressView: View {
             VStack(spacing: 10) {
                 primaryAction
                 secondaryAction
+                continueBrowsingAction
                 Text(footerText)
                     .font(TrueKeepTheme.Font.caption)
                     .foregroundStyle(TrueKeepTheme.muted)
@@ -106,7 +112,14 @@ struct ScanProgressView: View {
     private var title: String {
         switch status {
         case .scanning:
-            "正在扫描你的相册"
+            switch scanProgress {
+            case .coarseAnalysis:
+                "正在快速分析照片"
+            case .candidateRefinement:
+                "正在复核候选"
+            case .finalizing:
+                "正在整理扫描结果"
+            }
         case .completed:
             "扫描完成"
         case .interrupted:
@@ -117,7 +130,14 @@ struct ScanProgressView: View {
     private var progress: CGFloat {
         switch status {
         case .scanning:
-            0.42
+            switch scanProgress {
+            case .coarseAnalysis(let completed, let total):
+                0.05 + (0.50 * fraction(completed: completed, total: total))
+            case .candidateRefinement(let completed, let total):
+                0.55 + (0.35 * fraction(completed: completed, total: total))
+            case .finalizing:
+                0.94
+            }
         case .completed:
             1
         case .interrupted:
@@ -128,7 +148,13 @@ struct ScanProgressView: View {
     private var centerValue: String {
         switch status {
         case .scanning:
-            "处理中"
+            switch scanProgress {
+            case .coarseAnalysis(let completed, let total),
+                 .candidateRefinement(let completed, let total):
+                total > 0 ? "\(completed)/\(total)" : "准备中"
+            case .finalizing:
+                "整理中"
+            }
         case .completed:
             "100%"
         case .interrupted:
@@ -139,7 +165,7 @@ struct ScanProgressView: View {
     private var centerCaption: String {
         switch status {
         case .scanning:
-            "本机分批扫描"
+            scanProgress.stageTitle
         case .completed(let candidateCount):
             "\(candidateCount) 项待复核"
         case .interrupted:
@@ -150,25 +176,16 @@ struct ScanProgressView: View {
     private var rows: [ScanRowModel] {
         switch status {
         case .scanning:
-            [
-                ScanRowModel(title: "读取照片", value: "分批中", done: false),
-                ScanRowModel(title: "读取视频", value: "等待中", done: false),
-                ScanRowModel(title: "检测截图", value: "本机处理", done: false),
-                ScanRowModel(title: "分析视觉候选", value: "低置信度", done: false),
-                ScanRowModel(title: "分析大视频", value: "本机处理", done: false)
-            ]
+            scanningRows
         case .completed:
             [
-                ScanRowModel(title: "读取照片", value: "已完成", done: true),
-                ScanRowModel(title: "读取视频", value: "已完成", done: true),
-                ScanRowModel(title: "检测截图", value: "已完成", done: true),
-                ScanRowModel(title: "分析视觉候选", value: "已完成", done: true),
-                ScanRowModel(title: "分析大视频", value: "已完成", done: true)
+                ScanRowModel(title: "快速分析", value: "已完成", done: true),
+                ScanRowModel(title: "候选复核", value: "已完成", done: true),
+                ScanRowModel(title: "整理结果", value: "已完成", done: true)
             ]
         case .interrupted(let message):
             [
-                ScanRowModel(title: "读取照片", value: "已停止", done: false),
-                ScanRowModel(title: "读取视频", value: "已停止", done: false),
+                ScanRowModel(title: "本地扫描", value: "已停止", done: false),
                 ScanRowModel(title: "当前状态", value: message, done: false)
             ]
         }
@@ -206,14 +223,89 @@ struct ScanProgressView: View {
         }
     }
 
+    @ViewBuilder
+    private var continueBrowsingAction: some View {
+        if case .scanning = status {
+            SecondaryActionButton(title: "继续浏览", action: onContinueBrowsing)
+                .accessibilityIdentifier(TrueKeepAccessibility.Control.continueBrowsing.id)
+                .accessibilityHint("扫描会在本机继续运行，可从首页返回进度页")
+        }
+    }
+
     private var footerText: String {
         switch status {
         case .scanning:
-            "\(scanDateRange.title)扫描在前台分批进行，可以随时取消。"
+            "\(scanDateRange.title)扫描正在本机分批进行。离开本页后仍会继续，可以随时返回取消。"
         case .completed:
             "结果只来自\(scanDateRange.title)内当前可访问的照片和视频。"
         case .interrupted:
             "取消扫描不会删除或移动任何照片或视频。"
+        }
+    }
+
+    private var scanningRows: [ScanRowModel] {
+        switch scanProgress {
+        case .coarseAnalysis(let completed, let total):
+            return [
+                ScanRowModel(title: "快速分析", value: progressValue(completed, total), done: false),
+                ScanRowModel(title: "候选复核", value: "等待中", done: false),
+                ScanRowModel(title: "整理结果", value: "等待中", done: false)
+            ]
+        case .candidateRefinement(let completed, let total):
+            return [
+                ScanRowModel(title: "快速分析", value: "已完成", done: true),
+                ScanRowModel(title: "候选复核", value: progressValue(completed, total), done: false),
+                ScanRowModel(title: "整理结果", value: "等待中", done: false)
+            ]
+        case .finalizing:
+            return [
+                ScanRowModel(title: "快速分析", value: "已完成", done: true),
+                ScanRowModel(title: "候选复核", value: "已完成", done: true),
+                ScanRowModel(title: "整理结果", value: "处理中", done: false)
+            ]
+        }
+    }
+
+    private var scanProgressAccessibilityLabel: String {
+        switch status {
+        case .scanning:
+            "\(scanProgress.stageTitle)，\(scanProgress.progressDescription)，本次范围\(scanDateRange.title)"
+        case .completed(let candidateCount):
+            "扫描完成，\(candidateCount) 项待复核，本次范围\(scanDateRange.title)"
+        case .interrupted(let message):
+            "扫描已停止，\(message)，本次范围\(scanDateRange.title)"
+        }
+    }
+
+    private func fraction(completed: Int, total: Int) -> CGFloat {
+        guard total > 0 else { return 0 }
+        return CGFloat(min(total, max(0, completed))) / CGFloat(total)
+    }
+
+    private func progressValue(_ completed: Int, _ total: Int) -> String {
+        total > 0 ? "\(min(total, max(0, completed)))/\(total)" : "准备中"
+    }
+}
+
+extension PhotoScanProgress {
+    var stageTitle: String {
+        switch self {
+        case .coarseAnalysis:
+            "快速分析"
+        case .candidateRefinement:
+            "候选复核"
+        case .finalizing:
+            "整理结果"
+        }
+    }
+
+    var progressDescription: String {
+        switch self {
+        case .coarseAnalysis(let completed, let total),
+             .candidateRefinement(let completed, let total):
+            total > 0 ? "已完成 \(min(total, max(0, completed))) 项，共 \(total) 项" : "准备中"
+        case .finalizing:
+            "正在整理最终结果"
         }
     }
 }
