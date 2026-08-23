@@ -288,6 +288,7 @@ struct CleanupFlowState: Hashable {
     var reviewBinItems: [ReviewBinItem]
     var deletionSummary: PhotoDeletionSummary?
     var deletionErrorMessage: String?
+    var reviewGroupDeletionErrorMessage: String? = nil
 
     var hasDeletedItems: Bool {
         deletionSummary != nil
@@ -302,11 +303,12 @@ struct CleanupFlowState: Hashable {
     }
 
     var currentReviewSelectionCount: Int {
-        selectedCandidateIDs.count
+        selectedCurrentReviewAssetIDs.count
     }
 
     var currentReviewSelectableCandidateIDs: Set<String> {
-        Set(currentReviewGroup.candidates.filter { !$0.recommendedKeep }.map(\.id))
+        guard reviewGroups.indices.contains(currentReviewGroupIndex) else { return [] }
+        return Set(currentReviewGroup.candidates.filter { !$0.recommendedKeep }.map(\.id))
     }
 
     var canToggleAllCandidatesInCurrentGroup: Bool {
@@ -328,6 +330,15 @@ struct CleanupFlowState: Hashable {
             .map(\.id)
     }
 
+    var selectedCurrentReviewAssetIDs: [String] {
+        guard reviewGroups.indices.contains(currentReviewGroupIndex) else { return [] }
+
+        return currentReviewGroup.candidates.compactMap { candidate in
+            guard selectedCandidateIDs.contains(candidate.id), !candidate.recommendedKeep else { return nil }
+            return candidate.id
+        }
+    }
+
     var canMoveToPreviousReviewGroup: Bool {
         currentReviewGroupIndex > 0
     }
@@ -343,6 +354,7 @@ struct CleanupFlowState: Hashable {
         } else {
             selectedCandidateIDs.insert(candidate.id)
         }
+        reviewGroupDeletionErrorMessage = nil
     }
 
     mutating func toggleAllCandidatesInCurrentGroup() {
@@ -354,6 +366,7 @@ struct CleanupFlowState: Hashable {
         } else {
             selectedCandidateIDs.formUnion(selectableIDs)
         }
+        reviewGroupDeletionErrorMessage = nil
     }
 
     @discardableResult
@@ -362,6 +375,7 @@ struct CleanupFlowState: Hashable {
 
         currentReviewGroupIndex = index
         selectDefaultCandidatesInCurrentGroup()
+        reviewGroupDeletionErrorMessage = nil
         return true
     }
 
@@ -370,6 +384,7 @@ struct CleanupFlowState: Hashable {
         guard canMoveToPreviousReviewGroup else { return false }
         currentReviewGroupIndex -= 1
         selectDefaultCandidatesInCurrentGroup()
+        reviewGroupDeletionErrorMessage = nil
         return true
     }
 
@@ -378,6 +393,7 @@ struct CleanupFlowState: Hashable {
         guard canMoveToNextReviewGroup else { return false }
         currentReviewGroupIndex += 1
         selectDefaultCandidatesInCurrentGroup()
+        reviewGroupDeletionErrorMessage = nil
         return true
     }
 
@@ -427,6 +443,25 @@ struct CleanupFlowState: Hashable {
         }
     }
 
+    mutating func applyDirectDeletionResult(_ result: PhotoDeletionResult) {
+        let candidatesByID = reviewGroups.reduce(into: [String: CleanupCandidate]()) { candidates, group in
+            for candidate in group.candidates {
+                candidates[candidate.id] = candidate
+            }
+        }
+
+        switch result {
+        case .success(let deletedAssetIDs):
+            reconcileDeletedAssets(deletedAssetIDs, candidatesByID: candidatesByID)
+            reviewGroupDeletionErrorMessage = nil
+        case .partial(let deletedAssetIDs, let failedAssetIDs, let message):
+            reconcileDeletedAssets(deletedAssetIDs, candidatesByID: candidatesByID)
+            reviewGroupDeletionErrorMessage = "\(deletedAssetIDs.count) 项已删除，\(failedAssetIDs.count) 项未完成。\(message)"
+        case .failure(_, let message):
+            reviewGroupDeletionErrorMessage = message
+        }
+    }
+
     private mutating func reconcileDeletedAssets(
         _ deletedAssetIDs: [String],
         candidatesByID: [String: CleanupCandidate]
@@ -436,6 +471,11 @@ struct CleanupFlowState: Hashable {
         let currentGroupID = reviewGroups.indices.contains(currentReviewGroupIndex)
             ? reviewGroups[currentReviewGroupIndex].id
             : nil
+        let affectedGroupIDs = Set(
+            reviewGroups
+                .filter { group in group.candidates.contains { deletedIDs.contains($0.id) } }
+                .map(\.id)
+        )
 
         reviewBinItems.removeAll { deletedIDs.contains($0.id) }
         selectedCandidateIDs.subtract(deletedIDs)
@@ -447,7 +487,12 @@ struct CleanupFlowState: Hashable {
             return updatedGroup
         }
         normalizeReviewGroupMetadata()
-        tasks = CleanupTaskBuilder.tasks(from: reviewGroups)
+        let remainingGroupsByID = Dictionary(uniqueKeysWithValues: reviewGroups.map { ($0.id, $0) })
+        tasks = tasks.compactMap { task in
+            guard affectedGroupIDs.contains(task.id) else { return task }
+            guard let group = remainingGroupsByID[task.id] else { return nil }
+            return CleanupTaskBuilder.task(from: group)
+        }
 
         let remainingCandidateIDs = Set(reviewGroups.flatMap { $0.candidates.map(\.id) })
         selectedCandidateIDs.formIntersection(remainingCandidateIDs)
@@ -466,6 +511,10 @@ struct CleanupFlowState: Hashable {
     }
 
     private mutating func selectDefaultCandidatesInCurrentGroup() {
+        guard reviewGroups.indices.contains(currentReviewGroupIndex) else {
+            selectedCandidateIDs = []
+            return
+        }
         selectedCandidateIDs = Set(currentReviewGroup.candidates.filter(\.defaultSelectedForDeletion).map(\.id))
     }
 
@@ -494,6 +543,8 @@ struct CleanupFlowState: Hashable {
 
 extension Int64 {
     var formattedStorage: String {
+        guard self > 0 else { return "0 KB" }
+
         let formatter = ByteCountFormatter()
         formatter.allowedUnits = [.useMB, .useGB]
         formatter.countStyle = .file

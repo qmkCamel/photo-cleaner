@@ -3,6 +3,10 @@ import XCTest
 
 @MainActor
 final class CleanupFlowStateTests: XCTestCase {
+    func testZeroStorageFormattingUsesNumericValue() {
+        XCTAssertEqual(Int64(0).formattedStorage, "0 KB")
+    }
+
     func testReviewSelectionMovesIntoReviewBinBeforeDeletion() {
         var state = CleanupFlowState.sample()
 
@@ -32,6 +36,73 @@ final class CleanupFlowStateTests: XCTestCase {
         XCTAssertEqual(state.deletionSummary?.itemCount, 3)
         XCTAssertEqual(state.deletionSummary?.estimatedBytes, 6_000_000)
         XCTAssertEqual(state.postDeletionRecoveryMessage, "所选项目已移至 Photos 的“最近删除”。建议保留恢复窗口，不要立即清空。")
+    }
+
+    func testDirectDeletionRemovesCandidatesAndSynchronizesHomeTaskAndReviewBin() {
+        var state = CleanupFlowState.sample()
+        state.addCurrentSelectionToReviewBin()
+        let deletedIDs = state.selectedCurrentReviewAssetIDs
+        let unaffectedScreenshotCount = state.tasks.first { $0.category == .screenshots }?.candidateCount
+
+        state.applyDirectDeletionResult(.success(deletedAssetIDs: deletedIDs))
+
+        XCTAssertFalse(deletedIDs.isEmpty)
+        XCTAssertTrue(state.currentReviewGroup.candidates.allSatisfy { !deletedIDs.contains($0.id) })
+        XCTAssertTrue(state.reviewBinItems.allSatisfy { !deletedIDs.contains($0.id) })
+        XCTAssertTrue(state.selectedCandidateIDs.isDisjoint(with: deletedIDs))
+        XCTAssertEqual(state.tasks.first { $0.category == .similar }?.candidateCount, 4)
+        XCTAssertEqual(
+            state.tasks.first { $0.category == .similar }?.estimatedBytes,
+            state.currentReviewGroup.estimatedBytes
+        )
+        XCTAssertEqual(
+            state.tasks.first { $0.category == .screenshots }?.candidateCount,
+            unaffectedScreenshotCount
+        )
+        XCTAssertTrue(
+            state.tasks.first { $0.category == .similar }?.previewCandidates.allSatisfy { !deletedIDs.contains($0.id) }
+                ?? false
+        )
+        XCTAssertNil(state.reviewGroupDeletionErrorMessage)
+        XCTAssertTrue(state.hasDeletedItems)
+    }
+
+    func testPartialDirectDeletionRemovesSuccessAndKeepsFailuresSelected() throws {
+        var state = CleanupFlowState.sample()
+        let selectedIDs = state.selectedCurrentReviewAssetIDs
+        let deletedID = try XCTUnwrap(selectedIDs.first)
+        let failedIDs = Array(selectedIDs.dropFirst())
+
+        state.applyDirectDeletionResult(
+            .partial(
+                deletedAssetIDs: [deletedID],
+                failedAssetIDs: failedIDs,
+                message: "部分照片未能删除，请重试。"
+            )
+        )
+
+        XCTAssertFalse(state.currentReviewGroup.candidates.contains { $0.id == deletedID })
+        XCTAssertTrue(failedIDs.allSatisfy { failedID in
+            state.currentReviewGroup.candidates.contains { $0.id == failedID }
+        })
+        XCTAssertTrue(failedIDs.allSatisfy { state.selectedCandidateIDs.contains($0) })
+        XCTAssertEqual(state.reviewGroupDeletionErrorMessage, "1 项已删除，2 项未完成。部分照片未能删除，请重试。")
+        XCTAssertEqual(state.tasks.first { $0.category == .similar }?.candidateCount, 6)
+    }
+
+    func testFailedDirectDeletionPreservesCandidatesAndSelection() {
+        var state = CleanupFlowState.sample()
+        let originalCandidateIDs = state.currentReviewGroup.candidates.map(\.id)
+        let originalSelection = state.selectedCandidateIDs
+
+        state.applyDirectDeletionResult(
+            .failure(assetIDs: state.selectedCurrentReviewAssetIDs, message: "Photos 删除失败，请稍后重试。")
+        )
+
+        XCTAssertEqual(state.currentReviewGroup.candidates.map(\.id), originalCandidateIDs)
+        XCTAssertEqual(state.selectedCandidateIDs, originalSelection)
+        XCTAssertEqual(state.reviewGroupDeletionErrorMessage, "Photos 删除失败，请稍后重试。")
+        XCTAssertFalse(state.hasDeletedItems)
     }
 
     func testSelectedReviewBinAssetIDsOnlyIncludesSelectedItems() {
@@ -241,6 +312,32 @@ final class CleanupFlowStateTests: XCTestCase {
 
         XCTAssertFalse(state.selectReviewGroup(id: "missing-group"))
         XCTAssertEqual(state, originalState)
+    }
+
+    func testDirectDeletionOnlyRemovesMatchingGroupWhenCategoriesRepeat() {
+        let firstGroup = reviewGroup(id: "similar-1", category: .similar, candidateID: "similar-1-photo")
+        let secondGroup = reviewGroup(id: "similar-2", category: .similar, candidateID: "similar-2-photo")
+        var state = CleanupFlowState(
+            tasks: CleanupTaskBuilder.tasks(from: [firstGroup, secondGroup]),
+            reviewGroups: [firstGroup, secondGroup],
+            currentReviewGroupIndex: 0,
+            selectedCandidateIDs: ["similar-1-photo"],
+            reviewBinItems: [],
+            deletionSummary: nil,
+            deletionErrorMessage: nil
+        )
+
+        XCTAssertTrue(state.selectReviewGroup(id: secondGroup.id))
+        XCTAssertEqual(state.currentReviewGroup.id, "similar-2")
+        XCTAssertEqual(state.selectedCandidateIDs, ["similar-2-photo"])
+
+        state.applyDirectDeletionResult(.success(deletedAssetIDs: ["similar-2-photo"]))
+
+        XCTAssertNotNil(state.tasks.first { $0.id == "similar-1" })
+        XCTAssertNil(state.tasks.first { $0.id == "similar-2" })
+        XCTAssertNotNil(state.reviewGroups.first { $0.id == "similar-1" })
+        XCTAssertNil(state.reviewGroups.first { $0.id == "similar-2" })
+        XCTAssertEqual(state.deletionSummary?.deletedAssetIDs, ["similar-2-photo"])
     }
 
     func testSampleTasksEachOpenAReviewGroup() {

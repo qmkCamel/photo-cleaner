@@ -34,6 +34,7 @@ struct AppLaunchConfiguration: Hashable {
     static let uiTestMultipleSimilarGroupsArgument = "-TrueKeepUITestMultipleSimilarGroups"
     static let uiTestDelayedPhotoAccessArgument = "-TrueKeepUITestDelayPhotoAccess"
     static let uiTestDelayedPhotoDeletionArgument = "-TrueKeepUITestDelayPhotoDeletion"
+    static let uiTestSuccessfulPhotoDeletionArgument = "-TrueKeepUITestSuccessfulPhotoDeletion"
 
     var usesSampleCleanupData: Bool
     var hasCompletedIntro: Bool
@@ -431,10 +432,14 @@ struct AppRootView: View {
                 .navigationDestination(for: CleanupRoute.self) { route in
                     switch route {
                     case .reviewGroup:
-                        ReviewGroupView(state: $cleanupState) {
-                            selectedTab = .reviewBin
-                            homePath.removeAll()
-                        }
+                        ReviewGroupView(
+                            state: $cleanupState,
+                            photoDeletion: photoDeletion,
+                            onAddedToReviewBin: {
+                                selectedTab = .reviewBin
+                                homePath.removeAll()
+                            }
+                        )
                     }
                 }
             }

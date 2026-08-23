@@ -467,6 +467,67 @@ final class TrueKeepUITests: XCTestCase {
         XCTAssertTrue(app.buttons[ID.similarReviewBinItems[0]].waitForExistence(timeout: defaultTimeout))
     }
 
+    func testDirectDeleteShowsBusyStateAndRefreshesHomeTaskAfterSuccess() {
+        launchWithArguments([
+            "-TrueKeepDisablePhotoDeletion",
+            "-TrueKeepUseSampleCleanupData",
+            "-TrueKeepResetIntroState",
+            "-TrueKeepUITestForceNotDeterminedAccess",
+            "-TrueKeepUITestDelayPhotoDeletion",
+            "-TrueKeepUITestSuccessfulPhotoDeletion"
+        ])
+        openHome()
+        app.buttons[ID.taskScreenshots].tap()
+        XCTAssertTrue(app.staticTexts["截图复核"].waitForExistence(timeout: defaultTimeout))
+
+        let directDeleteButton = app.buttons[ID.directDeleteSelection]
+        XCTAssertTrue(directDeleteButton.waitForExistence(timeout: defaultTimeout))
+        XCTAssertTrue(directDeleteButton.label.contains("3"))
+        attachScreenshot(named: "direct-delete-01-review-actions")
+        tapControlEdge(ID.directDeleteSelection, x: 0.94, y: 0.50)
+
+        XCTAssertTrue(app.buttons[ID.confirmPhotoDeletion].waitForExistence(timeout: defaultTimeout))
+        XCTAssertTrue(app.staticTexts["iCloud Photos 风险"].exists)
+        attachScreenshot(named: "direct-delete-02-confirmation")
+        app.buttons[ID.confirmPhotoDeletion].tap()
+
+        XCTAssertTrue(waitForButtonLabel(ID.confirmPhotoDeletion, contains: "正在请求系统删除"))
+        XCTAssertTrue(waitForButtonEnabled(ID.confirmPhotoDeletion, false))
+        XCTAssertTrue(waitForButtonEnabled(ID.cancelPhotoDeletion, false))
+        attachScreenshot(named: "direct-delete-03-loading")
+        app.swipeUp()
+
+        XCTAssertTrue(app.staticTexts["删除已完成"].waitForExistence(timeout: defaultTimeout))
+        XCTAssertTrue(app.staticTexts["3 项已移入 Photos 的 Recently Deleted。返回首页时，任务数量、预计空间和预览会保持同步。"].exists)
+        XCTAssertTrue(app.staticTexts["预计释放 0 KB"].exists)
+        XCTAssertFalse(app.buttons[ID.reviewCandidateScreenshot1].exists)
+        XCTAssertFalse(app.buttons[ID.reviewAll].isEnabled)
+        attachScreenshot(named: "direct-delete-04-success")
+        tapBack()
+        assertHomeIsVisible()
+        XCTAssertFalse(app.buttons[ID.taskScreenshots].exists)
+        XCTAssertTrue(app.buttons[ID.taskSimilar].exists)
+        attachScreenshot(named: "direct-delete-05-home-synced")
+    }
+
+    func testDirectDeleteFailurePreservesReviewCandidatesAndSelection() {
+        openHome()
+        app.buttons[ID.taskScreenshots].tap()
+        XCTAssertTrue(app.staticTexts["截图复核"].waitForExistence(timeout: defaultTimeout))
+
+        app.buttons[ID.directDeleteSelection].tap()
+        XCTAssertTrue(app.buttons[ID.confirmPhotoDeletion].waitForExistence(timeout: defaultTimeout))
+        app.buttons[ID.confirmPhotoDeletion].tap()
+
+        XCTAssertTrue(app.staticTexts["删除未完成"].waitForExistence(timeout: defaultTimeout))
+        XCTAssertTrue(app.staticTexts["真机调试删除安全锁已开启，未删除任何照片或视频。"].exists)
+        let candidate = app.buttons[ID.reviewCandidateScreenshot1]
+        XCTAssertTrue(candidate.waitForExistence(timeout: defaultTimeout))
+        XCTAssertTrue(candidate.label.contains("已选择删除"))
+        XCTAssertTrue(app.buttons[ID.directDeleteSelection].isEnabled)
+        attachScreenshot(named: "direct-delete-06-failure-preserved")
+    }
+
     func testReviewBinActionsAreDisabledWhenNoItemsAreSelected() {
         openHome()
         app.buttons[ID.taskSimilar].tap()
@@ -509,14 +570,20 @@ final class TrueKeepUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["模糊复核"].waitForExistence(timeout: defaultTimeout))
 
         let addButton = app.buttons[ID.addToReviewBin]
+        let directDeleteButton = app.buttons[ID.directDeleteSelection]
         XCTAssertTrue(addButton.exists)
+        XCTAssertTrue(directDeleteButton.exists)
         XCTAssertFalse(addButton.isEnabled)
+        XCTAssertFalse(directDeleteButton.isEnabled)
         XCTAssertEqual(addButton.label, "选择项目后加入复核箱")
+        XCTAssertEqual(directDeleteButton.label, "选择后直接删除")
 
         app.buttons[ID.reviewCandidateBlur1].tap()
         XCTAssertTrue(addButton.waitForExistence(timeout: defaultTimeout))
         XCTAssertTrue(addButton.isEnabled)
         XCTAssertTrue(addButton.label.contains("1"))
+        XCTAssertTrue(directDeleteButton.isEnabled)
+        XCTAssertTrue(directDeleteButton.label.contains("1"))
     }
 
     func testReviewGroupBulkSelectionTogglesWithVisibleFeedback() {
@@ -762,6 +829,7 @@ private enum ID {
     static let scanDateRangeLastThreeMonths = "truekeep.cleanup.date-range.lastThreeMonths"
     static let scanDateRangeAll = "truekeep.cleanup.date-range.all"
     static let addToReviewBin = "truekeep.review.add-to-review-bin"
+    static let directDeleteSelection = "truekeep.review.direct-delete-selection"
     static let reviewAll = "truekeep.review.review-all"
     static let restoreReviewBinSelection = "truekeep.review-bin.restore-selection"
     static let deleteReviewBinSelection = "truekeep.review-bin.delete-selection"
@@ -779,6 +847,7 @@ private enum ID {
     static let taskBlurry = "truekeep.cleanup.task.blurry-low-confidence-02"
     static let taskLargeVideos = "truekeep.cleanup.task.large-videos-01"
     static let reviewCandidateBlur1 = "truekeep.review.candidate.blur-01"
+    static let reviewCandidateScreenshot1 = "truekeep.review.candidate.shot-01"
     static let reviewBinScreenshotItem = "truekeep.review-bin.item.shot-01"
 
     static let similarReviewBinItems = [

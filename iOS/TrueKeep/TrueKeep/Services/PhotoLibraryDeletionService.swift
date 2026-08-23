@@ -67,6 +67,12 @@ struct SystemPhotoLibraryDeletionService: PhotoLibraryDeleting {
             return .success(deletedAssetIDs: [])
         }
 
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains(AppLaunchConfiguration.uiTestSuccessfulPhotoDeletionArgument) {
+            return .success(deletedAssetIDs: assetIDs)
+        }
+        #endif
+
         guard !safetyPolicy.isDeletionDisabled else {
             return .failure(
                 assetIDs: assetIDs,

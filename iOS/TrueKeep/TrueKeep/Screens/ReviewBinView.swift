@@ -255,7 +255,7 @@ private struct SafetyCheckRow: View {
     }
 }
 
-private struct DeleteConfirmationSheet: View {
+struct DeleteConfirmationSheet: View {
     var count: Int
     var isDeleting: Bool
     var onCancel: () -> Void
@@ -293,11 +293,9 @@ private struct DeleteConfirmationSheet: View {
                         action: onConfirm
                     )
                     .disabled(isDeleting)
-                    .opacity(isDeleting ? 0.72 : 1)
                     .accessibilityIdentifier(TrueKeepAccessibility.Control.confirmPhotoDeletion.id)
                     SecondaryActionButton(title: "返回复核", action: onCancel)
                         .disabled(isDeleting)
-                        .opacity(isDeleting ? 0.55 : 1)
                         .accessibilityIdentifier(TrueKeepAccessibility.Control.cancelPhotoDeletion.id)
                 }
             }

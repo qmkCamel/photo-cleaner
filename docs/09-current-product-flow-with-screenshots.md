@@ -2,12 +2,13 @@
 
 本文档用于说明当前 iOS MVP 的实际使用动线，并配套当前可用截图。主线不是“一键清理”，而是：
 
-> 权限前说明与授权 -> 本地扫描 -> 按任务复核 -> 加入复核箱 -> 删除前二次确认。
+> 权限前说明与授权 -> 本地扫描 -> 按任务复核 -> 加入复核箱或直接删除 -> 删除前二次确认。
 
 截图来源：
 
 - 主截图集：`iOS/TrueKeep/MarketingScreenshots/2026-06-13-1811-photo-video-copy/`
 - 扫描状态补图：`03-scan-completed-limited.png`，使用 `-TrueKeepUITestLimitedCompletedScan` 启动参数在 iPhone 17 模拟器上补拍。
+- 直接删除 E2E 证据：`iOS/TrueKeep/TestArtifacts/2026-08-22-direct-delete-e2e/`，包含成功、失败、loading 和首页同步截图。
 
 ## 主线动线
 
@@ -64,12 +65,13 @@
 - 点缩略图切换是否加入删除选择。
 - 点 `复核本组全部` 可快速选择本组候选。
 - 点 `加入复核箱` 后进入复核箱。
+- 点 `直接删除` 对当前选中项打开删除前二次确认；成功项会从当前组移除并显示结果，返回首页时任务数量、预计空间和预览已经同步。
 
 <img src="../iOS/TrueKeep/MarketingScreenshots/2026-06-13-1811-photo-video-copy/05-screenshot-review.png" alt="逐组复核" width="260">
 
 ### 5. 复核箱
 
-复核箱是删除前缓冲区，不是已删除列表。页面明确提示 `尚未删除任何内容`。
+复核箱是可选的删除前缓冲区，不是已删除列表。需要跨组汇总或再次检查时可以先加入复核箱；已经在复核组确认清楚的项目也可以直接进入二次确认。页面明确提示 `尚未删除任何内容`。
 
 用户动作：
 
@@ -81,12 +83,12 @@
 
 ### 6. 删除前二次确认
 
-最终确认前明确说明照片或视频会从系统照片图库移除，并提示 iCloud Photos 同步风险与 Recently Deleted 恢复窗口。
+无论从复核组直接删除，还是从复核箱删除，最终确认前都明确说明照片或视频会从系统照片图库移除，并提示 iCloud Photos 同步风险与 Recently Deleted 恢复窗口。
 
 用户动作：
 
 - 点 `确认删除` 才执行 Photos 删除请求。
-- 点 `返回复核` 回到复核箱。
+- 点 `返回复核` 回到发起删除的复核组或复核箱。
 
 <img src="../iOS/TrueKeep/MarketingScreenshots/2026-06-13-1811-photo-video-copy/07-delete-safety-confirmation.png" alt="删除前二次确认" width="260">
 

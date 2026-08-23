@@ -1,11 +1,28 @@
 import SwiftUI
 
 struct ReviewGroupView: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Binding var state: CleanupFlowState
+    @State private var showsDeleteConfirmation = false
+    @State private var isDeleting = false
+    @State private var deletionSuccessMessage: String?
+    @State private var completedGroup: CleanupGroup?
+
+    private let photoDeletion: any PhotoLibraryDeleting
     var onAddedToReviewBin: () -> Void
 
+    init(
+        state: Binding<CleanupFlowState>,
+        photoDeletion: any PhotoLibraryDeleting = SystemPhotoLibraryDeletionService(),
+        onAddedToReviewBin: @escaping () -> Void
+    ) {
+        self._state = state
+        self.photoDeletion = photoDeletion
+        self.onAddedToReviewBin = onAddedToReviewBin
+    }
+
     var body: some View {
-        let group = state.currentReviewGroup
+        let group = completedGroup ?? state.currentReviewGroup
         ScrollView {
             VStack(alignment: .leading, spacing: 13) {
                 VStack(spacing: 3) {
@@ -21,9 +38,18 @@ struct ReviewGroupView: View {
                 }
                 .frame(maxWidth: .infinity)
 
+                if let deletionSuccessMessage {
+                    SafetyNotice(title: "删除已完成", message: deletionSuccessMessage)
+                }
+
+                if let deletionErrorMessage = state.reviewGroupDeletionErrorMessage {
+                    SafetyNotice(title: "删除未完成", message: deletionErrorMessage)
+                }
+
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
                     ForEach(group.candidates) { candidate in
                         Button {
+                            deletionSuccessMessage = nil
                             state.toggleReviewCandidate(candidate)
                         } label: {
                             ThumbnailView(
@@ -42,7 +68,7 @@ struct ReviewGroupView: View {
                         .disabled(candidate.recommendedKeep)
                         .accessibilityIdentifier(TrueKeepAccessibility.reviewCandidate(id: candidate.id))
                         .accessibilityLabel(candidateAccessibilityLabel(candidate))
-                        .accessibilityHint(candidate.recommendedKeep ? "推荐保留，不能加入删除选择" : "切换是否加入复核箱")
+                        .accessibilityHint(candidate.recommendedKeep ? "推荐保留，不能加入删除选择" : "切换选择；选中后可加入复核箱或直接删除")
                         .accessibilityAddTraits(state.selectedCandidateIDs.contains(candidate.id) ? .isSelected : [])
                     }
                 }
@@ -67,27 +93,54 @@ struct ReviewGroupView: View {
         .navigationTitle(group.category.title)
         .navigationBarTitleDisplayMode(.inline)
         .trueKeepScreenBackground()
+        .sheet(isPresented: $showsDeleteConfirmation) {
+            DeleteConfirmationSheet(
+                count: state.currentReviewSelectionCount,
+                isDeleting: isDeleting,
+                onCancel: { showsDeleteConfirmation = false },
+                onConfirm: { deleteSelectedAssets() }
+            )
+            .presentationDetents([.large])
+            .presentationDragIndicator(.hidden)
+            .interactiveDismissDisabled(isDeleting)
+        }
     }
 
     private var reviewActionsFooter: some View {
-        VStack(spacing: 10) {
-            PrimaryActionButton(title: state.currentReviewSelectionCount == 0 ? "选择项目后加入复核箱" : "加入复核箱（\(state.currentReviewSelectionCount)）") {
-                state.addCurrentSelectionToReviewBin()
-                onAddedToReviewBin()
+        let canToggleAll = completedGroup == nil
+            && state.canToggleAllCandidatesInCurrentGroup
+            && !isDeleting
+
+        return VStack(spacing: 10) {
+            if dynamicTypeSize.isAccessibilitySize {
+                VStack(spacing: 10) {
+                    addToReviewBinButton
+                    directDeleteButton
+                }
+            } else {
+                ViewThatFits(in: .horizontal) {
+                    HStack(spacing: 10) {
+                        addToReviewBinButton
+                        directDeleteButton
+                    }
+
+                    VStack(spacing: 10) {
+                        addToReviewBinButton
+                        directDeleteButton
+                    }
+                }
             }
-            .disabled(state.currentReviewSelectionCount == 0)
-            .opacity(state.currentReviewSelectionCount == 0 ? 0.55 : 1)
-            .accessibilityIdentifier(TrueKeepAccessibility.Control.addToReviewBin.id)
 
             SecondaryActionButton(
-                title: state.areAllCandidatesInCurrentGroupSelected
+                title: completedGroup == nil && state.areAllCandidatesInCurrentGroupSelected
                     ? "取消全选"
                     : "全选本组可清理项"
             ) {
+                deletionSuccessMessage = nil
                 state.toggleAllCandidatesInCurrentGroup()
             }
-            .disabled(!state.canToggleAllCandidatesInCurrentGroup)
-            .opacity(state.canToggleAllCandidatesInCurrentGroup ? 1 : 0.55)
+            .disabled(!canToggleAll)
+            .opacity(canToggleAll ? 1 : 0.55)
             .accessibilityIdentifier(TrueKeepAccessibility.Control.reviewAllInGroup.id)
             .accessibilityHint(
                 state.areAllCandidatesInCurrentGroupSelected
@@ -95,9 +148,10 @@ struct ReviewGroupView: View {
                     : "选择当前分组所有可清理项，推荐保留项不会被选择"
             )
 
-            if state.canMoveToPreviousReviewGroup || state.canMoveToNextReviewGroup {
+            if completedGroup == nil && (state.canMoveToPreviousReviewGroup || state.canMoveToNextReviewGroup) {
                 HStack {
                     InlineTextActionButton(title: "上一组", minWidth: 64) {
+                        deletionSuccessMessage = nil
                         state.moveToPreviousReviewGroup()
                     }
                     .disabled(!state.canMoveToPreviousReviewGroup)
@@ -107,6 +161,7 @@ struct ReviewGroupView: View {
                     Spacer()
 
                     InlineTextActionButton(title: "下一组", minWidth: 64) {
+                        deletionSuccessMessage = nil
                         state.moveToNextReviewGroup()
                     }
                     .disabled(!state.canMoveToNextReviewGroup)
@@ -125,6 +180,88 @@ struct ReviewGroupView: View {
                 .fill(TrueKeepTheme.line)
                 .frame(height: 1)
         }
+    }
+
+    private var addToReviewBinButton: some View {
+        PrimaryActionButton(title: selectionActionTitle(empty: "选择项目后加入复核箱", selected: "加入复核箱")) {
+            state.addCurrentSelectionToReviewBin()
+            onAddedToReviewBin()
+        }
+        .disabled(completedGroup != nil || state.currentReviewSelectionCount == 0 || isDeleting)
+        .opacity(completedGroup != nil || state.currentReviewSelectionCount == 0 || isDeleting ? 0.55 : 1)
+        .accessibilityIdentifier(TrueKeepAccessibility.Control.addToReviewBin.id)
+    }
+
+    private var directDeleteButton: some View {
+        DangerActionButton(title: selectionActionTitle(empty: "选择后直接删除", selected: "直接删除")) {
+            showsDeleteConfirmation = true
+        }
+        .disabled(completedGroup != nil || state.currentReviewSelectionCount == 0 || isDeleting)
+        .opacity(completedGroup != nil || state.currentReviewSelectionCount == 0 || isDeleting ? 0.55 : 1)
+        .accessibilityIdentifier(TrueKeepAccessibility.Control.directDeleteSelection.id)
+    }
+
+    private func selectionActionTitle(empty: String, selected: String) -> String {
+        state.currentReviewSelectionCount == 0
+            ? empty
+            : "\(selected)（\(state.currentReviewSelectionCount)）"
+    }
+
+    private func deleteSelectedAssets() {
+        guard !isDeleting else { return }
+        let assetIDs = state.selectedCurrentReviewAssetIDs
+        guard !assetIDs.isEmpty else {
+            showsDeleteConfirmation = false
+            return
+        }
+
+        deletionSuccessMessage = nil
+        isDeleting = true
+        let photoDeletion = photoDeletion
+        Task {
+            let result = await photoDeletion.deleteAssets(withLocalIdentifiers: assetIDs)
+            await MainActor.run {
+                completedGroup = completedGroupSnapshot(for: result, from: state.currentReviewGroup)
+                state.applyDirectDeletionResult(result)
+                deletionSuccessMessage = directDeletionSuccessMessage(for: result)
+                isDeleting = false
+                showsDeleteConfirmation = false
+            }
+        }
+    }
+
+    private func directDeletionSuccessMessage(for result: PhotoDeletionResult) -> String? {
+        let deletedCount: Int
+        switch result {
+        case .success(let deletedAssetIDs), .partial(let deletedAssetIDs, _, _):
+            deletedCount = deletedAssetIDs.count
+        case .failure:
+            return nil
+        }
+
+        guard deletedCount > 0 else { return nil }
+        return "\(deletedCount) 项已移入 Photos 的 Recently Deleted。返回首页时，任务数量、预计空间和预览会保持同步。"
+    }
+
+    private func completedGroupSnapshot(
+        for result: PhotoDeletionResult,
+        from group: CleanupGroup
+    ) -> CleanupGroup? {
+        let deletedAssetIDs: [String]
+        switch result {
+        case .success(let assetIDs), .partial(let assetIDs, _, _):
+            deletedAssetIDs = assetIDs
+        case .failure:
+            return nil
+        }
+
+        guard !deletedAssetIDs.isEmpty else { return nil }
+        let deletedIDs = Set(deletedAssetIDs)
+        var snapshot = group
+        snapshot.candidates.removeAll { deletedIDs.contains($0.id) }
+        guard !snapshot.candidates.contains(where: { !$0.recommendedKeep }) else { return nil }
+        snapshot.subtitle = "\(snapshot.candidates.count) 项"
+        return snapshot
     }
 
     private func groupCountText(_ group: CleanupGroup) -> String {
@@ -153,6 +290,9 @@ struct ReviewGroupView: View {
 
 #Preview {
     NavigationStack {
-        ReviewGroupView(state: .constant(.sample()), onAddedToReviewBin: {})
+        ReviewGroupView(
+            state: .constant(.sample()),
+            onAddedToReviewBin: {}
+        )
     }
 }

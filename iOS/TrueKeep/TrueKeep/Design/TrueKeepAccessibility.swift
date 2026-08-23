@@ -29,6 +29,7 @@ enum TrueKeepAccessibility {
         case completedScanDateRange = "truekeep.cleanup.date-range.completed"
         case deletionSummary = "truekeep.cleanup.deletion-summary"
         case addToReviewBin = "truekeep.review.add-to-review-bin"
+        case directDeleteSelection = "truekeep.review.direct-delete-selection"
         case reviewAllInGroup = "truekeep.review.review-all"
         case previousReviewGroup = "truekeep.review.previous-group"
         case nextReviewGroup = "truekeep.review.next-group"
