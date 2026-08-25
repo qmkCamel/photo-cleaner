@@ -2,8 +2,14 @@ import XCTest
 @testable import TrueKeep
 
 final class PhotoDeletionResultTests: XCTestCase {
-    func testCurrentDebugSafetyPolicyDisablesDeletionByDefault() {
-        XCTAssertTrue(PhotoDeletionSafetyPolicy.current.isDeletionDisabled)
+    func testDebugSafetyPolicyDisablesDeletionByDefault() {
+        let policy = PhotoDeletionSafetyPolicy.resolved(
+            arguments: ["TrueKeep"],
+            environment: [:],
+            isDebugBuild: true
+        )
+
+        XCTAssertTrue(policy.isDeletionDisabled)
     }
 
     func testDebugSafetyPolicyRequiresExplicitDestructiveDeletionOptIn() {

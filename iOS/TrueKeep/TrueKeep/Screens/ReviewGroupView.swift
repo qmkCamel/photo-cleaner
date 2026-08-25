@@ -65,10 +65,13 @@ struct ReviewGroupView: View {
                         }
                         .buttonStyle(.plain)
                         .gridCellColumns(candidate.recommendedKeep ? 3 : 1)
-                        .disabled(candidate.recommendedKeep)
                         .accessibilityIdentifier(TrueKeepAccessibility.reviewCandidate(id: candidate.id))
                         .accessibilityLabel(candidateAccessibilityLabel(candidate))
-                        .accessibilityHint(candidate.recommendedKeep ? "推荐保留，不能加入删除选择" : "切换选择；选中后可加入复核箱或直接删除")
+                        .accessibilityHint(
+                            candidate.recommendedKeep
+                                ? "系统建议保留；仍可切换删除选择，选中后可加入复核箱或直接删除"
+                                : "切换删除选择；选中后可加入复核箱或直接删除"
+                        )
                         .accessibilityAddTraits(state.selectedCandidateIDs.contains(candidate.id) ? .isSelected : [])
                     }
                 }
@@ -278,13 +281,13 @@ struct ReviewGroupView: View {
     }
 
     private func candidateAccessibilityLabel(_ candidate: CleanupCandidate) -> String {
+        let selectionState = state.selectedCandidateIDs.contains(candidate.id)
+            ? "已选择删除"
+            : "未选择删除"
         if candidate.recommendedKeep {
-            return "推荐保留，\(candidate.category.title)，\(candidate.reason)"
+            return "推荐保留，\(selectionState)，\(candidate.category.title)，\(candidate.reason)"
         }
-        if state.selectedCandidateIDs.contains(candidate.id) {
-            return "已选择删除，\(candidate.category.title)，\(candidate.reason)"
-        }
-        return "未选择删除，\(candidate.category.title)，\(candidate.reason)"
+        return "\(selectionState)，\(candidate.category.title)，\(candidate.reason)"
     }
 }
 

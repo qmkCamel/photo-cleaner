@@ -27,6 +27,14 @@
 - [x] 4.4 运行 OpenSpec 严格校验、`python3 openspec/check.py` 和 `git diff --check`，记录实际结果。
 - [ ] 4.5 变更被接受或发布后归档 OpenSpec，并把规格增量合入正式规格。
 
+## 5. 推荐保留手动覆盖迭代
+
+- [x] 5.1 更新提案、设计和规格，明确推荐项默认与批量选择保持保守，但允许用户逐张选择或取消。
+- [x] 5.2 解耦推荐徽标与删除选择状态，让推荐项进入明确选择、复核箱和直接删除数据流。
+- [x] 5.3 补充推荐项默认、逐张切换、批量清空、删除后任务同步和无障碍语义测试。
+- [x] 5.4 运行非破坏性 UI 自动化并保留推荐项已选与取消选择的命名截图。
+- [x] 5.5 运行完整 Xcode 回归、OpenSpec 严格校验、生命周期检查和差异检查，记录实际结果。
+
 ## 验证记录
 
 - 2026-08-22：在旧 `dev@6963c8e` 基线上使用 iPhone 17 Pro、iOS 26.5 模拟器完成 62/62 回归（59 个单元测试、3 个 UI 测试），真实 Photos 删除保持禁用；该结果仅作为重放前证据，最新远端整合后需要重新验证。
@@ -34,3 +42,7 @@
 - 2026-08-23：使用 iPhone 17 Pro、iOS 26.5 模拟器运行完整 Xcode 回归 127/127 通过（96 个单元测试、31 个 UI 测试），0 失败、0 跳过；结果包为 `/tmp/TrueKeepDirectDeleteE2E-20260823-final.xcresult`，真实 Photos 删除保持禁用。
 - 2026-08-23：导出并逐张检查 6 张直接删除截图，确认主操作、确认、loading、完成、首页同步和失败恢复没有文字裁切或控件重叠，且未受影响任务计数保持不变。
 - 2026-08-23：OpenSpec 1.2.0 状态显示全部制品完成，严格校验通过；`python3 openspec/check.py` 9/9 通过，`git diff --check` 通过。
+- 2026-08-25：新增 3 个推荐项状态红测在旧行为上以 8 个断言失败，实现后 3/3 通过；推荐项 UI E2E 1/1 通过，使用 `-TrueKeepDisablePhotoDeletion`，结果包为 `/tmp/TrueKeepRecommendedKeepE2E-20260825-1721.xcresult`。
+- 2026-08-25：从 UI E2E 保留 `recommended-keep-manually-selected` 和 `recommended-keep-selection-cleared` 两张 1206x2622 截图，视觉检查确认推荐书签、选择圆、操作计数和底部布局没有遮挡或裁切。
+- 2026-08-25：使用 iPhone 17 Pro、iOS 26.5（23F77）模拟器完成 129/129 回归（97 个单元测试、32 个 UI 测试），0 失败、0 跳过；测试显式禁用真实 Photos 删除，结果包为 `/tmp/TrueKeepRecommendedKeepFull-20260825-1725.xcresult`。
+- 2026-08-25：OpenSpec 1.8.0 对 `add-direct-review-deletion` 的严格校验通过；全仓 `python3 openspec/check.py` 为 9/10 通过，唯一失败来自既有 `refine-photo-analysis-pipeline` 缺少 4 个正式规格场景，未在本次跨范围修改；`git diff --check` 通过。截图证据保存在 `iOS/TrueKeep/TestArtifacts/2026-08-25-recommended-keep-override/`。

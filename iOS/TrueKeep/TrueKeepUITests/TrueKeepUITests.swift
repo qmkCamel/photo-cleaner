@@ -613,6 +613,44 @@ final class TrueKeepUITests: XCTestCase {
         attachScreenshot(named: "review-group-bulk-selection-restored")
     }
 
+    func testRecommendedKeepCanBeSelectedAndClearedWithoutLosingRecommendation() {
+        openHome()
+        app.buttons[ID.taskSimilar].tap()
+        XCTAssertTrue(app.staticTexts["相似照片"].waitForExistence(timeout: defaultTimeout))
+
+        let keepCandidate = app.buttons[ID.reviewCandidateRecommendedKeep]
+        let addButton = app.buttons[ID.addToReviewBin]
+        let directDeleteButton = app.buttons[ID.directDeleteSelection]
+        XCTAssertTrue(keepCandidate.waitForExistence(timeout: defaultTimeout))
+        XCTAssertTrue(keepCandidate.isHittable)
+        XCTAssertTrue(keepCandidate.label.contains("推荐保留"))
+        XCTAssertTrue(keepCandidate.label.contains("未选择删除"))
+        XCTAssertTrue(addButton.label.contains("3"))
+
+        keepCandidate.tap()
+
+        XCTAssertTrue(waitForButtonLabel(ID.reviewCandidateRecommendedKeep, contains: "已选择删除"))
+        XCTAssertTrue(keepCandidate.label.contains("推荐保留"))
+        XCTAssertTrue(addButton.label.contains("4"))
+        XCTAssertTrue(directDeleteButton.label.contains("4"))
+        attachScreenshot(named: "recommended-keep-manually-selected")
+
+        keepCandidate.tap()
+
+        XCTAssertTrue(waitForButtonLabel(ID.reviewCandidateRecommendedKeep, contains: "未选择删除"))
+        XCTAssertTrue(keepCandidate.label.contains("推荐保留"))
+        XCTAssertTrue(addButton.label.contains("3"))
+        attachScreenshot(named: "recommended-keep-selection-cleared")
+
+        keepCandidate.tap()
+        app.buttons[ID.reviewAll].tap()
+        XCTAssertTrue(waitForButtonLabel(ID.reviewAll, contains: "取消全选"))
+        app.buttons[ID.reviewAll].tap()
+
+        XCTAssertTrue(waitForButtonLabel(ID.reviewCandidateRecommendedKeep, contains: "未选择删除"))
+        XCTAssertTrue(waitForButtonEnabled(ID.addToReviewBin, false))
+    }
+
     func testCriticalScreensPassAccessibilityAudit() throws {
         try assertAccessibilityAuditPasses("welcome")
 
@@ -848,6 +886,7 @@ private enum ID {
     static let taskLargeVideos = "truekeep.cleanup.task.large-videos-01"
     static let reviewCandidateBlur1 = "truekeep.review.candidate.blur-01"
     static let reviewCandidateScreenshot1 = "truekeep.review.candidate.shot-01"
+    static let reviewCandidateRecommendedKeep = "truekeep.review.candidate.keep-01"
     static let reviewBinScreenshotItem = "truekeep.review-bin.item.shot-01"
 
     static let similarReviewBinItems = [

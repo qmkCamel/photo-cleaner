@@ -220,12 +220,12 @@ struct ThumbnailView: View {
                 if isRecommendedKeep {
                     VStack {
                         HStack {
-                Label("推荐保留", systemImage: "checkmark.seal.fill")
-                    .font(TrueKeepTheme.Font.caption2Strong)
-                    .foregroundStyle(TrueKeepTheme.greenStrong)
-                    .padding(.horizontal, 7)
-                    .padding(.vertical, 5)
-                    .background(TrueKeepTheme.greenSoft.opacity(0.95))
+                            Label("推荐保留", systemImage: "bookmark.fill")
+                                .font(TrueKeepTheme.Font.caption2Strong)
+                                .foregroundStyle(TrueKeepTheme.greenStrong)
+                                .padding(.horizontal, 7)
+                                .padding(.vertical, 5)
+                                .background(TrueKeepTheme.greenSoft.opacity(0.95))
                                 .clipShape(Capsule())
                             Spacer()
                         }
@@ -261,7 +261,7 @@ struct ThumbnailView: View {
             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             .overlay {
                 RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .stroke(isSelected || isRecommendedKeep ? TrueKeepTheme.green : .white.opacity(0.65), lineWidth: isSelected || isRecommendedKeep ? 2 : 1)
+                    .stroke(isSelected ? TrueKeepTheme.green : .white.opacity(0.65), lineWidth: isSelected ? 2 : 1)
             }
             .onAppear {
                 loadThumbnail(size: proxy.size)
@@ -290,7 +290,7 @@ struct ThumbnailView: View {
 
     @ViewBuilder
     private var selectionIndicator: some View {
-        if isSelected || isRecommendedKeep {
+        if isSelected {
             Image(systemName: "checkmark")
                 .font(TrueKeepTheme.Font.iconCaption)
                 .foregroundStyle(.white)
