@@ -18,6 +18,28 @@ enum CleanupRoute: Hashable {
     case reviewGroup(CleanupGroup.ID)
 }
 
+struct ConfirmedKeepStore {
+    static let defaultsKey = "truekeep.confirmedKeepAssetIDs"
+
+    private let defaults: UserDefaults
+
+    init(defaults: UserDefaults = .standard) {
+        self.defaults = defaults
+    }
+
+    func loadAssetIDs() -> Set<String> {
+        Set(defaults.stringArray(forKey: Self.defaultsKey) ?? [])
+    }
+
+    func saveAssetIDs(_ assetIDs: Set<String>) {
+        defaults.set(assetIDs.sorted(), forKey: Self.defaultsKey)
+    }
+
+    func reset() {
+        defaults.removeObject(forKey: Self.defaultsKey)
+    }
+}
+
 struct AppLaunchConfiguration: Hashable {
     static let sampleCleanupDataArgument = "-TrueKeepUseSampleCleanupData"
     static let sampleCleanupDataEnvironmentKey = "TRUEKEEP_USE_SAMPLE_CLEANUP_DATA"
@@ -35,10 +57,12 @@ struct AppLaunchConfiguration: Hashable {
     static let uiTestDelayedPhotoAccessArgument = "-TrueKeepUITestDelayPhotoAccess"
     static let uiTestDelayedPhotoDeletionArgument = "-TrueKeepUITestDelayPhotoDeletion"
     static let uiTestSuccessfulPhotoDeletionArgument = "-TrueKeepUITestSuccessfulPhotoDeletion"
+    static let resetConfirmedKeepsArgument = "-TrueKeepResetConfirmedKeeps"
 
     var usesSampleCleanupData: Bool
     var hasCompletedIntro: Bool
     var forcesNotDeterminedPhotoAccess: Bool
+    var resetsConfirmedKeeps: Bool
     var uiTestScenario: AppUITestLaunchScenario?
 
     init(
@@ -53,6 +77,7 @@ struct AppLaunchConfiguration: Hashable {
             || environment[Self.sampleCleanupDataEnvironmentKey] == "1"
         hasCompletedIntro = UserDefaults.standard.bool(forKey: Self.completedIntroDefaultsKey)
         forcesNotDeterminedPhotoAccess = arguments.contains(Self.uiTestForceNotDeterminedAccessArgument)
+        resetsConfirmedKeeps = arguments.contains(Self.resetConfirmedKeepsArgument)
         uiTestScenario = AppUITestLaunchScenario(arguments: arguments)
     }
 
@@ -210,21 +235,33 @@ struct AppRootView: View {
     @State private var scanTask: Task<Void, Never>?
     @State private var activeScanID = UUID()
     @State private var isScanActive = false
+    @State private var confirmedKeepAssetIDs: Set<String>
 
     private let photoAuthorization: any PhotoLibraryAuthorizing
     private let photoScanner: any PhotoLibraryScanning
     private let photoDeletion: any PhotoLibraryDeleting
+    private let confirmedKeepStore: ConfirmedKeepStore
 
     init(
         photoAuthorization: any PhotoLibraryAuthorizing = SystemPhotoLibraryAuthorizationService(),
         photoScanner: any PhotoLibraryScanning = SystemPhotoLibraryScanner(),
         photoDeletion: any PhotoLibraryDeleting = SystemPhotoLibraryDeletionService(),
+        confirmedKeepStore: ConfirmedKeepStore = .init(),
         launchConfiguration: AppLaunchConfiguration = .init()
     ) {
         self.photoAuthorization = photoAuthorization
         self.photoScanner = photoScanner
         self.photoDeletion = photoDeletion
-        let initialCleanupState = launchConfiguration.initialCleanupState
+        self.confirmedKeepStore = confirmedKeepStore
+        if launchConfiguration.resetsConfirmedKeeps {
+            confirmedKeepStore.reset()
+        }
+        let initialConfirmedKeepAssetIDs = confirmedKeepStore.loadAssetIDs()
+        var initialCleanupState = launchConfiguration.initialCleanupState
+        initialCleanupState.applyConfirmedKeepAssetIDs(
+            initialConfirmedKeepAssetIDs,
+            hideProtectedNonSimilarCandidates: true
+        )
         let initialPhotoAccess: PhotoLibraryAccess
         if launchConfiguration.uiTestScenario != nil {
             initialPhotoAccess = launchConfiguration.initialPhotoAccess
@@ -242,6 +279,7 @@ struct AppRootView: View {
             initialValue: launchConfiguration.initialHasCompletedScan ? .defaultValue : nil
         )
         self._isScanActive = State(initialValue: launchConfiguration.initialHasActiveScan)
+        self._confirmedKeepAssetIDs = State(initialValue: initialConfirmedKeepAssetIDs)
         self._cleanupState = State(initialValue: initialCleanupState)
     }
 
@@ -364,10 +402,15 @@ struct AppRootView: View {
                 if wasCancelled {
                     scanStatus = .interrupted(message: "用户已取消")
                 } else {
-                    cleanupState = scannedState
+                    var reconciledState = scannedState
+                    reconciledState.applyConfirmedKeepAssetIDs(
+                        confirmedKeepAssetIDs,
+                        hideProtectedNonSimilarCandidates: true
+                    )
+                    cleanupState = reconciledState
                     hasCompletedScan = true
                     completedScanDateRange = dateRange
-                    scanStatus = .completed(candidateCount: scannedState.tasks.map(\.candidateCount).reduce(0, +))
+                    scanStatus = .completed(candidateCount: reconciledState.tasks.map(\.candidateCount).reduce(0, +))
                 }
                 isScanActive = false
                 scanTask = nil
@@ -438,6 +481,9 @@ struct AppRootView: View {
                             onAddedToReviewBin: {
                                 selectedTab = .reviewBin
                                 homePath.removeAll()
+                            },
+                            onSetConfirmedKeep: { assetID, isConfirmed in
+                                setConfirmedKeep(assetID, isConfirmed: isConfirmed)
                             }
                         )
                     }
@@ -457,7 +503,13 @@ struct AppRootView: View {
                 .accessibilityIdentifier(TrueKeepAccessibility.Control.reviewBinTab.id)
 
             NavigationStack {
-                PrivacySafetyView()
+                PrivacySafetyView(
+                    confirmedKeepAssetIDs: confirmedKeepAssetIDs,
+                    onRemoveConfirmedKeep: { assetID in
+                        setConfirmedKeep(assetID, isConfirmed: false)
+                    },
+                    onResetConfirmedKeeps: { resetConfirmedKeeps() }
+                )
             }
             .tabItem {
                 Label("设置", systemImage: "gearshape")
@@ -467,6 +519,24 @@ struct AppRootView: View {
         }
         .toolbarBackground(TrueKeepTheme.page, for: .tabBar)
         .toolbarBackground(.visible, for: .tabBar)
+    }
+
+    private func setConfirmedKeep(_ assetID: String, isConfirmed: Bool) {
+        var updatedAssetIDs = confirmedKeepAssetIDs
+        if isConfirmed {
+            updatedAssetIDs.insert(assetID)
+        } else {
+            updatedAssetIDs.remove(assetID)
+        }
+        confirmedKeepStore.saveAssetIDs(updatedAssetIDs)
+        confirmedKeepAssetIDs = updatedAssetIDs
+        cleanupState.applyConfirmedKeepAssetIDs(updatedAssetIDs)
+    }
+
+    private func resetConfirmedKeeps() {
+        confirmedKeepStore.reset()
+        confirmedKeepAssetIDs = []
+        cleanupState.applyConfirmedKeepAssetIDs([])
     }
 }
 

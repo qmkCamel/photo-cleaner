@@ -1594,35 +1594,51 @@ enum PhotoFeaturePrintGenerator {
 }
 
 enum PhotoScanResultBuilder {
-    static func state(from snapshots: [PhotoAssetSnapshot]) -> CleanupFlowState {
+    static func state(
+        from snapshots: [PhotoAssetSnapshot],
+        confirmedKeepAssetIDs: Set<String> = []
+    ) -> CleanupFlowState {
         let screenshotCandidates = candidates(
-            from: snapshots.filter(\.isScreenshot),
-            category: .screenshots
+            from: snapshots.filter { $0.isScreenshot && !confirmedKeepAssetIDs.contains($0.id) },
+            category: .screenshots,
+            confirmedKeepAssetIDs: confirmedKeepAssetIDs
         )
         let largeVideoCandidates = candidates(
             from: snapshots.filter { snapshot in
-                snapshot.kind == .video && isLargeVideo(snapshot)
+                snapshot.kind == .video
+                    && isLargeVideo(snapshot)
+                    && !confirmedKeepAssetIDs.contains(snapshot.id)
             },
-            category: .largeVideos
+            category: .largeVideos,
+            confirmedKeepAssetIDs: confirmedKeepAssetIDs
         )
         let visuallyClassifiedPhotos = snapshots.filter { snapshot in
             snapshot.kind == .photo && !snapshot.isScreenshot && snapshot.visualClassification?.hasFindings == true
         }
-        let similarGroups = similarReviewGroups(from: visuallyClassifiedPhotos)
+        let similarGroups = similarReviewGroups(
+            from: visuallyClassifiedPhotos,
+            confirmedKeepAssetIDs: confirmedKeepAssetIDs
+        )
         let similarAssetIDs = Set(similarGroups.flatMap { group in
             group.candidates.map(\.id)
         })
         let accidentalCandidates = candidates(
             from: visuallyClassifiedPhotos.filter { snapshot in
-                !similarAssetIDs.contains(snapshot.id) && snapshot.visualClassification?.isAccidental == true
+                !similarAssetIDs.contains(snapshot.id)
+                    && !confirmedKeepAssetIDs.contains(snapshot.id)
+                    && snapshot.visualClassification?.isAccidental == true
             },
-            category: .accidental
+            category: .accidental,
+            confirmedKeepAssetIDs: confirmedKeepAssetIDs
         )
         let blurryCandidates = candidates(
             from: visuallyClassifiedPhotos.filter { snapshot in
-                !similarAssetIDs.contains(snapshot.id) && snapshot.visualClassification?.isBlurry == true
+                !similarAssetIDs.contains(snapshot.id)
+                    && !confirmedKeepAssetIDs.contains(snapshot.id)
+                    && snapshot.visualClassification?.isBlurry == true
             },
-            category: .blurry
+            category: .blurry,
+            confirmedKeepAssetIDs: confirmedKeepAssetIDs
         )
 
         let groups = similarGroups + [
@@ -1671,7 +1687,8 @@ enum PhotoScanResultBuilder {
 
     private static func candidates(
         from snapshots: [PhotoAssetSnapshot],
-        category: CleanupCategory
+        category: CleanupCategory,
+        confirmedKeepAssetIDs: Set<String>
     ) -> [CleanupCandidate] {
         snapshots.enumerated().map { index, snapshot in
             let recommendedKeep = category == .similar && snapshot.visualClassification?.recommendedKeep == true
@@ -1687,6 +1704,7 @@ enum PhotoScanResultBuilder {
                     wasRefined: wasRefined
                 ),
                 recommendedKeep: recommendedKeep,
+                confirmedKeep: confirmedKeepAssetIDs.contains(snapshot.id),
                 reason: reason(for: category, snapshot: snapshot),
                 estimatedBytes: estimatedBytes(for: snapshot, category: category),
                 thumbnail: thumbnail(for: category, index: index),
@@ -1696,7 +1714,10 @@ enum PhotoScanResultBuilder {
         }
     }
 
-    private static func similarReviewGroups(from snapshots: [PhotoAssetSnapshot]) -> [CleanupGroup] {
+    private static func similarReviewGroups(
+        from snapshots: [PhotoAssetSnapshot],
+        confirmedKeepAssetIDs: Set<String>
+    ) -> [CleanupGroup] {
         let groupedSnapshots = Dictionary(grouping: snapshots) { snapshot in
             snapshot.visualClassification?.similarGroupID
         }
@@ -1709,7 +1730,11 @@ enum PhotoScanResultBuilder {
         }
 
         return groups.enumerated().map { index, group in
-            let candidates = candidates(from: group.1, category: .similar)
+            let candidates = candidates(
+                from: group.1,
+                category: .similar,
+                confirmedKeepAssetIDs: confirmedKeepAssetIDs
+            )
             let isExactDuplicate = candidates.allSatisfy(\.isExactDuplicate)
             return CleanupGroup(
                 id: group.0,

@@ -87,6 +87,103 @@ final class PhotoScanResultBuilderTests: XCTestCase {
         XCTAssertEqual(state.reviewGroups.map(\.category), [.screenshots, .largeVideos])
     }
 
+    func testConfirmedKeepIsFilteredFromNonSimilarScanTasks() {
+        let state = PhotoScanResultBuilder.state(
+            from: [
+                PhotoAssetSnapshot(
+                    id: "protected-screen",
+                    kind: .photo,
+                    isScreenshot: true,
+                    duration: 0,
+                    estimatedBytes: 1_200_000
+                ),
+                PhotoAssetSnapshot(
+                    id: "new-screen",
+                    kind: .photo,
+                    isScreenshot: true,
+                    duration: 0,
+                    estimatedBytes: 1_400_000
+                )
+            ],
+            confirmedKeepAssetIDs: ["protected-screen"]
+        )
+
+        XCTAssertEqual(state.tasks.first?.candidateCount, 1)
+        XCTAssertEqual(state.reviewGroups.first?.candidates.map(\.id), ["new-screen"])
+        XCTAssertEqual(state.totalEstimatedBytes, 1_400_000)
+        XCTAssertEqual(state.selectedCandidateIDs, ["new-screen"])
+    }
+
+    func testConfirmedKeepRemainsProtectedReferenceInSimilarGroup() throws {
+        let state = PhotoScanResultBuilder.state(
+            from: [
+                PhotoAssetSnapshot(
+                    id: "protected-anchor",
+                    kind: .photo,
+                    isScreenshot: false,
+                    duration: 0,
+                    estimatedBytes: 2_800_000,
+                    visualClassification: PhotoVisualClassification(
+                        similarGroupID: "burst-1",
+                        recommendedKeep: true
+                    )
+                ),
+                PhotoAssetSnapshot(
+                    id: "new-candidate",
+                    kind: .photo,
+                    isScreenshot: false,
+                    duration: 0,
+                    estimatedBytes: 2_600_000,
+                    visualClassification: PhotoVisualClassification(
+                        similarGroupID: "burst-1",
+                        recommendedKeep: false
+                    )
+                )
+            ],
+            confirmedKeepAssetIDs: ["protected-anchor"]
+        )
+
+        let group = try XCTUnwrap(state.reviewGroups.first)
+        let task = try XCTUnwrap(state.tasks.first)
+        XCTAssertEqual(group.candidates.map(\.id), ["protected-anchor", "new-candidate"])
+        XCTAssertTrue(group.candidates[0].confirmedKeep)
+        XCTAssertEqual(task.candidateCount, 1)
+        XCTAssertEqual(task.previewCandidates.map(\.id), ["new-candidate"])
+        XCTAssertEqual(task.estimatedBytes, 2_600_000)
+        XCTAssertEqual(state.selectedCandidateIDs, ["new-candidate"])
+    }
+
+    func testSimilarGroupWithNoOrdinaryUnprotectedCandidateCreatesNoTask() {
+        let state = PhotoScanResultBuilder.state(
+            from: [
+                PhotoAssetSnapshot(
+                    id: "recommended",
+                    kind: .photo,
+                    isScreenshot: false,
+                    duration: 0,
+                    visualClassification: PhotoVisualClassification(
+                        similarGroupID: "burst-1",
+                        recommendedKeep: true
+                    )
+                ),
+                PhotoAssetSnapshot(
+                    id: "protected",
+                    kind: .photo,
+                    isScreenshot: false,
+                    duration: 0,
+                    visualClassification: PhotoVisualClassification(
+                        similarGroupID: "burst-1",
+                        recommendedKeep: false
+                    )
+                )
+            ],
+            confirmedKeepAssetIDs: ["protected"]
+        )
+
+        XCTAssertTrue(state.tasks.isEmpty)
+        XCTAssertEqual(state.reviewGroups.first?.candidates.count, 2)
+    }
+
     func testRealScanCandidatesKeepPhotoAssetIdentifierForThumbnails() {
         let state = PhotoScanResultBuilder.state(
             from: [

@@ -31,12 +31,14 @@ enum TrueKeepAccessibility {
         case addToReviewBin = "truekeep.review.add-to-review-bin"
         case directDeleteSelection = "truekeep.review.direct-delete-selection"
         case reviewAllInGroup = "truekeep.review.review-all"
+        case confirmedKeepFeedback = "truekeep.review.confirmed-keep-feedback"
         case previousReviewGroup = "truekeep.review.previous-group"
         case nextReviewGroup = "truekeep.review.next-group"
         case restoreReviewBinSelection = "truekeep.review-bin.restore-selection"
         case deleteReviewBinSelection = "truekeep.review-bin.delete-selection"
         case confirmPhotoDeletion = "truekeep.delete.confirm"
         case cancelPhotoDeletion = "truekeep.delete.cancel"
+        case resetConfirmedKeeps = "truekeep.settings.confirmed-keeps.reset"
 
         var id: String { rawValue }
     }
@@ -51,6 +53,14 @@ enum TrueKeepAccessibility {
 
     static func reviewCandidate(id: String) -> String {
         "truekeep.review.candidate.\(id)"
+    }
+
+    static func reviewCandidateActions(id: String) -> String {
+        "truekeep.review.candidate-actions.\(id)"
+    }
+
+    static func confirmedKeepItem(id: String) -> String {
+        "truekeep.settings.confirmed-keep.\(id)"
     }
 
     static func reviewBinItem(id: String) -> String {

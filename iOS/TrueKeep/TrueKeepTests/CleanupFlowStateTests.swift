@@ -241,6 +241,73 @@ final class CleanupFlowStateTests: XCTestCase {
         XCTAssertFalse(newScanState.hasDeletedItems)
     }
 
+    func testConfirmedKeepRemovesCandidateFromDeletionPathsAndTaskMetrics() throws {
+        var state = CleanupFlowState.sample()
+        state.addCurrentSelectionToReviewBin()
+        let protectedID = "similar-02"
+        let originalEstimatedBytes = state.totalEstimatedBytes
+
+        state.applyConfirmedKeepAssetIDs([protectedID])
+
+        let protectedCandidate = try XCTUnwrap(
+            state.currentReviewGroup.candidates.first { $0.id == protectedID }
+        )
+        let similarTask = try XCTUnwrap(state.tasks.first { $0.category == .similar })
+        XCTAssertTrue(protectedCandidate.confirmedKeep)
+        XCTAssertFalse(state.selectedCandidateIDs.contains(protectedID))
+        XCTAssertFalse(state.selectedCurrentReviewAssetIDs.contains(protectedID))
+        XCTAssertFalse(state.reviewBinItems.contains { $0.id == protectedID })
+        XCTAssertEqual(similarTask.candidateCount, 6)
+        XCTAssertEqual(similarTask.previewCandidates.contains { $0.id == protectedID }, false)
+        XCTAssertTrue(similarTask.description.contains("1 张已确认保留"))
+        XCTAssertLessThan(state.totalEstimatedBytes, originalEstimatedBytes)
+
+        state.toggleReviewCandidate(protectedCandidate)
+        state.addCurrentSelectionToReviewBin()
+
+        XCTAssertFalse(state.selectedCandidateIDs.contains(protectedID))
+        XCTAssertFalse(state.reviewBinItems.contains { $0.id == protectedID })
+    }
+
+    func testCancellingConfirmedKeepRestoresEligibilityWithoutSelectingForDeletion() throws {
+        var state = CleanupFlowState.sample()
+        state.applyConfirmedKeepAssetIDs(["similar-05"])
+
+        state.applyConfirmedKeepAssetIDs([])
+
+        let candidate = try XCTUnwrap(
+            state.currentReviewGroup.candidates.first { $0.id == "similar-05" }
+        )
+        XCTAssertFalse(candidate.confirmedKeep)
+        XCTAssertFalse(state.selectedCandidateIDs.contains(candidate.id))
+
+        state.toggleReviewCandidate(candidate)
+
+        XCTAssertTrue(state.selectedCandidateIDs.contains(candidate.id))
+    }
+
+    func testHidingProtectedNonSimilarCandidatesKeepsSimilarReferenceOnly() throws {
+        var state = CleanupFlowState.sample()
+
+        state.applyConfirmedKeepAssetIDs(
+            ["similar-05", "shot-01"],
+            hideProtectedNonSimilarCandidates: true
+        )
+
+        let similarCandidate = try XCTUnwrap(
+            state.reviewGroups
+                .first { $0.category == .similar }?
+                .candidates.first { $0.id == "similar-05" }
+        )
+        XCTAssertTrue(similarCandidate.confirmedKeep)
+        XCTAssertFalse(
+            state.reviewGroups
+                .flatMap(\.candidates)
+                .contains { $0.id == "shot-01" }
+        )
+        XCTAssertEqual(state.tasks.first { $0.category == .screenshots }?.candidateCount, 2)
+    }
+
     func testRecommendedKeepCandidateIsNotSelectedByDefaultButCanBeToggled() throws {
         var state = CleanupFlowState.sample()
         let keepCandidate = try XCTUnwrap(
@@ -438,6 +505,36 @@ final class CleanupFlowStateTests: XCTestCase {
 
         XCTAssertTrue(state.moveToPreviousReviewGroup())
         XCTAssertEqual(state.currentReviewGroup.category, .screenshots)
+        XCTAssertEqual(state.selectedCandidateIDs, ["screen-1"])
+    }
+
+    func testReviewGroupNavigationSkipsGroupsWithOnlyConfirmedKeeps() {
+        var protectedGroup = reviewGroup(
+            id: "protected-similar",
+            category: .similar,
+            candidateID: "protected-1"
+        )
+        protectedGroup.candidates[0].confirmedKeep = true
+        var state = CleanupFlowState(
+            tasks: [],
+            reviewGroups: [
+                reviewGroup(id: "screenshots", category: .screenshots, candidateID: "screen-1"),
+                protectedGroup,
+                reviewGroup(id: "large-videos", category: .largeVideos, candidateID: "video-1")
+            ],
+            currentReviewGroupIndex: 0,
+            selectedCandidateIDs: ["screen-1"],
+            reviewBinItems: [],
+            deletionSummary: nil,
+            deletionErrorMessage: nil
+        )
+
+        XCTAssertTrue(state.moveToNextReviewGroup())
+        XCTAssertEqual(state.currentReviewGroup.id, "large-videos")
+        XCTAssertEqual(state.selectedCandidateIDs, ["video-1"])
+
+        XCTAssertTrue(state.moveToPreviousReviewGroup())
+        XCTAssertEqual(state.currentReviewGroup.id, "screenshots")
         XCTAssertEqual(state.selectedCandidateIDs, ["screen-1"])
     }
 

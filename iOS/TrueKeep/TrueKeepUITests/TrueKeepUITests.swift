@@ -22,6 +22,7 @@ final class TrueKeepUITests: XCTestCase {
             "-TrueKeepDisablePhotoDeletion",
             "-TrueKeepUseSampleCleanupData",
             "-TrueKeepResetIntroState",
+            "-TrueKeepResetConfirmedKeeps",
             "-TrueKeepUITestForceNotDeterminedAccess"
         ]
         app.launch()
@@ -651,6 +652,79 @@ final class TrueKeepUITests: XCTestCase {
         XCTAssertTrue(waitForButtonEnabled(ID.addToReviewBin, false))
     }
 
+    func testConfirmedKeepPersistsAcrossRelaunchAndCanBeManaged() throws {
+        openHome()
+        app.buttons[ID.taskSimilar].tap()
+        XCTAssertTrue(app.staticTexts["相似照片"].waitForExistence(timeout: defaultTimeout))
+
+        let candidate = app.buttons[ID.reviewCandidateSimilar2]
+        let candidateActions = app.buttons[ID.reviewCandidateActionsSimilar2]
+        XCTAssertTrue(candidate.waitForExistence(timeout: defaultTimeout))
+        XCTAssertTrue(candidateActions.waitForExistence(timeout: defaultTimeout))
+        XCTAssertTrue(candidateActions.isHittable)
+        XCTAssertTrue(app.buttons[ID.addToReviewBin].label.contains("3"))
+
+        candidateActions.tap()
+        let confirmKeep = app.buttons["确认保留，不再提醒"]
+        XCTAssertTrue(confirmKeep.waitForExistence(timeout: defaultTimeout))
+        confirmKeep.tap()
+
+        let feedback = app.descendants(matching: .any)[ID.confirmedKeepFeedback]
+        XCTAssertTrue(feedback.waitForExistence(timeout: defaultTimeout))
+        XCTAssertTrue(waitForButtonLabel(ID.reviewCandidateSimilar2, contains: "已确认保留"))
+        XCTAssertTrue(waitForButtonEnabled(ID.reviewCandidateSimilar2, false))
+        XCTAssertTrue(app.buttons[ID.addToReviewBin].label.contains("2"))
+        attachScreenshot(named: "confirmed-keep-review-success")
+
+        let undo = feedback.buttons["撤销"]
+        XCTAssertTrue(undo.waitForExistence(timeout: defaultTimeout))
+        undo.tap()
+
+        XCTAssertFalse(feedback.exists)
+        XCTAssertTrue(waitForButtonEnabled(ID.reviewCandidateSimilar2, true))
+        XCTAssertFalse(candidate.label.contains("已确认保留"))
+
+        candidateActions.tap()
+        XCTAssertTrue(confirmKeep.waitForExistence(timeout: defaultTimeout))
+        confirmKeep.tap()
+        XCTAssertTrue(waitForButtonLabel(ID.reviewCandidateSimilar2, contains: "已确认保留"))
+
+        tapBack()
+        assertHomeIsVisible()
+        XCTAssertTrue(app.buttons[ID.taskSimilar].label.contains("6 张待复核"))
+        XCTAssertTrue(app.buttons[ID.taskSimilar].label.contains("1 张已确认保留"))
+
+        relaunchWithSampleCleanupData(resetIntro: false, resetConfirmedKeeps: false)
+
+        assertHomeIsVisible()
+        XCTAssertTrue(app.buttons[ID.taskSimilar].label.contains("6 张待复核"))
+        app.buttons[ID.taskSimilar].tap()
+        let relaunchedCandidate = app.buttons[ID.reviewCandidateSimilar2]
+        XCTAssertTrue(relaunchedCandidate.waitForExistence(timeout: defaultTimeout))
+        scrollToMakeHittable(relaunchedCandidate)
+        XCTAssertTrue(relaunchedCandidate.label.contains("已确认保留"))
+        XCTAssertFalse(relaunchedCandidate.isEnabled)
+        attachScreenshot(named: "confirmed-keep-after-relaunch")
+
+        app.tabBars.buttons["设置"].tap()
+        let confirmedKeepsSettings = app.buttons[ID.settingsConfirmedKeeps]
+        XCTAssertTrue(confirmedKeepsSettings.waitForExistence(timeout: defaultTimeout))
+        XCTAssertEqual(confirmedKeepsSettings.value as? String, "1 项")
+        confirmedKeepsSettings.tap()
+
+        let protectedItem = app.buttons[ID.confirmedKeepItemSimilar2]
+        XCTAssertTrue(protectedItem.waitForExistence(timeout: defaultTimeout))
+        XCTAssertTrue(protectedItem.isHittable)
+        attachScreenshot(named: "confirmed-keeps-settings-management")
+        try assertAccessibilityAuditPasses("confirmed-keeps-settings-management")
+
+        protectedItem.tap()
+
+        XCTAssertTrue(app.staticTexts["还没有已确认保留的照片"].waitForExistence(timeout: defaultTimeout))
+        XCTAssertFalse(protectedItem.exists)
+        attachScreenshot(named: "confirmed-keeps-settings-empty-after-removal")
+    }
+
     func testCriticalScreensPassAccessibilityAudit() throws {
         try assertAccessibilityAuditPasses("welcome")
 
@@ -718,12 +792,16 @@ final class TrueKeepUITests: XCTestCase {
         app.launchArguments = [
             "-TrueKeepDisablePhotoDeletion",
             "-TrueKeepResetIntroState",
+            "-TrueKeepResetConfirmedKeeps",
             "-TrueKeepUITestForceNotDeterminedAccess"
         ]
         app.launch()
     }
 
-    private func relaunchWithSampleCleanupData(resetIntro: Bool = true) {
+    private func relaunchWithSampleCleanupData(
+        resetIntro: Bool = true,
+        resetConfirmedKeeps: Bool = true
+    ) {
         app.terminate()
         app = XCUIApplication()
         app.launchArguments = [
@@ -734,6 +812,9 @@ final class TrueKeepUITests: XCTestCase {
         if resetIntro {
             app.launchArguments.append("-TrueKeepResetIntroState")
         }
+        if resetConfirmedKeeps {
+            app.launchArguments.append("-TrueKeepResetConfirmedKeeps")
+        }
         app.launch()
     }
 
@@ -741,10 +822,17 @@ final class TrueKeepUITests: XCTestCase {
         launchWithArguments(["-TrueKeepDisablePhotoDeletion", "-TrueKeepUseSampleCleanupData", "-TrueKeepResetIntroState", scenario])
     }
 
-    private func launchWithArguments(_ launchArguments: [String]) {
+    private func launchWithArguments(
+        _ launchArguments: [String],
+        resetConfirmedKeeps: Bool = true
+    ) {
         app.terminate()
         app = XCUIApplication()
         app.launchArguments = launchArguments
+        if resetConfirmedKeeps,
+           !app.launchArguments.contains("-TrueKeepResetConfirmedKeeps") {
+            app.launchArguments.append("-TrueKeepResetConfirmedKeeps")
+        }
         app.launch()
     }
 
@@ -875,6 +963,7 @@ private enum ID {
     static let cancelPhotoDeletion = "truekeep.delete.cancel"
 
     static let settingsHowItWorks = "truekeep.settings.topic.how-it-works"
+    static let settingsConfirmedKeeps = "truekeep.settings.topic.confirmed-keeps"
     static let settingsPrivacyDetails = "truekeep.settings.topic.privacy-details"
     static let settingsHelpSupport = "truekeep.settings.topic.help-support"
 
@@ -887,6 +976,10 @@ private enum ID {
     static let reviewCandidateBlur1 = "truekeep.review.candidate.blur-01"
     static let reviewCandidateScreenshot1 = "truekeep.review.candidate.shot-01"
     static let reviewCandidateRecommendedKeep = "truekeep.review.candidate.keep-01"
+    static let reviewCandidateSimilar2 = "truekeep.review.candidate.similar-02"
+    static let reviewCandidateActionsSimilar2 = "truekeep.review.candidate-actions.similar-02"
+    static let confirmedKeepFeedback = "truekeep.review.confirmed-keep-feedback"
+    static let confirmedKeepItemSimilar2 = "truekeep.settings.confirmed-keep.similar-02"
     static let reviewBinScreenshotItem = "truekeep.review-bin.item.shot-01"
 
     static let similarReviewBinItems = [

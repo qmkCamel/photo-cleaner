@@ -25,6 +25,7 @@ final class TrueKeepAccessibilityTests: XCTestCase {
         XCTAssertTrue(controls.contains(.deletionSummary))
         XCTAssertTrue(controls.contains(.addToReviewBin))
         XCTAssertTrue(controls.contains(.directDeleteSelection))
+        XCTAssertTrue(controls.contains(.confirmedKeepFeedback))
         XCTAssertTrue(controls.contains(.deleteReviewBinSelection))
         XCTAssertTrue(controls.contains(.confirmPhotoDeletion))
         XCTAssertTrue(controls.contains(.privacySafetyTab))
@@ -42,6 +43,14 @@ final class TrueKeepAccessibilityTests: XCTestCase {
         XCTAssertEqual(
             TrueKeepAccessibility.reviewBinItem(id: "asset-1"),
             "truekeep.review-bin.item.asset-1"
+        )
+        XCTAssertEqual(
+            TrueKeepAccessibility.reviewCandidateActions(id: "asset-1"),
+            "truekeep.review.candidate-actions.asset-1"
+        )
+        XCTAssertEqual(
+            TrueKeepAccessibility.confirmedKeepItem(id: "asset-1"),
+            "truekeep.settings.confirmed-keep.asset-1"
         )
     }
 

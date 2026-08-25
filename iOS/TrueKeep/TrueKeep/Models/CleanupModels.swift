@@ -119,6 +119,7 @@ struct CleanupCandidate: Identifiable, Hashable {
     var confidence: CandidateConfidence
     var defaultSelectedForDeletion: Bool
     var recommendedKeep: Bool
+    var confirmedKeep: Bool = false
     var reason: String
     var estimatedBytes: Int64
     var thumbnail: ThumbnailStyle
@@ -138,7 +139,7 @@ struct CleanupGroup: Identifiable, Hashable {
 
     var estimatedBytes: Int64 {
         candidates
-            .filter { !$0.recommendedKeep }
+            .filter { !$0.recommendedKeep && !$0.confirmedKeep }
             .map(\.estimatedBytes)
             .reduce(0, +)
     }
@@ -160,21 +161,24 @@ enum CleanupTaskBuilder {
     }
 
     static func task(from group: CleanupGroup) -> CleanupTask? {
-        guard group.candidates.contains(where: { !$0.recommendedKeep }) else { return nil }
+        let reviewCandidates = group.candidates.filter { !$0.confirmedKeep }
+        guard reviewCandidates.contains(where: { !$0.recommendedKeep }) else { return nil }
+        let confirmedKeepCount = group.candidates.count - reviewCandidates.count
 
         return CleanupTask(
             id: group.id,
             category: group.category,
             description: taskDescription(
                 for: group.category,
-                count: group.candidates.count,
-                isExactDuplicate: group.candidates.allSatisfy(\.isExactDuplicate),
-                hasRecommendedKeep: group.candidates.contains(where: \.recommendedKeep)
+                count: reviewCandidates.count,
+                isExactDuplicate: reviewCandidates.allSatisfy(\.isExactDuplicate),
+                hasRecommendedKeep: reviewCandidates.contains(where: \.recommendedKeep),
+                confirmedKeepCount: confirmedKeepCount
             ),
-            candidateCount: group.candidates.count,
+            candidateCount: reviewCandidates.count,
             estimatedBytes: group.estimatedBytes,
             confidenceLabel: confidenceLabel(for: group.category),
-            previewCandidates: Array(group.candidates.prefix(4))
+            previewCandidates: Array(reviewCandidates.prefix(4))
         )
     }
 
@@ -182,7 +186,8 @@ enum CleanupTaskBuilder {
         for category: CleanupCategory,
         count: Int,
         isExactDuplicate: Bool,
-        hasRecommendedKeep: Bool
+        hasRecommendedKeep: Bool,
+        confirmedKeepCount: Int
     ) -> String {
         switch category {
         case .screenshots:
@@ -190,6 +195,9 @@ enum CleanupTaskBuilder {
         case .largeVideos:
             return "\(count) 个长视频或大视频，建议逐个确认"
         case .similar:
+            if confirmedKeepCount > 0 {
+                return "\(count) 张待复核，\(confirmedKeepCount) 张已确认保留"
+            }
             let recommendation = hasRecommendedKeep
                 ? "已推荐保留一张"
                 : "请继续确认保留项"
@@ -318,7 +326,7 @@ struct CleanupFlowState: Hashable {
 
     var currentReviewBulkSelectableCandidateIDs: Set<String> {
         guard reviewGroups.indices.contains(currentReviewGroupIndex) else { return [] }
-        return Set(currentReviewGroup.candidates.filter { !$0.recommendedKeep }.map(\.id))
+        return Set(currentReviewGroup.candidates.filter { !$0.recommendedKeep && !$0.confirmedKeep }.map(\.id))
     }
 
     var canToggleAllCandidatesInCurrentGroup: Bool {
@@ -344,20 +352,25 @@ struct CleanupFlowState: Hashable {
         guard reviewGroups.indices.contains(currentReviewGroupIndex) else { return [] }
 
         return currentReviewGroup.candidates.compactMap { candidate in
-            guard selectedCandidateIDs.contains(candidate.id) else { return nil }
+            guard selectedCandidateIDs.contains(candidate.id), !candidate.confirmedKeep else { return nil }
             return candidate.id
         }
     }
 
     var canMoveToPreviousReviewGroup: Bool {
-        currentReviewGroupIndex > 0
+        previousReviewGroupIndex != nil
     }
 
     var canMoveToNextReviewGroup: Bool {
-        currentReviewGroupIndex < reviewGroups.count - 1
+        nextReviewGroupIndex != nil
     }
 
     mutating func toggleReviewCandidate(_ candidate: CleanupCandidate) {
+        let isConfirmedKeep = reviewGroups
+            .flatMap(\.candidates)
+            .first(where: { $0.id == candidate.id })?
+            .confirmedKeep == true
+        guard !isConfirmedKeep else { return }
         if selectedCandidateIDs.contains(candidate.id) {
             selectedCandidateIDs.remove(candidate.id)
         } else {
@@ -390,8 +403,8 @@ struct CleanupFlowState: Hashable {
 
     @discardableResult
     mutating func moveToPreviousReviewGroup() -> Bool {
-        guard canMoveToPreviousReviewGroup else { return false }
-        currentReviewGroupIndex -= 1
+        guard let previousReviewGroupIndex else { return false }
+        currentReviewGroupIndex = previousReviewGroupIndex
         selectDefaultCandidatesInCurrentGroup()
         reviewGroupDeletionErrorMessage = nil
         return true
@@ -399,17 +412,31 @@ struct CleanupFlowState: Hashable {
 
     @discardableResult
     mutating func moveToNextReviewGroup() -> Bool {
-        guard canMoveToNextReviewGroup else { return false }
-        currentReviewGroupIndex += 1
+        guard let nextReviewGroupIndex else { return false }
+        currentReviewGroupIndex = nextReviewGroupIndex
         selectDefaultCandidatesInCurrentGroup()
         reviewGroupDeletionErrorMessage = nil
         return true
     }
 
+    private var previousReviewGroupIndex: Int? {
+        reviewGroups.indices.reversed().first { index in
+            index < currentReviewGroupIndex && CleanupTaskBuilder.task(from: reviewGroups[index]) != nil
+        }
+    }
+
+    private var nextReviewGroupIndex: Int? {
+        reviewGroups.indices.first { index in
+            index > currentReviewGroupIndex && CleanupTaskBuilder.task(from: reviewGroups[index]) != nil
+        }
+    }
+
     mutating func addCurrentSelectionToReviewBin() {
         let alreadyAdded = Set(reviewBinItems.map(\.candidate.id))
         let selectedCandidates = currentReviewGroup.candidates.filter { candidate in
-            selectedCandidateIDs.contains(candidate.id) && !alreadyAdded.contains(candidate.id)
+            selectedCandidateIDs.contains(candidate.id)
+                && !candidate.confirmedKeep
+                && !alreadyAdded.contains(candidate.id)
         }
 
         reviewBinItems.append(
@@ -471,6 +498,46 @@ struct CleanupFlowState: Hashable {
         }
     }
 
+    mutating func applyConfirmedKeepAssetIDs(
+        _ assetIDs: Set<String>,
+        hideProtectedNonSimilarCandidates: Bool = false
+    ) {
+        let currentGroupID = reviewGroups.indices.contains(currentReviewGroupIndex)
+            ? reviewGroups[currentReviewGroupIndex].id
+            : nil
+
+        reviewGroups = reviewGroups.compactMap { group in
+            var updatedGroup = group
+            for index in updatedGroup.candidates.indices {
+                updatedGroup.candidates[index].confirmedKeep = assetIDs.contains(
+                    updatedGroup.candidates[index].id
+                )
+            }
+            if hideProtectedNonSimilarCandidates && updatedGroup.category != .similar {
+                updatedGroup.candidates.removeAll(where: \.confirmedKeep)
+            }
+            return updatedGroup.candidates.isEmpty ? nil : updatedGroup
+        }
+
+        reviewBinItems.removeAll { assetIDs.contains($0.id) }
+        selectedCandidateIDs.subtract(assetIDs)
+        let remainingCandidateIDs = Set(reviewGroups.flatMap { $0.candidates.map(\.id) })
+        selectedCandidateIDs.formIntersection(remainingCandidateIDs)
+        tasks = CleanupTaskBuilder.tasks(from: reviewGroups)
+        normalizeReviewGroupMetadata()
+
+        if reviewGroups.isEmpty {
+            currentReviewGroupIndex = 0
+        } else if let currentGroupID,
+                  let preservedIndex = reviewGroups.firstIndex(where: { $0.id == currentGroupID }) {
+            currentReviewGroupIndex = preservedIndex
+        } else {
+            currentReviewGroupIndex = min(currentReviewGroupIndex, reviewGroups.count - 1)
+        }
+        deletionErrorMessage = nil
+        reviewGroupDeletionErrorMessage = nil
+    }
+
     private mutating func reconcileDeletedAssets(
         _ deletedAssetIDs: [String],
         candidatesByID: [String: CleanupCandidate]
@@ -492,7 +559,7 @@ struct CleanupFlowState: Hashable {
         reviewGroups = reviewGroups.compactMap { group in
             var updatedGroup = group
             updatedGroup.candidates.removeAll { deletedIDs.contains($0.id) }
-            guard updatedGroup.candidates.contains(where: { !$0.recommendedKeep }) else { return nil }
+            guard CleanupTaskBuilder.task(from: updatedGroup) != nil else { return nil }
             return updatedGroup
         }
         normalizeReviewGroupMetadata()
@@ -524,7 +591,11 @@ struct CleanupFlowState: Hashable {
             selectedCandidateIDs = []
             return
         }
-        selectedCandidateIDs = Set(currentReviewGroup.candidates.filter(\.defaultSelectedForDeletion).map(\.id))
+        selectedCandidateIDs = Set(
+            currentReviewGroup.candidates
+                .filter { $0.defaultSelectedForDeletion && !$0.confirmedKeep }
+                .map(\.id)
+        )
     }
 
     private mutating func selectFailedReviewBinItems(_ failedAssetIDs: [String]) {
@@ -542,8 +613,9 @@ struct CleanupFlowState: Hashable {
             for (offset, index) in indices.enumerated() {
                 reviewGroups[index].groupIndex = offset + 1
                 reviewGroups[index].totalGroups = indices.count
+                let reviewCandidateCount = reviewGroups[index].candidates.filter { !$0.confirmedKeep }.count
                 reviewGroups[index].subtitle = indices.count == 1
-                    ? "\(reviewGroups[index].candidates.count) 项"
+                    ? "\(reviewCandidateCount) 项待复核"
                     : "第 \(offset + 1) 组 / \(indices.count) 组"
             }
         }

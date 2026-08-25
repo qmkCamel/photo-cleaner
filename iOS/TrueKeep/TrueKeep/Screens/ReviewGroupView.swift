@@ -7,18 +7,22 @@ struct ReviewGroupView: View {
     @State private var isDeleting = false
     @State private var deletionSuccessMessage: String?
     @State private var completedGroup: CleanupGroup?
+    @State private var confirmedKeepFeedbackAssetID: String?
 
     private let photoDeletion: any PhotoLibraryDeleting
     var onAddedToReviewBin: () -> Void
+    var onSetConfirmedKeep: (String, Bool) -> Void
 
     init(
         state: Binding<CleanupFlowState>,
         photoDeletion: any PhotoLibraryDeleting = SystemPhotoLibraryDeletionService(),
-        onAddedToReviewBin: @escaping () -> Void
+        onAddedToReviewBin: @escaping () -> Void,
+        onSetConfirmedKeep: @escaping (String, Bool) -> Void = { _, _ in }
     ) {
         self._state = state
         self.photoDeletion = photoDeletion
         self.onAddedToReviewBin = onAddedToReviewBin
+        self.onSetConfirmedKeep = onSetConfirmedKeep
     }
 
     var body: some View {
@@ -46,33 +50,14 @@ struct ReviewGroupView: View {
                     SafetyNotice(title: "删除未完成", message: deletionErrorMessage)
                 }
 
+                if let confirmedKeepFeedbackAssetID {
+                    confirmedKeepFeedback(assetID: confirmedKeepFeedbackAssetID)
+                }
+
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
                     ForEach(group.candidates) { candidate in
-                        Button {
-                            deletionSuccessMessage = nil
-                            state.toggleReviewCandidate(candidate)
-                        } label: {
-                            ThumbnailView(
-                                style: candidate.thumbnail,
-                                assetID: candidate.thumbnailAssetID,
-                                isSelected: state.selectedCandidateIDs.contains(candidate.id),
-                                isRecommendedKeep: candidate.recommendedKeep,
-                                videoLabel: candidateVideoLabel(candidate)
-                            )
-                            .frame(maxWidth: .infinity)
-                            .frame(height: candidate.recommendedKeep ? 178 : 104)
-                            .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                        }
-                        .buttonStyle(.plain)
+                        candidateCell(candidate)
                         .gridCellColumns(candidate.recommendedKeep ? 3 : 1)
-                        .accessibilityIdentifier(TrueKeepAccessibility.reviewCandidate(id: candidate.id))
-                        .accessibilityLabel(candidateAccessibilityLabel(candidate))
-                        .accessibilityHint(
-                            candidate.recommendedKeep
-                                ? "系统建议保留；仍可切换删除选择，选中后可加入复核箱或直接删除"
-                                : "切换删除选择；选中后可加入复核箱或直接删除"
-                        )
-                        .accessibilityAddTraits(state.selectedCandidateIDs.contains(candidate.id) ? .isSelected : [])
                     }
                 }
 
@@ -185,6 +170,102 @@ struct ReviewGroupView: View {
         }
     }
 
+    private func candidateCell(_ candidate: CleanupCandidate) -> some View {
+        ZStack(alignment: .bottomLeading) {
+            Button {
+                deletionSuccessMessage = nil
+                confirmedKeepFeedbackAssetID = nil
+                state.toggleReviewCandidate(candidate)
+            } label: {
+                ThumbnailView(
+                    style: candidate.thumbnail,
+                    assetID: candidate.thumbnailAssetID,
+                    isSelected: state.selectedCandidateIDs.contains(candidate.id),
+                    isRecommendedKeep: candidate.recommendedKeep,
+                    isConfirmedKeep: candidate.confirmedKeep,
+                    showsSelectionIndicator: !candidate.confirmedKeep,
+                    videoLabel: candidateVideoLabel(candidate)
+                )
+                .frame(maxWidth: .infinity)
+                .frame(height: candidate.recommendedKeep ? 178 : 104)
+                .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            }
+            .buttonStyle(.plain)
+            .disabled(candidate.confirmedKeep || isDeleting)
+            .accessibilityIdentifier(TrueKeepAccessibility.reviewCandidate(id: candidate.id))
+            .accessibilityLabel(candidateAccessibilityLabel(candidate))
+            .accessibilityHint(candidateAccessibilityHint(candidate))
+            .accessibilityAddTraits(state.selectedCandidateIDs.contains(candidate.id) ? .isSelected : [])
+
+            Menu {
+                if candidate.confirmedKeep {
+                    Button {
+                        onSetConfirmedKeep(candidate.id, false)
+                        confirmedKeepFeedbackAssetID = nil
+                    } label: {
+                        Label("取消确认保留", systemImage: "arrow.uturn.backward")
+                    }
+                } else {
+                    Button {
+                        confirmKeep(candidate)
+                    } label: {
+                        Label("确认保留，不再提醒", systemImage: "checkmark.shield")
+                    }
+                }
+            } label: {
+                Image(systemName: "ellipsis")
+                    .font(TrueKeepTheme.Font.iconCaption)
+                    .foregroundStyle(TrueKeepTheme.ink)
+                    .frame(width: 32, height: 32)
+                    .background(.ultraThinMaterial, in: Circle())
+                    .frame(width: 44, height: 44)
+                    .contentShape(Circle())
+            }
+            .buttonStyle(.plain)
+            .disabled(isDeleting)
+            .accessibilityIdentifier(TrueKeepAccessibility.reviewCandidateActions(id: candidate.id))
+            .accessibilityLabel(candidate.confirmedKeep ? "管理已确认保留" : "更多照片操作")
+            .accessibilityHint(candidate.confirmedKeep ? "可以取消确认保留" : "可以确认保留并在后续扫描中不再提醒")
+            .help(candidate.confirmedKeep ? "管理已确认保留" : "更多照片操作")
+        }
+    }
+
+    private func confirmedKeepFeedback(assetID: String) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            Image(systemName: "checkmark.shield.fill")
+                .font(TrueKeepTheme.Font.iconMedium)
+                .foregroundStyle(TrueKeepTheme.greenStrong)
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 3) {
+                Text("已确认保留")
+                    .font(TrueKeepTheme.Font.cardTitle)
+                    .foregroundStyle(TrueKeepTheme.ink)
+                Text("这张照片不会再作为普通清理候选，仍可用于相似照片比较。")
+                    .font(TrueKeepTheme.Font.caption)
+                    .foregroundStyle(TrueKeepTheme.muted)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 4)
+            Button("撤销") {
+                onSetConfirmedKeep(assetID, false)
+                confirmedKeepFeedbackAssetID = nil
+            }
+            .font(TrueKeepTheme.Font.inlineAction)
+            .frame(minWidth: 44, minHeight: 44)
+        }
+        .padding(12)
+        .background(TrueKeepTheme.greenSoft)
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier(TrueKeepAccessibility.Control.confirmedKeepFeedback.id)
+    }
+
+    private func confirmKeep(_ candidate: CleanupCandidate) {
+        deletionSuccessMessage = nil
+        onSetConfirmedKeep(candidate.id, true)
+        confirmedKeepFeedbackAssetID = candidate.id
+    }
+
     private var addToReviewBinButton: some View {
         PrimaryActionButton(title: selectionActionTitle(empty: "选择项目后加入复核箱", selected: "加入复核箱")) {
             state.addCurrentSelectionToReviewBin()
@@ -262,12 +343,17 @@ struct ReviewGroupView: View {
         let deletedIDs = Set(deletedAssetIDs)
         var snapshot = group
         snapshot.candidates.removeAll { deletedIDs.contains($0.id) }
-        guard !snapshot.candidates.contains(where: { !$0.recommendedKeep }) else { return nil }
+        guard CleanupTaskBuilder.task(from: snapshot) == nil else { return nil }
         snapshot.subtitle = "\(snapshot.candidates.count) 项"
         return snapshot
     }
 
     private func groupCountText(_ group: CleanupGroup) -> String {
+        let confirmedKeepCount = group.candidates.filter(\.confirmedKeep).count
+        let reviewCount = group.candidates.count - confirmedKeepCount
+        if confirmedKeepCount > 0 {
+            return "\(reviewCount) 项待复核 · \(confirmedKeepCount) 项已确认保留"
+        }
         switch group.category {
         case .largeVideos:
             return "\(group.candidates.count) 个视频"
@@ -281,6 +367,10 @@ struct ReviewGroupView: View {
     }
 
     private func candidateAccessibilityLabel(_ candidate: CleanupCandidate) -> String {
+        if candidate.confirmedKeep {
+            let recommendation = candidate.recommendedKeep ? "，系统推荐保留" : ""
+            return "已确认保留\(recommendation)，\(candidate.category.title)，\(candidate.reason)"
+        }
         let selectionState = state.selectedCandidateIDs.contains(candidate.id)
             ? "已选择删除"
             : "未选择删除"
@@ -288,6 +378,16 @@ struct ReviewGroupView: View {
             return "推荐保留，\(selectionState)，\(candidate.category.title)，\(candidate.reason)"
         }
         return "\(selectionState)，\(candidate.category.title)，\(candidate.reason)"
+    }
+
+    private func candidateAccessibilityHint(_ candidate: CleanupCandidate) -> String {
+        if candidate.confirmedKeep {
+            return "不会加入删除选择；使用更多照片操作可以取消确认保留"
+        }
+        if candidate.recommendedKeep {
+            return "系统建议保留；仍可切换删除选择，或使用更多照片操作确认保留"
+        }
+        return "切换删除选择；或使用更多照片操作确认保留"
     }
 }
 

@@ -2,6 +2,32 @@ import XCTest
 @testable import TrueKeep
 
 final class PhotoLibraryAuthorizationTests: XCTestCase {
+    func testConfirmedKeepStorePersistsUniqueSortedIDsAndResets() throws {
+        let suiteName = "ConfirmedKeepStoreTests.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = ConfirmedKeepStore(defaults: defaults)
+
+        store.saveAssetIDs(["photo-b", "photo-a", "photo-b"])
+
+        XCTAssertEqual(defaults.stringArray(forKey: ConfirmedKeepStore.defaultsKey), ["photo-a", "photo-b"])
+        XCTAssertEqual(store.loadAssetIDs(), ["photo-a", "photo-b"])
+
+        store.reset()
+
+        XCTAssertTrue(store.loadAssetIDs().isEmpty)
+        XCTAssertNil(defaults.object(forKey: ConfirmedKeepStore.defaultsKey))
+    }
+
+    func testLaunchConfigurationRecognizesConfirmedKeepResetArgument() {
+        let configuration = AppLaunchConfiguration(
+            arguments: [AppLaunchConfiguration.resetConfirmedKeepsArgument],
+            environment: [:]
+        )
+
+        XCTAssertTrue(configuration.resetsConfirmedKeeps)
+    }
+
     func testPhotoScanDateRangeDefaultsToLastMonth() {
         XCTAssertEqual(PhotoScanDateRange.defaultValue, .lastMonth)
         XCTAssertEqual(PhotoScanDateRange.allCases, [.lastMonth, .lastThreeMonths, .all])
