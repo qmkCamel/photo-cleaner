@@ -4,9 +4,11 @@ TrueKeep / 留真 helps you review photo-library cleanup candidates locally on y
 
 ## Contact
 
-Support contact: pending.
+Support contact: [qmkhaust@gmail.com](mailto:qmkhaust@gmail.com).
 
-Before App Store submission, replace this placeholder with a monitored email address or support form URL.
+Published support page: https://qmkcamel.github.io/photo-cleaner/support.html
+
+Include the iPhone model, iOS version, app version, and a description of the issue. Original photos are not required; redact private information from optional screenshots.
 
 ## Common Questions
 
@@ -16,7 +18,7 @@ No. The current build does not upload photos or videos. Scanning runs on your iP
 
 ### Does TrueKeep delete photos automatically?
 
-No. Cleanup candidates must be reviewed by you, added to Review Bin, and confirmed again before deletion.
+No. You review and select candidates, then initiate deletion from Review Bin or directly from a review group. Both paths require a second explicit confirmation.
 
 ### What happens if I use iCloud Photos?
 
@@ -30,10 +32,10 @@ Yes. If you grant Limited Photos Access, TrueKeep can only scan the photos and v
 
 The current MVP is conservative. Similar, blurry, and accidental-shot items are local review candidates, not automatic decisions. You stay in control of what is kept or deleted.
 
-## App Store Review Notes
+## Confirmed Keeps
 
-For review builds, deletion can be disabled with the internal launch argument:
+Mark a photo as a confirmed keep through its more-actions menu. The app remembers only its local Photos resource identifier. Manage or reset records in Settings. The current version does not select a recommended keep item for you.
 
-`-TrueKeepDisablePhotoDeletion`
+## Website Source
 
-This allows the review and confirmation flow to be tested without deleting photo or video items.
+`site-template/support.html` contains the complete Chinese and English support page, including interrupted scans, failed deletion, and Recently Deleted recovery guidance. Internal review configuration belongs in `iOS/TrueKeep/APP_STORE_REVIEW_NOTES.md`.

@@ -1,0 +1,50 @@
+name: App Store support pages
+
+on:
+  push:
+    branches: [dev]
+    paths:
+      - docs/app-store/site-template/**
+      - docs/app-store/check_site.py
+      - .github/workflows/app-store-pages.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: app-store-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out website source
+        uses: actions/checkout@v6
+      - name: Validate public pages
+        run: python3 docs/app-store/check_site.py
+      - name: Stage only public website files
+        run: |
+          mkdir -p _site
+          for file in index.html privacy.html support.html styles.css .nojekyll; do
+            cp "docs/app-store/site-template/$file" "_site/$file"
+          done
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

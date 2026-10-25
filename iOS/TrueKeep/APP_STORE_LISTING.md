@@ -1,6 +1,6 @@
 # TrueKeep App Store Listing Draft
 
-Updated: 2026-06-11
+Updated: 2026-10-25
 
 This is the working App Store Connect listing draft for the current MVP build. It is not a final submission package until App Store Connect name availability, legal/trademark clearance, support URLs, and accepted-size screenshot exports are confirmed.
 
@@ -31,9 +31,9 @@ Copy-paste files:
   `Find review-worthy cleanup candidates from your photo library without uploading photos. TrueKeep keeps every decision local, visible, and reversible until you confirm deletion.`
 - Description:
   `TrueKeep helps you review screenshots, large videos, similar photos, blurry shots, and accidental photos from your local photo library. The app is built around trust: it explains Photos access before asking, runs analysis on the iPhone, keeps candidates in review groups, and requires a Review Bin plus a second confirmation before deletion. No account, upload, ads, analytics, or cross-app tracking is included in the current build.`
-- Support URL: pending.
-- Marketing URL: pending.
-- Privacy Policy URL: pending; host `docs/app-store/privacy-policy.md`.
+- Support URL: https://qmkcamel.github.io/photo-cleaner/support.html
+- Marketing URL: https://qmkcamel.github.io/photo-cleaner/
+- Privacy Policy URL: https://qmkcamel.github.io/photo-cleaner/privacy.html
 
 ## zh-Hans Metadata Draft
 
@@ -51,9 +51,9 @@ Copy-paste files:
   `在 iPhone 本机找出值得复核的清理候选，不上传照片或视频，不自动删除。`
 - Description:
   `留真用于本机复核相册中的截图、大视频、相似照片、模糊照片和误拍照片。应用会先说明为什么需要照片权限，再在 iPhone 上完成分析。所有候选都需要你逐组确认，加入复核箱后还要二次确认才会请求系统删除。当前版本没有账号、上传、广告、分析 SDK 或跨 App 跟踪。`
-- Support URL: pending.
-- Marketing URL: pending.
-- Privacy Policy URL: pending; host `docs/app-store/privacy-policy.md`.
+- Support URL: https://qmkcamel.github.io/photo-cleaner/support.html
+- Marketing URL: https://qmkcamel.github.io/photo-cleaner/
+- Privacy Policy URL: https://qmkcamel.github.io/photo-cleaner/privacy.html
 
 ## Support And Privacy Pages
 
@@ -62,8 +62,8 @@ Copy-paste files:
 - Ready-to-host static template files are drafted in `../../docs/app-store/site-template/`.
 - Age-rating, export-compliance, content-rights, and category-answer drafts are in `../../docs/app-store/compliance-answers.md`.
 - Copy-paste App Store Connect metadata is saved in `AppStoreConnect/`.
-- Apple requires a privacy policy URL for iOS apps and requires support/privacy links to be functional for review. Final URLs still need to be hosted and checked before submission.
-- The static template is not final until the support-contact placeholder is replaced with a monitored email address or support form URL.
+- Apple requires a privacy policy URL for iOS apps and requires support/privacy links to be functional for review. The Pages URLs above must be checked after each deployment and before submission; deployment evidence is recorded in `../../docs/app-store/github-pages-deployment.md`.
+- Support contact: `qmkhaust@gmail.com`. Public bilingual pages are maintained in `../../docs/app-store/site-template/`.
 - Official references:
   - https://developer.apple.com/help/app-store-connect/manage-app-information/manage-app-privacy/
   - https://developer.apple.com/distribute/app-review/

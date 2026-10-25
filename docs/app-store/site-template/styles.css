@@ -28,6 +28,43 @@ a {
   font-weight: 650;
 }
 
+a:focus-visible {
+  outline: 3px solid var(--green);
+  outline-offset: 4px;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  padding: 12px;
+  background: var(--surface);
+}
+
+.skip-link:focus {
+  top: 12px;
+}
+
+.nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.nav [aria-current="page"] {
+  text-decoration-thickness: 3px;
+  text-underline-offset: 6px;
+}
+
+.contact-card {
+  background: var(--green-soft);
+}
+
+.contact-address {
+  font-size: clamp(20px, 5vw, 28px);
+  overflow-wrap: anywhere;
+}
+
 .shell {
   width: min(920px, calc(100% - 40px));
   margin: 0 auto;
@@ -74,7 +111,7 @@ h1 {
   max-width: 760px;
   margin: 0;
   font-size: clamp(40px, 8vw, 72px);
-  line-height: 1.02;
+  line-height: 1.18;
   letter-spacing: 0;
 }
 

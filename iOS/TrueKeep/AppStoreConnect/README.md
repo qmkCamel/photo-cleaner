@@ -1,6 +1,6 @@
 # TrueKeep App Store Connect Packet
 
-Updated: 2026-06-11
+Updated: 2026-10-25
 
 This folder contains copy-paste metadata for App Store Connect. It is intentionally plain text so the account owner can paste fields manually before any upload automation is introduced.
 
@@ -14,8 +14,8 @@ Use `../SUBMISSION_RUNBOOK.md` before entering these fields in App Store Connect
 
 ## Still Pending
 
-- Hosted Support URL.
-- Hosted Privacy Policy URL.
+- Enter and verify the published Support and Privacy URLs in App Store Connect; use the locale-specific `support_url.txt` and `privacy_url.txt` files.
+- Deployment evidence: `../../../docs/app-store/github-pages-deployment.md`.
 - Final App Store Connect name availability.
 - Final App Store Connect age rating and export-compliance questionnaire submission.
 - Legal/trademark approval.

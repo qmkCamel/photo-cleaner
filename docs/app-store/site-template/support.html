@@ -1,61 +1,74 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>TrueKeep Support</title>
-    <meta name="description" content="Support information for TrueKeep / 留真.">
-    <link rel="stylesheet" href="styles.css">
-  </head>
-  <body>
-    <main class="shell">
-      <header class="masthead">
-        <p class="brand">TrueKeep / 留真</p>
-        <nav class="nav" aria-label="Support navigation">
-          <a href="index.html">Home</a>
-          <a href="privacy.html">Privacy Policy</a>
-        </nav>
-      </header>
-
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="照片权限、扫描与删除的问题，都可以从这里开始。">
+  <title>帮助与支持 · TrueKeep / 留真</title>
+  <link rel="canonical" href="https://qmkcamel.github.io/photo-cleaner/support.html">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到正文 / Skip to content</a>
+  <div class="shell">
+    <header class="masthead">
+      <a class="brand" href="index.html">TrueKeep / 留真</a>
+      <nav class="nav" aria-label="网站导航 / Site navigation"><a href="index.html">首页 / Home</a><a href="support.html" aria-current="page">帮助 / Support</a><a href="privacy.html">隐私政策 / Privacy</a></nav>
+    </header>
+    <main id="main">
       <section class="hero">
-        <p class="eyebrow">Support</p>
-        <h1>Help with TrueKeep.</h1>
-        <p class="summary">TrueKeep helps you review photo-library cleanup candidates locally on your iPhone.</p>
+        <p class="eyebrow">SUPPORT</p>
+        <h1>帮助与支持</h1>
+        <p class="summary">照片权限、扫描与删除的问题，都可以从这里开始。</p>
       </section>
-
-      <section class="notice">
-        <p>Before App Store submission, replace this notice with a monitored support email address or support form URL.</p>
-      </section>
-
-      <section class="content">
-        <article class="section">
-          <h2>Common Questions</h2>
-
-          <h3>Does TrueKeep upload my photos?</h3>
-          <p>No. The current build does not upload photos or videos. Scanning runs on your iPhone.</p>
-
-          <h3>Does TrueKeep delete photos automatically?</h3>
-          <p>No. Cleanup candidates must be reviewed by you, added to Review Bin, and confirmed again before deletion.</p>
-
-          <h3>What happens if I use iCloud Photos?</h3>
-          <p>If iCloud Photos is enabled, deleting an item from Photos may also remove it from iCloud and your other devices. The app shows this warning before deletion.</p>
-
-          <h3>Can I use Limited Photos Access?</h3>
-          <p>Yes. If you grant Limited Photos Access, TrueKeep can only scan the photos and videos you selected. Results may be incomplete until you allow more items.</p>
-
-          <h3>Why does the app show review candidates instead of exact duplicates only?</h3>
-          <p>The current MVP is conservative. Similar, blurry, and accidental-shot items are local review candidates, not automatic decisions. You stay in control of what is kept or deleted.</p>
-        </article>
-
-        <article class="section">
-          <h2>App Review Note</h2>
-          <p>For review builds, deletion can be disabled with the internal launch argument <strong>-TrueKeepDisablePhotoDeletion</strong>. This allows the review and confirmation flow to be tested without deleting photo or video items.</p>
-        </article>
-      </section>
-
-      <footer class="footer">
-        <p>This page is a static hosting template. It is not final until the support contact and public URL are confirmed.</p>
-      </footer>
+      <div class="content">
+<section class="section contact-card">
+  <h2>联系支持 <span lang="en">Contact support</span></h2>
+  <p class="contact-address"><a href="mailto:qmkhaust@gmail.com">qmkhaust@gmail.com</a></p>
+  <p>请说明 iPhone 型号、iOS 版本、App 版本和遇到的问题。无需提供照片原件；如果附上截图，请先遮住私人内容。</p>
+  <p lang="en">Include your iPhone model, iOS version, app version, and a description of the problem. Original photos are not needed. Redact private information from any screenshots you choose to send.</p>
+</section>
+<section class="section" aria-labelledby="faq-zh">
+  <h2 id="faq-zh">常见问题</h2>
+  <h3>照片或视频会上传吗？</h3>
+  <p>不会。当前 App 在 iPhone 本机分析，不需要账号，也不包含广告、分析或跨 App 跟踪 SDK。</p>
+  <h3>为什么扫描结果不完整？</h3>
+  <p>如果只授予有限照片访问权限，留真只能扫描你允许访问的项目。你可以在 iOS 设置中调整照片权限，也可以继续整理当前可访问的部分。为保持本地处理，扫描不会主动下载仅存于 iCloud 的原始资源，某些项目可能无法完成视觉分析。</p>
+  <h3>相似、模糊或误拍候选一定应该删除吗？</h3>
+  <p>不一定。这些是低置信度的复核辅助；请打开缩略图并结合自己的判断决定。相似照片也可能记录了不同的瞬间。当前版本不会替你推荐保留哪一张。</p>
+  <h3>如何避免同一张照片反复出现？</h3>
+  <p>在复核照片时通过更多操作选择确认保留。留真只在本机保存对应的 Photos 资源 ID，不保存照片副本。你可以在设置中的“已确认保留”查看、取消或重置记录；取消后，照片可能在后续扫描中再次出现。</p>
+  <h3>复核箱里的照片已经删除了吗？</h3>
+  <p>没有。复核箱是删除前的缓冲区，移出复核箱也不会删除系统照片。你可以把选中的候选加入复核箱后再删除，或在复核组内选择直接删除；两条路径都要经过明确的第二次确认才会请求系统删除。</p>
+  <h3>删除会影响 iCloud 和其他设备吗？</h3>
+  <p>如果启用 iCloud 照片，从系统照片图库删除项目可能同步到 iCloud 和其他设备。请在确认前核对数量和内容。</p>
+  <h3>如何恢复误删的项目？</h3>
+  <p>尽快打开系统“照片”App 的“最近删除”查看并恢复。恢复窗口由系统管理；如果项目已被永久删除或超过恢复期限，留真无法恢复。不要为了立即释放空间而清空“最近删除”。</p>
+  <h3>扫描中断或删除失败怎么办？</h3>
+  <p>按页面提示重试扫描。删除失败时检查照片权限和系统提示，再复核仍保留的项目；不要把失败提示当作已成功删除。问题持续时请联系上方邮箱。</p>
+</section>
+<section class="section" lang="en" aria-labelledby="faq-en">
+  <h2 id="faq-en">Frequently asked questions</h2>
+  <h3>Are my photos uploaded?</h3>
+  <p>No. The current app analyzes photos locally on your iPhone, requires no account, and includes no advertising, analytics, or cross-app tracking SDK.</p>
+  <h3>Why are some items missing from the results?</h3>
+  <p>With Limited Photos Access, only the items you allow can be scanned. Adjust Photos access in iOS Settings or continue with that subset. The scan does not download iCloud-only resources, so some items may be unavailable for visual analysis.</p>
+  <h3>Should I delete every candidate?</h3>
+  <p>No. Similar, blurry, and accidental-shot classifications are low-confidence review aids. Review each item yourself. The current version does not choose a recommended photo to keep for you.</p>
+  <h3>How do confirmed keeps work?</h3>
+  <p>Use a photo's more-actions menu to confirm it should be kept. Only its local Photos resource identifier is remembered. Manage or reset these records under Confirmed Keeps in Settings. Removing a record may allow the photo to appear in a later scan.</p>
+  <h3>Does Review Bin contain deleted photos?</h3>
+  <p>No. Review Bin holds items before deletion. Removing an item from the bin does not delete it from Photos. You may delete reviewed selections from the bin or directly from a review group. Both paths require a second explicit confirmation.</p>
+  <h3>What about iCloud Photos and recovery?</h3>
+  <p>Deleting from the system Photos library may also remove items from iCloud and other devices. To recover an item, check Recently Deleted in Apple's Photos app promptly. TrueKeep cannot recover items that are permanently deleted or beyond the system recovery window.</p>
+  <h3>What if a scan or deletion fails?</h3>
+  <p>Retry an interrupted scan using the on-screen action. For deletion errors, check Photos permissions and review the retained items before retrying. A failed attempt does not mean the items were deleted. Contact support if the issue continues.</p>
+</section></div>
     </main>
-  </body>
+    <footer class="footer">
+      <p>TrueKeep / 留真 · 联系我们 / Contact: <a href="mailto:qmkhaust@gmail.com">qmkhaust@gmail.com</a></p>
+      <p>更新于 / Updated: <time datetime="2026-10-25">2026-10-25</time></p>
+    </footer>
+  </div>
+</body>
 </html>
