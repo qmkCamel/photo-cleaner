@@ -11,7 +11,7 @@ extension CleanupFlowState {
             totalGroups: 67,
             explanation: "这些照片看起来非常相似。保留一张清晰表情更好的照片，可以减少重复。",
             candidates: [
-                candidate("keep-01", .similar, .high, false, true, "这一张主体清晰，表情最好。", 0, .kidPortrait),
+                candidate("keep-01", .similar, .high, false, true, "同一场景的相似照片，请自行判断是否保留。", 0, .kidPortrait),
                 candidate("similar-02", .similar, .high, true, false, "同一场景的重复照片。", 4_200_000, .park),
                 candidate("similar-03", .similar, .high, true, false, "主体接近，但构图更弱。", 3_900_000, .familyBeach),
                 candidate("similar-04", .similar, .medium, true, false, "同一组连拍里清晰度较低。", 4_300_000, .breakfast),
@@ -93,7 +93,7 @@ extension CleanupFlowState {
             CleanupTask(
                 id: similarGroup.id,
                 category: .similar,
-                description: "67 组，建议保留最佳照片",
+                description: "67 组相似照片，请逐张确认",
                 candidateCount: 1_284,
                 estimatedBytes: 3_900_000_000,
                 confidenceLabel: "推荐复核",
@@ -170,7 +170,7 @@ extension CleanupFlowState {
                     .high,
                     false,
                     true,
-                    "第二组推荐保留照片。",
+                    "第二组相似照片，请自行判断。",
                     0,
                     .garden
                 ),
@@ -203,11 +203,15 @@ extension CleanupFlowState {
         _ bytes: Int64,
         _ thumbnail: ThumbnailStyle
     ) -> CleanupCandidate {
-        CleanupCandidate(
+        let effectiveDefaultSelection = category == .similar
+            && !TrueKeepFeatureFlags.recommendedKeepEnabled
+            ? false
+            : defaultSelected
+        return CleanupCandidate(
             id: id,
             category: category,
             confidence: confidence,
-            defaultSelectedForDeletion: defaultSelected,
+            defaultSelectedForDeletion: effectiveDefaultSelection,
             recommendedKeep: recommendedKeep,
             reason: reason,
             estimatedBytes: bytes,

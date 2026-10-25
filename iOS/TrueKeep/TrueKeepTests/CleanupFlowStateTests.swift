@@ -8,7 +8,7 @@ final class CleanupFlowStateTests: XCTestCase {
     }
 
     func testReviewSelectionMovesIntoReviewBinBeforeDeletion() {
-        var state = CleanupFlowState.sample()
+        var state = screenshotState()
 
         XCTAssertEqual(state.reviewBinItems.count, 0)
         XCTAssertEqual(state.currentReviewSelectionCount, 3)
@@ -40,6 +40,9 @@ final class CleanupFlowStateTests: XCTestCase {
 
     func testDirectDeletionRemovesCandidatesAndSynchronizesHomeTaskAndReviewBin() {
         var state = CleanupFlowState.sample()
+        for candidate in state.currentReviewGroup.candidates.prefix(3) {
+            state.toggleReviewCandidate(candidate)
+        }
         state.addCurrentSelectionToReviewBin()
         let deletedIDs = state.selectedCurrentReviewAssetIDs
         let unaffectedScreenshotCount = state.tasks.first { $0.category == .screenshots }?.candidateCount
@@ -69,6 +72,9 @@ final class CleanupFlowStateTests: XCTestCase {
 
     func testPartialDirectDeletionRemovesSuccessAndKeepsFailuresSelected() throws {
         var state = CleanupFlowState.sample()
+        for candidate in state.currentReviewGroup.candidates.prefix(3) {
+            state.toggleReviewCandidate(candidate)
+        }
         let selectedIDs = state.selectedCurrentReviewAssetIDs
         let deletedID = try XCTUnwrap(selectedIDs.first)
         let failedIDs = Array(selectedIDs.dropFirst())
@@ -92,6 +98,9 @@ final class CleanupFlowStateTests: XCTestCase {
 
     func testFailedDirectDeletionPreservesCandidatesAndSelection() {
         var state = CleanupFlowState.sample()
+        for candidate in state.currentReviewGroup.candidates.prefix(3) {
+            state.toggleReviewCandidate(candidate)
+        }
         let originalCandidateIDs = state.currentReviewGroup.candidates.map(\.id)
         let originalSelection = state.selectedCandidateIDs
 
@@ -106,7 +115,7 @@ final class CleanupFlowStateTests: XCTestCase {
     }
 
     func testSelectedReviewBinAssetIDsOnlyIncludesSelectedItems() {
-        var state = CleanupFlowState.sample()
+        var state = screenshotState()
         state.addCurrentSelectionToReviewBin()
         state.toggleReviewBinItem(state.reviewBinItems[0])
 
@@ -154,7 +163,7 @@ final class CleanupFlowStateTests: XCTestCase {
         XCTAssertEqual(state.deletionErrorMessage, "2 项未能删除。")
     }
 
-    func testDeletingLastActionableCandidateDropsRecommendedKeepOnlyGroup() {
+    func testDeletingOtherCandidateKeepsInternalRecommendationAvailableForReview() {
         let keepCandidate = candidate(id: "keep", bytes: 0, selected: false, recommendedKeep: true)
         let deleteCandidate = candidate(id: "delete", bytes: 2_000_000, selected: true)
         let group = CleanupGroup(
@@ -180,8 +189,12 @@ final class CleanupFlowStateTests: XCTestCase {
 
         state.applyDeletionResult(.success(deletedAssetIDs: [deleteCandidate.id]))
 
-        XCTAssertTrue(state.tasks.isEmpty)
-        XCTAssertTrue(state.reviewGroups.isEmpty)
+        XCTAssertEqual(state.tasks.count, 1)
+        XCTAssertEqual(state.tasks.first?.candidateCount, 1)
+        XCTAssertFalse(state.tasks.first?.description.contains("推荐保留") ?? true)
+        XCTAssertEqual(state.reviewGroups.count, 1)
+        XCTAssertEqual(state.currentReviewGroup.candidates.map(\.id), [keepCandidate.id])
+        XCTAssertTrue(state.selectedCandidateIDs.isEmpty)
         XCTAssertEqual(state.deletionSummary?.itemCount, 1)
         XCTAssertFalse(state.deletionSummary?.deletedAssetIDs.contains(keepCandidate.id) ?? true)
     }
@@ -243,9 +256,16 @@ final class CleanupFlowStateTests: XCTestCase {
 
     func testConfirmedKeepRemovesCandidateFromDeletionPathsAndTaskMetrics() throws {
         var state = CleanupFlowState.sample()
+        let protectedCandidateBeforeConfirmation = try XCTUnwrap(
+            state.currentReviewGroup.candidates.first { $0.id == "similar-02" }
+        )
+        let secondSelectedCandidate = state.currentReviewGroup.candidates[2]
+        state.toggleReviewCandidate(protectedCandidateBeforeConfirmation)
+        state.toggleReviewCandidate(secondSelectedCandidate)
         state.addCurrentSelectionToReviewBin()
         let protectedID = "similar-02"
         let originalEstimatedBytes = state.totalEstimatedBytes
+        XCTAssertTrue(state.reviewBinItems.contains { $0.id == protectedID })
 
         state.applyConfirmedKeepAssetIDs([protectedID])
 
@@ -308,20 +328,24 @@ final class CleanupFlowStateTests: XCTestCase {
         XCTAssertEqual(state.tasks.first { $0.category == .screenshots }?.candidateCount, 2)
     }
 
-    func testRecommendedKeepCandidateIsNotSelectedByDefaultButCanBeToggled() throws {
+    func testRecommendedKeepCapabilityIsSuppressedAndCandidateCanBeToggledNormally() throws {
         var state = CleanupFlowState.sample()
         let keepCandidate = try XCTUnwrap(
             state.currentReviewGroup.candidates.first { $0.recommendedKeep }
         )
+        let rebuiltTask = try XCTUnwrap(CleanupTaskBuilder.task(from: state.currentReviewGroup))
 
+        XCTAssertFalse(keepCandidate.isRecommendedKeepActive)
         XCTAssertFalse(keepCandidate.defaultSelectedForDeletion)
-        XCTAssertFalse(state.selectedCandidateIDs.contains(keepCandidate.id))
+        XCTAssertTrue(state.selectedCandidateIDs.isEmpty)
+        XCTAssertTrue(state.currentReviewBulkSelectableCandidateIDs.contains(keepCandidate.id))
+        XCTAssertFalse(rebuiltTask.description.contains("推荐保留"))
 
         state.toggleReviewCandidate(keepCandidate)
 
         XCTAssertTrue(state.selectedCandidateIDs.contains(keepCandidate.id))
         XCTAssertTrue(state.selectedCurrentReviewAssetIDs.contains(keepCandidate.id))
-        XCTAssertEqual(state.currentReviewSelectionCount, 4)
+        XCTAssertEqual(state.currentReviewSelectionCount, 1)
 
         state.addCurrentSelectionToReviewBin()
         XCTAssertTrue(state.reviewBinItems.contains { $0.id == keepCandidate.id })
@@ -332,7 +356,34 @@ final class CleanupFlowStateTests: XCTestCase {
         XCTAssertFalse(state.selectedCurrentReviewAssetIDs.contains(keepCandidate.id))
     }
 
-    func testDirectDeletionOfRecommendedKeepRebuildsTaskWithoutStaleRecommendationCopy() throws {
+    func testDisabledRecommendationCountsRawRecommendationInTaskMetrics() throws {
+        let internallyRankedCandidate = candidate(
+            id: "internally-ranked",
+            bytes: 2_000_000,
+            selected: false,
+            recommendedKeep: true
+        )
+        let otherCandidate = candidate(id: "other", bytes: 3_000_000, selected: false)
+        let group = CleanupGroup(
+            id: "similar-metrics",
+            category: .similar,
+            title: "相似照片",
+            subtitle: "1 组",
+            groupIndex: 1,
+            totalGroups: 1,
+            explanation: "测试组",
+            candidates: [internallyRankedCandidate, otherCandidate]
+        )
+
+        let task = try XCTUnwrap(CleanupTaskBuilder.task(from: group))
+
+        XCTAssertEqual(group.estimatedBytes, 5_000_000)
+        XCTAssertEqual(task.estimatedBytes, 5_000_000)
+        XCTAssertEqual(task.candidateCount, 2)
+        XCTAssertFalse(task.description.contains("推荐保留"))
+    }
+
+    func testDirectDeletionOfInternallyRankedCandidateRebuildsTaskWithoutRecommendationCopy() throws {
         var state = CleanupFlowState.sample()
         let keepCandidate = try XCTUnwrap(
             state.currentReviewGroup.candidates.first { $0.recommendedKeep }
@@ -347,7 +398,7 @@ final class CleanupFlowStateTests: XCTestCase {
             state.tasks.first { $0.category == .similar }?.description.contains("已推荐保留一张") ?? true
         )
         XCTAssertTrue(
-            state.tasks.first { $0.category == .similar }?.description.contains("请继续确认保留项") ?? false
+            state.tasks.first { $0.category == .similar }?.description.contains("请逐张确认") ?? false
         )
         XCTAssertEqual(state.deletionSummary?.deletedAssetIDs, [keepCandidate.id])
     }
@@ -383,7 +434,7 @@ final class CleanupFlowStateTests: XCTestCase {
         XCTAssertFalse(state.selectedCandidateIDs.contains("screen-1"))
     }
 
-    func testSelectingReviewGroupByIDTargetsMatchingGroupWhenCategoriesRepeat() {
+    func testSelectingSimilarReviewGroupByIDClearsDefaultSelectionWhenRecommendationIsDisabled() {
         let firstGroup = reviewGroup(
             id: "similar-first",
             category: .similar,
@@ -406,7 +457,7 @@ final class CleanupFlowStateTests: XCTestCase {
 
         XCTAssertTrue(state.selectReviewGroup(id: secondGroup.id))
         XCTAssertEqual(state.currentReviewGroup.id, secondGroup.id)
-        XCTAssertEqual(state.selectedCandidateIDs, ["similar-second-candidate"])
+        XCTAssertTrue(state.selectedCandidateIDs.isEmpty)
     }
 
     func testSelectingMissingReviewGroupIDPreservesCurrentState() {
@@ -432,6 +483,9 @@ final class CleanupFlowStateTests: XCTestCase {
 
         XCTAssertTrue(state.selectReviewGroup(id: secondGroup.id))
         XCTAssertEqual(state.currentReviewGroup.id, "similar-2")
+        XCTAssertTrue(state.selectedCandidateIDs.isEmpty)
+        let selectedCandidate = state.currentReviewGroup.candidates[0]
+        state.toggleReviewCandidate(selectedCandidate)
         XCTAssertEqual(state.selectedCandidateIDs, ["similar-2-photo"])
 
         state.applyDirectDeletionResult(.success(deletedAssetIDs: ["similar-2-photo"]))
@@ -452,7 +506,7 @@ final class CleanupFlowStateTests: XCTestCase {
         XCTAssertEqual(Set(state.tasks.map(\.id)), reviewGroupIDs)
     }
 
-    func testTogglingAllReviewCandidatesCompletesSelectionAndExcludesRecommendedKeepItems() {
+    func testTogglingAllReviewCandidatesIncludesInternalRecommendationWhenCapabilityIsDisabled() {
         var state = CleanupFlowState.sample()
 
         XCTAssertFalse(state.areAllCandidatesInCurrentGroupSelected)
@@ -460,10 +514,10 @@ final class CleanupFlowStateTests: XCTestCase {
 
         XCTAssertEqual(
             state.selectedCandidateIDs,
-            Set(state.currentReviewGroup.candidates.filter { !$0.recommendedKeep }.map(\.id))
+            Set(state.currentReviewGroup.candidates.filter { !$0.confirmedKeep }.map(\.id))
         )
         XCTAssertTrue(state.areAllCandidatesInCurrentGroupSelected)
-        XCTAssertFalse(state.selectedCandidateIDs.contains("keep-01"))
+        XCTAssertTrue(state.selectedCandidateIDs.contains("keep-01"))
     }
 
     func testTogglingFullySelectedReviewGroupClearsAllCurrentCandidates() {

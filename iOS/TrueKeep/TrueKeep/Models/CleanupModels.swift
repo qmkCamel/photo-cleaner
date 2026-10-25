@@ -113,6 +113,10 @@ struct ThumbnailStyle: Hashable {
     var bottomColor: Color
 }
 
+enum TrueKeepFeatureFlags {
+    static let recommendedKeepEnabled = false
+}
+
 struct CleanupCandidate: Identifiable, Hashable {
     var id: String
     var category: CleanupCategory
@@ -125,6 +129,10 @@ struct CleanupCandidate: Identifiable, Hashable {
     var thumbnail: ThumbnailStyle
     var thumbnailAssetID: String? = nil
     var isExactDuplicate: Bool = false
+
+    var isRecommendedKeepActive: Bool {
+        TrueKeepFeatureFlags.recommendedKeepEnabled && recommendedKeep
+    }
 }
 
 struct CleanupGroup: Identifiable, Hashable {
@@ -139,7 +147,7 @@ struct CleanupGroup: Identifiable, Hashable {
 
     var estimatedBytes: Int64 {
         candidates
-            .filter { !$0.recommendedKeep && !$0.confirmedKeep }
+            .filter { !$0.isRecommendedKeepActive && !$0.confirmedKeep }
             .map(\.estimatedBytes)
             .reduce(0, +)
     }
@@ -162,7 +170,7 @@ enum CleanupTaskBuilder {
 
     static func task(from group: CleanupGroup) -> CleanupTask? {
         let reviewCandidates = group.candidates.filter { !$0.confirmedKeep }
-        guard reviewCandidates.contains(where: { !$0.recommendedKeep }) else { return nil }
+        guard reviewCandidates.contains(where: { !$0.isRecommendedKeepActive }) else { return nil }
         let confirmedKeepCount = group.candidates.count - reviewCandidates.count
 
         return CleanupTask(
@@ -172,7 +180,7 @@ enum CleanupTaskBuilder {
                 for: group.category,
                 count: reviewCandidates.count,
                 isExactDuplicate: reviewCandidates.allSatisfy(\.isExactDuplicate),
-                hasRecommendedKeep: reviewCandidates.contains(where: \.recommendedKeep),
+                hasRecommendedKeep: reviewCandidates.contains(where: \.isRecommendedKeepActive),
                 confirmedKeepCount: confirmedKeepCount
             ),
             candidateCount: reviewCandidates.count,
@@ -200,7 +208,7 @@ enum CleanupTaskBuilder {
             }
             let recommendation = hasRecommendedKeep
                 ? "已推荐保留一张"
-                : "请继续确认保留项"
+                : "请逐张确认"
             if isExactDuplicate {
                 return "\(count) 张本机确认内容完全相同的照片，\(recommendation)"
             }
@@ -326,7 +334,11 @@ struct CleanupFlowState: Hashable {
 
     var currentReviewBulkSelectableCandidateIDs: Set<String> {
         guard reviewGroups.indices.contains(currentReviewGroupIndex) else { return [] }
-        return Set(currentReviewGroup.candidates.filter { !$0.recommendedKeep && !$0.confirmedKeep }.map(\.id))
+        return Set(
+            currentReviewGroup.candidates
+                .filter { !$0.isRecommendedKeepActive && !$0.confirmedKeep }
+                .map(\.id)
+        )
     }
 
     var canToggleAllCandidatesInCurrentGroup: Bool {
@@ -588,6 +600,11 @@ struct CleanupFlowState: Hashable {
 
     private mutating func selectDefaultCandidatesInCurrentGroup() {
         guard reviewGroups.indices.contains(currentReviewGroupIndex) else {
+            selectedCandidateIDs = []
+            return
+        }
+        if currentReviewGroup.category == .similar,
+           !TrueKeepFeatureFlags.recommendedKeepEnabled {
             selectedCandidateIDs = []
             return
         }

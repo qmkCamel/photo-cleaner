@@ -150,10 +150,10 @@ final class PhotoScanResultBuilderTests: XCTestCase {
         XCTAssertEqual(task.candidateCount, 1)
         XCTAssertEqual(task.previewCandidates.map(\.id), ["new-candidate"])
         XCTAssertEqual(task.estimatedBytes, 2_600_000)
-        XCTAssertEqual(state.selectedCandidateIDs, ["new-candidate"])
+        XCTAssertTrue(state.selectedCandidateIDs.isEmpty)
     }
 
-    func testSimilarGroupWithNoOrdinaryUnprotectedCandidateCreatesNoTask() {
+    func testInternalRecommendationStillCreatesReviewTaskWhenCapabilityIsDisabled() throws {
         let state = PhotoScanResultBuilder.state(
             from: [
                 PhotoAssetSnapshot(
@@ -180,7 +180,10 @@ final class PhotoScanResultBuilderTests: XCTestCase {
             confirmedKeepAssetIDs: ["protected"]
         )
 
-        XCTAssertTrue(state.tasks.isEmpty)
+        let task = try XCTUnwrap(state.tasks.first)
+        XCTAssertEqual(task.candidateCount, 1)
+        XCTAssertFalse(task.description.contains("推荐保留"))
+        XCTAssertTrue(state.selectedCandidateIDs.isEmpty)
         XCTAssertEqual(state.reviewGroups.first?.candidates.count, 2)
     }
 
@@ -283,7 +286,7 @@ final class PhotoScanResultBuilderTests: XCTestCase {
         XCTAssertEqual(state.reviewGroups.map(\.category), [.similar, .accidental, .blurry])
     }
 
-    func testSimilarVisualGroupKeepsBestCandidateOutOfDefaultDeletionSelection() {
+    func testSimilarVisualGroupKeepsInternalRankingButStartsWithNoDeletionSelection() {
         let state = PhotoScanResultBuilder.state(
             from: [
                 PhotoAssetSnapshot(
@@ -314,7 +317,7 @@ final class PhotoScanResultBuilderTests: XCTestCase {
         XCTAssertEqual(similarCandidates.map(\.id), ["keeper", "candidate"])
         XCTAssertTrue(similarCandidates[0].recommendedKeep)
         XCTAssertFalse(similarCandidates[0].defaultSelectedForDeletion)
-        XCTAssertEqual(state.selectedCandidateIDs, ["candidate"])
+        XCTAssertTrue(state.selectedCandidateIDs.isEmpty)
     }
 
     func testVisualClassifierGroupsNearHashesAndKeepsSharpestInput() {

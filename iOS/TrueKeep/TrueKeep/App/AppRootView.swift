@@ -160,7 +160,7 @@ struct AppLaunchConfiguration: Hashable {
         var state = CleanupFlowState.sample()
         let deletedCandidates = state.reviewGroups
             .flatMap(\.candidates)
-            .filter { !$0.recommendedKeep }
+            .filter { !$0.isRecommendedKeepActive && !$0.confirmedKeep }
         state.reviewBinItems = deletedCandidates.map {
             ReviewBinItem(
                 candidate: $0,

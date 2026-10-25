@@ -1743,9 +1743,7 @@ enum PhotoScanResultBuilder {
                 subtitle: "第 \(index + 1) 组 / \(groups.count) 组",
                 groupIndex: index + 1,
                 totalGroups: groups.count,
-                explanation: isExactDuplicate
-                    ? "这些照片的本地底层资源内容完全一致。留真会推荐保留一张，其他项目仍需你确认后才能加入复核箱。"
-                    : "这些照片来自短时间内的相似画面。留真会综合清晰度和可用的人脸质量推荐保留一张，其余项目需要你确认后才能加入复核箱。",
+                explanation: similarGroupExplanation(isExactDuplicate: isExactDuplicate),
                 candidates: candidates
             )
         }
@@ -1784,7 +1782,12 @@ enum PhotoScanResultBuilder {
         recommendedKeep: Bool,
         wasRefined: Bool
     ) -> Bool {
-        guard !recommendedKeep, wasRefined else { return false }
+        guard wasRefined else { return false }
+        if category == .similar,
+           !TrueKeepFeatureFlags.recommendedKeepEnabled {
+            return false
+        }
+        guard !recommendedKeep else { return false }
 
         switch category {
         case .similar, .screenshots, .largeVideos:
@@ -1792,6 +1795,17 @@ enum PhotoScanResultBuilder {
         case .accidental, .blurry:
             return false
         }
+    }
+
+    private static func similarGroupExplanation(isExactDuplicate: Bool) -> String {
+        if !TrueKeepFeatureFlags.recommendedKeepEnabled {
+            return isExactDuplicate
+                ? "这些照片的本地底层资源内容完全一致。请逐张确认需要保留和清理的照片。"
+                : "这些照片来自短时间内的相似画面。请逐张确认需要保留和清理的照片。"
+        }
+        return isExactDuplicate
+            ? "这些照片的本地底层资源内容完全一致。留真会推荐保留一张，其他项目仍需你确认后才能加入复核箱。"
+            : "这些照片来自短时间内的相似画面。留真会综合清晰度和可用的人脸质量推荐保留一张，其余项目需要你确认后才能加入复核箱。"
     }
 
     private static func estimatedBytes(

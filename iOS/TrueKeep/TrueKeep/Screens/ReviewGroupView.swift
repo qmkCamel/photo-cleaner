@@ -57,7 +57,7 @@ struct ReviewGroupView: View {
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
                     ForEach(group.candidates) { candidate in
                         candidateCell(candidate)
-                        .gridCellColumns(candidate.recommendedKeep ? 3 : 1)
+                        .gridCellColumns(candidate.isRecommendedKeepActive ? 3 : 1)
                     }
                 }
 
@@ -133,7 +133,7 @@ struct ReviewGroupView: View {
             .accessibilityHint(
                 state.areAllCandidatesInCurrentGroupSelected
                     ? "取消当前分组所有可清理项的选择"
-                    : "选择当前分组所有可清理项，推荐保留项不会被选择"
+                    : "选择当前分组所有未确认保留项"
             )
 
             if completedGroup == nil && (state.canMoveToPreviousReviewGroup || state.canMoveToNextReviewGroup) {
@@ -181,13 +181,13 @@ struct ReviewGroupView: View {
                     style: candidate.thumbnail,
                     assetID: candidate.thumbnailAssetID,
                     isSelected: state.selectedCandidateIDs.contains(candidate.id),
-                    isRecommendedKeep: candidate.recommendedKeep,
+                    isRecommendedKeep: candidate.isRecommendedKeepActive,
                     isConfirmedKeep: candidate.confirmedKeep,
                     showsSelectionIndicator: !candidate.confirmedKeep,
                     videoLabel: candidateVideoLabel(candidate)
                 )
                 .frame(maxWidth: .infinity)
-                .frame(height: candidate.recommendedKeep ? 178 : 104)
+                .frame(height: candidate.isRecommendedKeepActive ? 178 : 104)
                 .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             }
             .buttonStyle(.plain)
@@ -368,13 +368,13 @@ struct ReviewGroupView: View {
 
     private func candidateAccessibilityLabel(_ candidate: CleanupCandidate) -> String {
         if candidate.confirmedKeep {
-            let recommendation = candidate.recommendedKeep ? "，系统推荐保留" : ""
+            let recommendation = candidate.isRecommendedKeepActive ? "，系统推荐保留" : ""
             return "已确认保留\(recommendation)，\(candidate.category.title)，\(candidate.reason)"
         }
         let selectionState = state.selectedCandidateIDs.contains(candidate.id)
             ? "已选择删除"
             : "未选择删除"
-        if candidate.recommendedKeep {
+        if candidate.isRecommendedKeepActive {
             return "推荐保留，\(selectionState)，\(candidate.category.title)，\(candidate.reason)"
         }
         return "\(selectionState)，\(candidate.category.title)，\(candidate.reason)"
@@ -384,7 +384,7 @@ struct ReviewGroupView: View {
         if candidate.confirmedKeep {
             return "不会加入删除选择；使用更多照片操作可以取消确认保留"
         }
-        if candidate.recommendedKeep {
+        if candidate.isRecommendedKeepActive {
             return "系统建议保留；仍可切换删除选择，或使用更多照片操作确认保留"
         }
         return "切换删除选择；或使用更多照片操作确认保留"

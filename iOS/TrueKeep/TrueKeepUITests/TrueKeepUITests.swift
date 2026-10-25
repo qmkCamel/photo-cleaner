@@ -420,7 +420,7 @@ final class TrueKeepUITests: XCTestCase {
 
         app.buttons[ID.reviewAll].tap()
         XCTAssertTrue(app.buttons[ID.addToReviewBin].waitForExistence(timeout: defaultTimeout))
-        XCTAssertTrue(app.buttons[ID.addToReviewBin].label.contains("6"))
+        XCTAssertTrue(app.buttons[ID.addToReviewBin].label.contains("7"))
 
         app.buttons[ID.addToReviewBin].tap()
         XCTAssertTrue(app.buttons[ID.deleteReviewBinSelection].waitForExistence(timeout: defaultTimeout))
@@ -614,41 +614,46 @@ final class TrueKeepUITests: XCTestCase {
         attachScreenshot(named: "review-group-bulk-selection-restored")
     }
 
-    func testRecommendedKeepCanBeSelectedAndClearedWithoutLosingRecommendation() {
+    func testRecommendedKeepCapabilityIsHiddenAndSimilarGroupStartsUnselected() {
         openHome()
-        app.buttons[ID.taskSimilar].tap()
+        let similarTask = app.buttons[ID.taskSimilar]
+        XCTAssertFalse(similarTask.label.contains("推荐保留"))
+        similarTask.tap()
         XCTAssertTrue(app.staticTexts["相似照片"].waitForExistence(timeout: defaultTimeout))
 
-        let keepCandidate = app.buttons[ID.reviewCandidateRecommendedKeep]
+        let formerRecommendationCandidate = app.buttons[ID.reviewCandidateFormerRecommendation]
         let addButton = app.buttons[ID.addToReviewBin]
         let directDeleteButton = app.buttons[ID.directDeleteSelection]
-        XCTAssertTrue(keepCandidate.waitForExistence(timeout: defaultTimeout))
-        XCTAssertTrue(keepCandidate.isHittable)
-        XCTAssertTrue(keepCandidate.label.contains("推荐保留"))
-        XCTAssertTrue(keepCandidate.label.contains("未选择删除"))
-        XCTAssertTrue(addButton.label.contains("3"))
+        XCTAssertTrue(formerRecommendationCandidate.waitForExistence(timeout: defaultTimeout))
+        XCTAssertTrue(formerRecommendationCandidate.isHittable)
+        XCTAssertFalse(formerRecommendationCandidate.label.contains("推荐保留"))
+        XCTAssertTrue(formerRecommendationCandidate.label.contains("未选择删除"))
+        XCTAssertFalse(addButton.isEnabled)
+        XCTAssertFalse(directDeleteButton.isEnabled)
+        XCTAssertEqual(addButton.label, "选择项目后加入复核箱")
+        XCTAssertEqual(directDeleteButton.label, "选择后直接删除")
+        XCTAssertEqual(app.buttons[ID.reviewAll].label, "全选本组可清理项")
+        attachScreenshot(named: "recommended-keep-disabled-similar-review")
 
-        keepCandidate.tap()
+        tapControlEdge(ID.reviewCandidateFormerRecommendation, x: 0.78, y: 0.25)
 
-        XCTAssertTrue(waitForButtonLabel(ID.reviewCandidateRecommendedKeep, contains: "已选择删除"))
-        XCTAssertTrue(keepCandidate.label.contains("推荐保留"))
-        XCTAssertTrue(addButton.label.contains("4"))
-        XCTAssertTrue(directDeleteButton.label.contains("4"))
-        attachScreenshot(named: "recommended-keep-manually-selected")
+        XCTAssertTrue(waitForButtonLabel(ID.reviewCandidateFormerRecommendation, contains: "已选择删除"))
+        XCTAssertFalse(formerRecommendationCandidate.label.contains("推荐保留"))
+        XCTAssertTrue(addButton.label.contains("1"))
+        XCTAssertTrue(directDeleteButton.label.contains("1"))
+        attachScreenshot(named: "recommended-keep-disabled-manual-selection")
 
-        keepCandidate.tap()
+        tapControlEdge(ID.reviewCandidateFormerRecommendation, x: 0.78, y: 0.25)
 
-        XCTAssertTrue(waitForButtonLabel(ID.reviewCandidateRecommendedKeep, contains: "未选择删除"))
-        XCTAssertTrue(keepCandidate.label.contains("推荐保留"))
-        XCTAssertTrue(addButton.label.contains("3"))
-        attachScreenshot(named: "recommended-keep-selection-cleared")
+        XCTAssertTrue(waitForButtonLabel(ID.reviewCandidateFormerRecommendation, contains: "未选择删除"))
+        XCTAssertTrue(waitForButtonEnabled(ID.addToReviewBin, false))
 
-        keepCandidate.tap()
         app.buttons[ID.reviewAll].tap()
         XCTAssertTrue(waitForButtonLabel(ID.reviewAll, contains: "取消全选"))
+        XCTAssertTrue(addButton.label.contains("7"))
         app.buttons[ID.reviewAll].tap()
 
-        XCTAssertTrue(waitForButtonLabel(ID.reviewCandidateRecommendedKeep, contains: "未选择删除"))
+        XCTAssertTrue(waitForButtonLabel(ID.reviewCandidateFormerRecommendation, contains: "未选择删除"))
         XCTAssertTrue(waitForButtonEnabled(ID.addToReviewBin, false))
     }
 
@@ -662,7 +667,8 @@ final class TrueKeepUITests: XCTestCase {
         XCTAssertTrue(candidate.waitForExistence(timeout: defaultTimeout))
         XCTAssertTrue(candidateActions.waitForExistence(timeout: defaultTimeout))
         XCTAssertTrue(candidateActions.isHittable)
-        XCTAssertTrue(app.buttons[ID.addToReviewBin].label.contains("3"))
+        XCTAssertFalse(app.buttons[ID.addToReviewBin].isEnabled)
+        XCTAssertEqual(app.buttons[ID.addToReviewBin].label, "选择项目后加入复核箱")
 
         candidateActions.tap()
         let confirmKeep = app.buttons["确认保留，不再提醒"]
@@ -673,7 +679,7 @@ final class TrueKeepUITests: XCTestCase {
         XCTAssertTrue(feedback.waitForExistence(timeout: defaultTimeout))
         XCTAssertTrue(waitForButtonLabel(ID.reviewCandidateSimilar2, contains: "已确认保留"))
         XCTAssertTrue(waitForButtonEnabled(ID.reviewCandidateSimilar2, false))
-        XCTAssertTrue(app.buttons[ID.addToReviewBin].label.contains("2"))
+        XCTAssertFalse(app.buttons[ID.addToReviewBin].isEnabled)
         attachScreenshot(named: "confirmed-keep-review-success")
 
         let undo = feedback.buttons["撤销"]
@@ -975,7 +981,7 @@ private enum ID {
     static let taskLargeVideos = "truekeep.cleanup.task.large-videos-01"
     static let reviewCandidateBlur1 = "truekeep.review.candidate.blur-01"
     static let reviewCandidateScreenshot1 = "truekeep.review.candidate.shot-01"
-    static let reviewCandidateRecommendedKeep = "truekeep.review.candidate.keep-01"
+    static let reviewCandidateFormerRecommendation = "truekeep.review.candidate.keep-01"
     static let reviewCandidateSimilar2 = "truekeep.review.candidate.similar-02"
     static let reviewCandidateActionsSimilar2 = "truekeep.review.candidate-actions.similar-02"
     static let confirmedKeepFeedback = "truekeep.review.confirmed-keep-feedback"
@@ -983,6 +989,7 @@ private enum ID {
     static let reviewBinScreenshotItem = "truekeep.review-bin.item.shot-01"
 
     static let similarReviewBinItems = [
+        "truekeep.review-bin.item.keep-01",
         "truekeep.review-bin.item.similar-02",
         "truekeep.review-bin.item.similar-03",
         "truekeep.review-bin.item.similar-04",
