@@ -1,0 +1,38 @@
+{
+  "verified_at": "2026-10-25T21:22:01.748113+08:00",
+  "source_commit": "6d60ee0cbc02f6efad1448805c6116c546b4f712",
+  "authentication": "none",
+  "results": [
+    {
+      "url": "https://qmkcamel.github.io/photo-cleaner/",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "matches_source": true,
+      "sha256": "e1e4612e9ed3898a388b2b53402ada83e78e8c76f0ec2b1daf31d1754671b3ee",
+      "approved_contact_present": true
+    },
+    {
+      "url": "https://qmkcamel.github.io/photo-cleaner/privacy.html",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "matches_source": true,
+      "sha256": "b9f811665fdc33e148f3c92e57da5d22cc48c49fe9a44b482a036247e26b30c2",
+      "approved_contact_present": true
+    },
+    {
+      "url": "https://qmkcamel.github.io/photo-cleaner/support.html",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "matches_source": true,
+      "sha256": "117705abd7d8bd8469b0d2297abbe8a212a3267a4a3e2865c75b484c6d39c4cf",
+      "approved_contact_present": true
+    },
+    {
+      "url": "https://qmkcamel.github.io/photo-cleaner/styles.css",
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "matches_source": true,
+      "sha256": "87ce6ad26444c3b40a773adf5ec49382badbd71f96f597f455d58333bbc84f46"
+    }
+  ]
+}
