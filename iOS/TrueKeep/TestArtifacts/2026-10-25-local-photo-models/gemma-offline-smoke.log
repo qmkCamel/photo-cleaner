@@ -1,0 +1,23 @@
+loading
+analyzing(completed: 0, total: 1)
+analyzing(completed: 1, total: 1)
+model=gemma4-e2b revision=238767527555cb75a05732a84dff5d6ba0dd6809 seconds=3.3217480182647705
+{"observations":["一个盾形轮廓","内部被分割成多个扇形区域","颜色为浅灰和中灰的组合"],"uncertain":false,"subject":"徽章图标"}
+        3.50 real         3.12 user         1.48 sys
+          3804725248  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              247473  page reclaims
+                 730  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 135  voluntary context switches
+               17494  involuntary context switches
+         33809649498  instructions retired
+         14586064425  cycles elapsed
+          4258860296  peak memory footprint

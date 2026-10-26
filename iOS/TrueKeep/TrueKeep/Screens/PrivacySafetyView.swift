@@ -53,6 +53,7 @@ enum PrivacySafetyTopic: String, CaseIterable, Identifiable, Hashable {
 }
 
 struct PrivacySafetyView: View {
+    @ObservedObject var localModels: LocalPhotoModelController = .init()
     var confirmedKeepAssetIDs: Set<String> = []
     var onRemoveConfirmedKeep: (String) -> Void = { _ in }
     var onResetConfirmedKeeps: () -> Void = {}
@@ -86,6 +87,13 @@ struct PrivacySafetyView: View {
                 )
 
                 VStack(spacing: 8) {
+                    NavigationLink {
+                        LocalPhotoModelsView(controller: localModels)
+                    } label: {
+                        SettingsRow(title: "本地模型实验", detail: localModels.isEnabled ? "已开启" : "关闭")
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier("truekeep.settings.local-models")
                     ForEach(PrivacySafetyTopic.allCases) { topic in
                         NavigationLink(value: topic) {
                             SettingsRow(

@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct ReviewGroupView: View {
+    @ObservedObject private var localModels: LocalPhotoModelController
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Binding var state: CleanupFlowState
     @State private var showsDeleteConfirmation = false
@@ -15,11 +16,13 @@ struct ReviewGroupView: View {
 
     init(
         state: Binding<CleanupFlowState>,
+        localModels: LocalPhotoModelController = .init(),
         photoDeletion: any PhotoLibraryDeleting = SystemPhotoLibraryDeletionService(),
         onAddedToReviewBin: @escaping () -> Void,
         onSetConfirmedKeep: @escaping (String, Bool) -> Void = { _, _ in }
     ) {
         self._state = state
+        self.localModels = localModels
         self.photoDeletion = photoDeletion
         self.onAddedToReviewBin = onAddedToReviewBin
         self.onSetConfirmedKeep = onSetConfirmedKeep
@@ -70,6 +73,10 @@ struct ReviewGroupView: View {
                 .foregroundStyle(TrueKeepTheme.muted)
 
                 SafetyNotice(title: "为什么标记这组？", message: group.explanation)
+
+                if localModels.isEnabled, group.category != .largeVideos, completedGroup == nil {
+                    LocalPhotoAnalysisSection(controller: localModels, group: group, isDeleting: isDeleting)
+                }
 
             }
             .padding(20)

@@ -1,0 +1,51 @@
+[0/1] Planning build
+Building for debugging...
+[0/9] Write sources
+[4/9] Write swift-version--58304C5D6DBC2206.txt
+[6/11] Emitting module PhotoModelContracts
+[7/11] Compiling PhotoModelContracts PhotoSemanticAnalyzing.swift
+[8/16] Emitting module LocalPhotoModels
+[9/16] Compiling LocalPhotoModels MLXPhotoSemanticAnalyzer.swift
+[10/16] Emitting module PhotoModelContractsTests
+[11/16] Compiling PhotoModelContractsTests PhotoModelContractsTests.swift
+[11/16] Write Objects.LinkFileList
+[13/18] Compiling LocalModelSmoke SmokeCommand.swift
+[14/18] Emitting module LocalModelSmoke
+[14/18] Write Objects.LinkFileList
+[15/18] Linking LocalPhotoModelsPackageTests
+[16/18] Linking local-model-smoke
+[17/18] Applying local-model-smoke
+Build complete! (7.33s)
+Test Suite 'All tests' started at 2026-10-25 21:45:58.581.
+Test Suite 'LocalPhotoModelsPackageTests.xctest' started at 2026-10-25 21:45:58.581.
+Test Suite 'PhotoModelContractsTests' started at 2026-10-25 21:45:58.581.
+Test Case '-[PhotoModelContractsTests.PhotoModelContractsTests testAllowsExplicitAbstentionAndOneJSONFence]' started.
+Test Case '-[PhotoModelContractsTests.PhotoModelContractsTests testAllowsExplicitAbstentionAndOneJSONFence]' passed (0.002 seconds).
+Test Case '-[PhotoModelContractsTests.PhotoModelContractsTests testCancelledInstallDoesNotPublishModel]' started.
+Test Case '-[PhotoModelContractsTests.PhotoModelContractsTests testCancelledInstallDoesNotPublishModel]' passed (0.028 seconds).
+Test Case '-[PhotoModelContractsTests.PhotoModelContractsTests testDecodesStructuredObservation]' started.
+Test Case '-[PhotoModelContractsTests.PhotoModelContractsTests testDecodesStructuredObservation]' passed (0.000 seconds).
+Test Case '-[PhotoModelContractsTests.PhotoModelContractsTests testIncompleteInstallationIsNotReadyAndRemovalIsScoped]' started.
+Test Case '-[PhotoModelContractsTests.PhotoModelContractsTests testIncompleteInstallationIsNotReadyAndRemovalIsScoped]' passed (0.002 seconds).
+Test Case '-[PhotoModelContractsTests.PhotoModelContractsTests testModelCatalogPinsVersionsAndWeights]' started.
+Test Case '-[PhotoModelContractsTests.PhotoModelContractsTests testModelCatalogPinsVersionsAndWeights]' passed (0.000 seconds).
+Test Case '-[PhotoModelContractsTests.PhotoModelContractsTests testNetworkFailureCleansStagingAndRetryPreservesOtherModel]' started.
+Test Case '-[PhotoModelContractsTests.PhotoModelContractsTests testNetworkFailureCleansStagingAndRetryPreservesOtherModel]' passed (0.020 seconds).
+Test Case '-[PhotoModelContractsTests.PhotoModelContractsTests testPackagePrivacyManifestCoversLocalStorageChecks]' started.
+Test Case '-[PhotoModelContractsTests.PhotoModelContractsTests testPackagePrivacyManifestCoversLocalStorageChecks]' passed (0.001 seconds).
+Test Case '-[PhotoModelContractsTests.PhotoModelContractsTests testRejectsMalformedOutputAndDeletionInstructions]' started.
+Test Case '-[PhotoModelContractsTests.PhotoModelContractsTests testRejectsMalformedOutputAndDeletionInstructions]' passed (0.000 seconds).
+Test Case '-[PhotoModelContractsTests.PhotoModelContractsTests testSmallModelCaptionIsAlwaysUncertainAndNeverRepairsJSON]' started.
+Test Case '-[PhotoModelContractsTests.PhotoModelContractsTests testSmallModelCaptionIsAlwaysUncertainAndNeverRepairsJSON]' passed (0.000 seconds).
+Test Case '-[PhotoModelContractsTests.PhotoModelContractsTests testVerifiesSizeAndSHA256]' started.
+Test Case '-[PhotoModelContractsTests.PhotoModelContractsTests testVerifiesSizeAndSHA256]' passed (0.001 seconds).
+Test Suite 'PhotoModelContractsTests' passed at 2026-10-25 21:45:58.637.
+	 Executed 10 tests, with 0 failures (0 unexpected) in 0.055 (0.056) seconds
+Test Suite 'LocalPhotoModelsPackageTests.xctest' passed at 2026-10-25 21:45:58.637.
+	 Executed 10 tests, with 0 failures (0 unexpected) in 0.055 (0.056) seconds
+Test Suite 'All tests' passed at 2026-10-25 21:45:58.637.
+	 Executed 10 tests, with 0 failures (0 unexpected) in 0.055 (0.057) seconds
+◇ Test run started.
+↳ Testing Library Version: 1902
+↳ Target Platform: arm64e-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

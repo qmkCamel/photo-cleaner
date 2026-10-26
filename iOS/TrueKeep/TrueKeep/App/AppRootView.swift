@@ -236,6 +236,7 @@ struct AppRootView: View {
     @State private var activeScanID = UUID()
     @State private var isScanActive = false
     @State private var confirmedKeepAssetIDs: Set<String>
+    @StateObject private var localModels = LocalPhotoModelController()
 
     private let photoAuthorization: any PhotoLibraryAuthorizing
     private let photoScanner: any PhotoLibraryScanning
@@ -477,6 +478,7 @@ struct AppRootView: View {
                     case .reviewGroup:
                         ReviewGroupView(
                             state: $cleanupState,
+                            localModels: localModels,
                             photoDeletion: photoDeletion,
                             onAddedToReviewBin: {
                                 selectedTab = .reviewBin
@@ -504,6 +506,7 @@ struct AppRootView: View {
 
             NavigationStack {
                 PrivacySafetyView(
+                    localModels: localModels,
                     confirmedKeepAssetIDs: confirmedKeepAssetIDs,
                     onRemoveConfirmedKeep: { assetID in
                         setConfirmedKeep(assetID, isConfirmed: false)

@@ -1,0 +1,23 @@
+loading
+analyzing(completed: 0, total: 1)
+analyzing(completed: 1, total: 1)
+model=qwen3.5-0.8b revision=da28692b5f139cb0ec58a356b437486b7dac7462 seconds=1.7046610116958618
+{"uncertain":true,"subject":"这张图片展示了一个盾牌形状的设计，盾牌上嵌有相机光圈图案，背景为浅绿色。","observations":[]}
+        3.16 real         1.45 user         0.38 sys
+           838729728  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               57810  page reclaims
+                 397  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 584  voluntary context switches
+                5310  involuntary context switches
+         18935056832  instructions retired
+          6022732084  cycles elapsed
+          1440089600  peak memory footprint

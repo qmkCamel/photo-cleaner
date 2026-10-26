@@ -9,13 +9,17 @@ settings:
     CURRENT_PROJECT_VERSION: "1"
     SWIFT_VERSION: "6.0"
     DEVELOPMENT_TEAM: D8BE8WBTV5
-packages: {}
+packages:
+  LocalPhotoModels:
+    path: Packages/LocalPhotoModels
 targets:
   TrueKeep:
     type: application
     platform: iOS
     sources:
       - path: TrueKeep
+    dependencies:
+      - package: LocalPhotoModels
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: app.truekeep.ios
