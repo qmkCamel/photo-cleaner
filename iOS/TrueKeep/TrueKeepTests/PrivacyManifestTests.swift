@@ -8,7 +8,16 @@ final class PrivacyManifestTests: XCTestCase {
         XCTAssertEqual(manifest["NSPrivacyTracking"] as? Bool, false)
         XCTAssertEqual(manifest["NSPrivacyTrackingDomains"] as? [String], [])
         XCTAssertEqual(manifest["NSPrivacyCollectedDataTypes"] as? [[String: AnyHashable]], [])
-        XCTAssertEqual(manifest["NSPrivacyAccessedAPITypes"] as? [[String: AnyHashable]], [])
+    }
+
+    func testPrivacyManifestDeclaresAppLocalUserDefaultsUsage() throws {
+        let manifest = try loadPrivacyManifest()
+        let accessedAPIs = try XCTUnwrap(manifest["NSPrivacyAccessedAPITypes"] as? [[String: Any]])
+
+        XCTAssertEqual(accessedAPIs.count, 1)
+        let userDefaults = try XCTUnwrap(accessedAPIs.first)
+        XCTAssertEqual(userDefaults["NSPrivacyAccessedAPIType"] as? String, "NSPrivacyAccessedAPICategoryUserDefaults")
+        XCTAssertEqual(userDefaults["NSPrivacyAccessedAPITypeReasons"] as? [String], ["CA92.1"])
     }
 
     private func loadPrivacyManifest() throws -> [String: Any] {

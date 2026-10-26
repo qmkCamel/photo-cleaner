@@ -178,10 +178,20 @@ class Preflight:
         collected = privacy.get("NSPrivacyCollectedDataTypes")
         accessed = privacy.get("NSPrivacyAccessedAPITypes")
         tracking_domains = privacy.get("NSPrivacyTrackingDomains")
-        if tracking is False and collected == [] and accessed == [] and tracking_domains == []:
-            self.pass_("privacy-manifest", "declares no tracking, collected data, tracking domains, or required-reason APIs")
+        # Onboarding state and confirmed-keep asset IDs are stored in app-local UserDefaults.
+        expected_accessed = [{
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+            "NSPrivacyAccessedAPITypeReasons": ["CA92.1"],
+        }]
+        errors = []
+        if tracking is not False or collected != [] or tracking_domains != []:
+            errors.append("privacy manifest no-collection/no-tracking assertion changed")
+        if accessed != expected_accessed:
+            errors.append("required-reason APIs must declare only app-local UserDefaults with reason CA92.1")
+        if errors:
+            self.fail("privacy-manifest", "; ".join(errors))
         else:
-            self.fail("privacy-manifest", "privacy manifest no-collection/no-tracking assertion changed")
+            self.pass_("privacy-manifest", "declares no collection or tracking; app-local UserDefaults uses reason CA92.1")
 
     def check_metadata_lengths(self) -> None:
         checks = [

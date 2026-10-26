@@ -50,7 +50,7 @@ This is the working checklist for reaching a state that can be submitted to App 
 ## Privacy and App Store
 
 - [x] App Store privacy labels are drafted and checked against actual SDK/data collection.
-- [x] Privacy manifest is included and declares no tracking, no collection, and no required-reason API usage for the current SDK set.
+- [x] Privacy manifest is included and declares no tracking, no collection, and app-local UserDefaults usage (`CA92.1`) for onboarding state and confirmed-keep asset IDs.
 - [x] No analytics, ads, or crash SDK is added without updating Privacy & Safety copy.
 - [x] App Review notes explain local processing and deletion confirmation.
 - [x] Native-app marketing screenshot candidates are produced from the test flow.

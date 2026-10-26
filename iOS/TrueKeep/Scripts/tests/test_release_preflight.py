@@ -1,4 +1,5 @@
 import importlib.util
+import plistlib
 import sys
 import tempfile
 import unittest
@@ -19,6 +20,66 @@ def load_module():
 
 
 class ReleasePreflightScriptTests(unittest.TestCase):
+    def check_privacy_manifest(self, manifest):
+        module = load_module()
+        with tempfile.TemporaryDirectory() as tmp:
+            ios_root = Path(tmp)
+            privacy_path = ios_root / "TrueKeep" / "Resources" / "PrivacyInfo.xcprivacy"
+            privacy_path.parent.mkdir(parents=True)
+            privacy_path.write_bytes(plistlib.dumps(manifest))
+            with patch.object(module, "IOS_ROOT", ios_root):
+                preflight = module.Preflight(run_xcode=False)
+                preflight.check_privacy_manifest()
+        self.assertEqual(len(preflight.results), 1)
+        return preflight.results[0]
+
+    def test_privacy_manifest_accepts_app_local_user_defaults(self):
+        result = self.check_privacy_manifest(sample_privacy_manifest())
+        self.assertEqual(result.status, "PASS")
+        self.assertIn("CA92.1", result.detail)
+
+    def test_privacy_manifest_rejects_missing_or_unapproved_api_reasons(self):
+        cases = {
+            "missing declaration": None,
+            "empty declaration": [],
+            "missing reasons": [{"NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults"}],
+            "empty reasons": [{
+                "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+                "NSPrivacyAccessedAPITypeReasons": [],
+            }],
+            "app group reason": [{
+                "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+                "NSPrivacyAccessedAPITypeReasons": ["1C8F.1"],
+            }],
+            "unreviewed category": sample_privacy_manifest()["NSPrivacyAccessedAPITypes"] + [{
+                "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryDiskSpace",
+                "NSPrivacyAccessedAPITypeReasons": ["E174.1"],
+            }],
+        }
+        for name, accessed in cases.items():
+            with self.subTest(name=name):
+                manifest = sample_privacy_manifest()
+                if accessed is None:
+                    del manifest["NSPrivacyAccessedAPITypes"]
+                else:
+                    manifest["NSPrivacyAccessedAPITypes"] = accessed
+                result = self.check_privacy_manifest(manifest)
+                self.assertEqual(result.status, "FAIL")
+                self.assertIn("CA92.1", result.detail)
+
+    def test_privacy_manifest_preserves_no_collection_or_tracking_guardrails(self):
+        for key, value in {
+            "NSPrivacyTracking": True,
+            "NSPrivacyTrackingDomains": ["tracking.example.com"],
+            "NSPrivacyCollectedDataTypes": [{"NSPrivacyCollectedDataType": "NSPrivacyCollectedDataTypePhotosorVideos"}],
+        }.items():
+            with self.subTest(key=key):
+                manifest = sample_privacy_manifest()
+                manifest[key] = value
+                result = self.check_privacy_manifest(manifest)
+                self.assertEqual(result.status, "FAIL")
+                self.assertIn("no-collection/no-tracking", result.detail)
+
     def test_signing_state_accepts_confirmed_team_and_current_xcode_profile_directory(self):
         module = load_module()
 
@@ -248,6 +309,18 @@ class ReleasePreflightScriptTests(unittest.TestCase):
         self.assertIn("APP_STORE_LISTING.md", preflight.results[0].detail)
         self.assertIn("support.md", preflight.results[0].detail)
         self.assertIn("site-template/support.html", preflight.results[0].detail)
+
+def sample_privacy_manifest():
+    return {
+        "NSPrivacyTracking": False,
+        "NSPrivacyTrackingDomains": [],
+        "NSPrivacyCollectedDataTypes": [],
+        "NSPrivacyAccessedAPITypes": [{
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+            "NSPrivacyAccessedAPITypeReasons": ["CA92.1"],
+        }],
+    }
+
 
 def sample_listing():
     return (
