@@ -1,0 +1,54 @@
+name: P0 删除成功后的首页同步
+platform: ios
+appId: app.truekeep.ios
+---
+- launchApp
+- waitUntil:
+    target:
+      accessibilityId:
+        value: truekeep.cleanup.deletion-summary
+        match: contains
+    timeout: 10
+- assertVisible:
+    accessibilityId:
+      value: truekeep.cleanup.deletion-summary
+      match: contains
+- assertVisible:
+    text:
+      value: 本轮没有待复核项目
+      match: contains
+- assertVisible:
+    text:
+      value: 访问范围有限
+      match: contains
+- waitUntilGone:
+    target:
+      accessibilityId:
+        value: truekeep.cleanup.task.screenshots
+        match: contains
+    timeout: 3
+- waitUntilGone:
+    target:
+      text:
+        value: 预计可释放空间
+        match: contains
+    timeout: 3
+- assertVisible:
+    accessibilityId:
+      value: truekeep.cleanup.scan
+      match: contains
+- tap:
+    accessibilityId:
+      value: truekeep.cleanup.scan
+      match: contains
+- waitUntilGone:
+    target:
+      accessibilityId:
+        value: truekeep.cleanup.deletion-summary
+        match: contains
+    timeout: 10
+- assertVisible:
+    text:
+      value: 本地扫描
+      match: contains
+- done

@@ -48,6 +48,65 @@ final class TrueKeepUITests: XCTestCase {
         XCTAssertFalse(app.staticTexts["授权前先说清楚"].exists)
     }
 
+    func testMediaPreviewFailureAndConfirmedKeepWithScreenshots() {
+        launchWithArguments(["-TrueKeepDisablePhotoDeletion", "-TrueKeepUseSampleCleanupData", "-TrueKeepUITestMultipleSimilarGroups"])
+        app.buttons["truekeep.cleanup.task.similar-family-12"].tap()
+        let preview = app.buttons["review.preview.keep-01"]
+        XCTAssertTrue(preview.waitForExistence(timeout: defaultTimeout))
+        preview.tap()
+        XCTAssertTrue(app.staticTexts["media.unavailable"].waitForExistence(timeout: defaultTimeout))
+        attachScreenshot(named: "media-preview-local-unavailable")
+        app.buttons["下一张"].tap()
+        app.buttons["media.keep"].tap()
+        XCTAssertTrue(app.staticTexts["已确认保留"].firstMatch.waitForExistence(timeout: defaultTimeout))
+        XCTAssertFalse(app.staticTexts["推荐保留"].exists)
+        attachScreenshot(named: "review-preview-confirmed-keep")
+    }
+
+    func testReviewSessionSurvivesRelaunchWithScreenshot() {
+        let arguments = ["-TrueKeepDisablePhotoDeletion", "-TrueKeepUseSampleCleanupData", "-TrueKeepUITestMultipleSimilarGroups", "-TrueKeepUITestPersistentSession"]
+        launchWithArguments(arguments + ["-TrueKeepResetReviewSession"])
+        app.buttons[ID.taskSimilar].tap()
+        app.buttons["truekeep.review.candidate.similar-02"].tap()
+        app.buttons[ID.addToReviewBin].tap()
+        XCTAssertTrue(app.buttons[ID.deleteReviewBinSelection].waitForExistence(timeout: defaultTimeout))
+        attachScreenshot(named: "review-session-before-relaunch")
+        launchWithArguments(arguments, resetConfirmedKeeps: false)
+        app.tabBars.buttons["复核箱"].tap()
+        XCTAssertTrue(app.buttons[ID.deleteReviewBinSelection].waitForExistence(timeout: defaultTimeout))
+        XCTAssertTrue(app.buttons[ID.deleteReviewBinSelection].label.contains("1"))
+        attachScreenshot(named: "review-session-restored-after-relaunch")
+    }
+
+    func testCoverageSummaryIncludesUnreadablePhotosWithScreenshot() {
+        launchWithArguments(["-TrueKeepDisablePhotoDeletion", "-TrueKeepUseSampleCleanupData", "-TrueKeepUITestAuthorizedHome", "-TrueKeepUITestCoverage"])
+        let coverage = app.descendants(matching: .any)["scan.coverage"]
+        XCTAssertTrue(coverage.waitForExistence(timeout: defaultTimeout))
+        XCTAssertTrue(app.staticTexts.containing(NSPredicate(format: "label CONTAINS %@", "699/701")).firstMatch.exists)
+        attachScreenshot(named: "scan-coverage-with-local-unavailable")
+    }
+
+    func testKeepEntireGroupRemovesTaskAndCanClearDecision() {
+        launchWithArguments(["-TrueKeepDisablePhotoDeletion", "-TrueKeepUseSampleCleanupData", "-TrueKeepUITestMultipleSimilarGroups"])
+        let task = app.buttons["truekeep.cleanup.task.similar-family-13"]
+        XCTAssertTrue(task.waitForExistence(timeout: defaultTimeout))
+        task.tap()
+        let keep = app.buttons["review.keep-group"]
+        scrollToMakeHittable(keep)
+        keep.tap()
+        XCTAssertFalse(app.buttons[ID.addToReviewBin].isEnabled)
+        attachScreenshot(named: "review-entire-group-kept")
+        app.tabBars.buttons["设置"].tap()
+        app.buttons[ID.settingsConfirmedKeeps].tap()
+        let clear = app.buttons["truekeep.settings.confirmed-keeps.reset"]
+        scrollToMakeHittable(clear)
+        XCTAssertTrue(clear.waitForExistence(timeout: defaultTimeout))
+        clear.tap()
+        app.alerts.buttons["全部取消保留"].tap()
+        XCTAssertTrue(app.staticTexts["还没有已确认保留的照片"].waitForExistence(timeout: defaultTimeout))
+        attachScreenshot(named: "review-confirmed-keeps-cleared")
+    }
+
     func testAuthorizedColdLaunchCanStartAndRepeatScanFromHome() {
         launchWithArguments([
             "-TrueKeepDisablePhotoDeletion",

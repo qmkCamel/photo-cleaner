@@ -1,0 +1,47 @@
+[
+  {
+    "id": "trust-intro-skip",
+    "exitCode": 0,
+    "elapsedSeconds": 22.076
+  },
+  {
+    "id": "settings-trust-details",
+    "exitCode": 0,
+    "elapsedSeconds": 24.873
+  },
+  {
+    "id": "review-bin-deletion-safety",
+    "exitCode": 0,
+    "elapsedSeconds": 49.984
+  },
+  {
+    "id": "permission-denied-retry",
+    "exitCode": 0,
+    "elapsedSeconds": 26.135
+  },
+  {
+    "id": "scan-cancel-recovery",
+    "exitCode": 1,
+    "elapsedSeconds": 25.075
+  },
+  {
+    "id": "candidate-refinement-continuity",
+    "exitCode": 0,
+    "elapsedSeconds": 26.554
+  },
+  {
+    "id": "limited-results-rescan",
+    "exitCode": 0,
+    "elapsedSeconds": 25.019
+  },
+  {
+    "id": "scan-date-range-selection",
+    "exitCode": 0,
+    "elapsedSeconds": 28.073
+  },
+  {
+    "id": "post-deletion-home-sync",
+    "exitCode": 0,
+    "elapsedSeconds": 26.299
+  }
+]

@@ -117,6 +117,8 @@ struct ScanProgressView: View {
                 "正在快速分析照片"
             case .candidateRefinement:
                 "正在复核候选"
+            case .duplicateVerification:
+                "正在确认重复内容"
             case .finalizing:
                 "正在整理扫描结果"
             }
@@ -134,7 +136,9 @@ struct ScanProgressView: View {
             case .coarseAnalysis(let completed, let total):
                 0.05 + (0.50 * fraction(completed: completed, total: total))
             case .candidateRefinement(let completed, let total):
-                0.55 + (0.35 * fraction(completed: completed, total: total))
+                0.55 + (0.25 * fraction(completed: completed, total: total))
+            case .duplicateVerification(let completed, let total):
+                0.80 + (0.13 * fraction(completed: completed, total: total))
             case .finalizing:
                 0.94
             }
@@ -150,7 +154,8 @@ struct ScanProgressView: View {
         case .scanning:
             switch scanProgress {
             case .coarseAnalysis(let completed, let total),
-                 .candidateRefinement(let completed, let total):
+                 .candidateRefinement(let completed, let total),
+                 .duplicateVerification(let completed, let total):
                 total > 0 ? "\(completed)/\(total)" : "准备中"
             case .finalizing:
                 "整理中"
@@ -257,6 +262,13 @@ struct ScanProgressView: View {
                 ScanRowModel(title: "候选复核", value: progressValue(completed, total), done: false),
                 ScanRowModel(title: "整理结果", value: "等待中", done: false)
             ]
+        case .duplicateVerification(let completed, let total):
+            return [
+                ScanRowModel(title: "快速分析", value: "已完成", done: true),
+                ScanRowModel(title: "候选复核", value: "已完成", done: true),
+                ScanRowModel(title: "确认重复", value: progressValue(completed, total), done: false),
+                ScanRowModel(title: "整理结果", value: "等待中", done: false)
+            ]
         case .finalizing:
             return [
                 ScanRowModel(title: "快速分析", value: "已完成", done: true),
@@ -294,6 +306,8 @@ extension PhotoScanProgress {
             "快速分析"
         case .candidateRefinement:
             "候选复核"
+        case .duplicateVerification:
+            "确认重复内容"
         case .finalizing:
             "整理结果"
         }
@@ -302,7 +316,8 @@ extension PhotoScanProgress {
     var progressDescription: String {
         switch self {
         case .coarseAnalysis(let completed, let total),
-             .candidateRefinement(let completed, let total):
+             .candidateRefinement(let completed, let total),
+             .duplicateVerification(let completed, let total):
             total > 0 ? "已完成 \(min(total, max(0, completed))) 项，共 \(total) 项" : "准备中"
         case .finalizing:
             "正在整理最终结果"

@@ -65,7 +65,7 @@ struct PhotoVisualClassification: Hashable, Sendable {
     }
 }
 
-struct PhotoVisualMetrics: Hashable, Sendable {
+struct PhotoVisualMetrics: Hashable, Sendable, Codable {
     var perceptualHash: UInt64
     var featurePrint: PhotoFeaturePrint?
     var brightness: Double
@@ -99,7 +99,7 @@ struct PhotoVisualMetrics: Hashable, Sendable {
     }
 }
 
-enum PhotoFeatureElementType: Int, Hashable, Sendable {
+enum PhotoFeatureElementType: Int, Hashable, Sendable, Codable {
     case unknown = 0
     case float = 1
     case double = 2
@@ -109,7 +109,7 @@ enum PhotoFeatureElementType: Int, Hashable, Sendable {
     }
 }
 
-struct PhotoFeaturePrint: Hashable, Sendable {
+struct PhotoFeaturePrint: Hashable, Sendable, Codable {
     var data: Data
     var elementType: PhotoFeatureElementType
     var elementCount: Int
@@ -194,7 +194,7 @@ struct PhotoQualityFeatures: Hashable, Sendable {
     }
 }
 
-struct PhotoQualityAssessment: Hashable, Sendable {
+struct PhotoQualityAssessment: Hashable, Sendable, Codable {
     var overallQuality: Double
     var blurRisk: Double
     var accidentalRisk: Double
@@ -328,7 +328,7 @@ struct PhotoVisualAnalysisPolicy: Hashable, Sendable {
     }
 }
 
-enum PhotoQualitySource: String, Hashable, Sendable {
+enum PhotoQualitySource: String, Hashable, Sendable, Codable {
     case heuristic
     case visionAesthetics
     case customCoreML
@@ -516,30 +516,22 @@ struct PhotoLibraryScanPolicy: Hashable, Sendable {
     var isLowPowerModeEnabled: Bool
     var standardBatchSize: Int
     var lowPowerBatchSize: Int
-    var standardVisualClassificationLimit: Int
-    var lowPowerVisualClassificationLimit: Int
 
     init(
         isLowPowerModeEnabled: Bool = ProcessInfo.processInfo.isLowPowerModeEnabled,
         standardBatchSize: Int = 200,
-        lowPowerBatchSize: Int = 50,
-        standardVisualClassificationLimit: Int = 300,
-        lowPowerVisualClassificationLimit: Int = 80
+        lowPowerBatchSize: Int = 50
     ) {
         self.isLowPowerModeEnabled = isLowPowerModeEnabled
         self.standardBatchSize = max(1, standardBatchSize)
         self.lowPowerBatchSize = max(1, lowPowerBatchSize)
-        self.standardVisualClassificationLimit = max(0, standardVisualClassificationLimit)
-        self.lowPowerVisualClassificationLimit = max(0, lowPowerVisualClassificationLimit)
     }
 
     var effectiveBatchSize: Int {
         isLowPowerModeEnabled ? lowPowerBatchSize : standardBatchSize
     }
 
-    var effectiveVisualClassificationLimit: Int {
-        isLowPowerModeEnabled ? lowPowerVisualClassificationLimit : standardVisualClassificationLimit
-    }
+    var visualBatchSize: Int { effectiveBatchSize }
 }
 
 enum PhotoImageRequestStrategy {
@@ -647,17 +639,15 @@ enum PhotoExactDuplicateGrouper {
 struct SystemPhotoDuplicateVerifier {
     func exactDuplicateGroups(
         candidateGroups: [[String]],
-        assetsByID: [String: PHAsset]
+        assetsByID: [String: PHAsset],
+        onProgress: @escaping PhotoScanProgressHandler = { _ in }
     ) async throws -> [[String]] {
-        var exactGroups: [[String]] = []
-
-        for candidateGroup in candidateGroups {
+        let candidateIDs = Set(candidateGroups.flatMap { $0 }).sorted()
+        var digestsByAssetID: [String: PhotoResourceDigestSet] = [:]
+        await onProgress(.duplicateVerification(completed: 0, total: candidateIDs.count))
+        for (index, assetID) in candidateIDs.enumerated() {
             try Task.checkCancellation()
-            var digestsByAssetID: [String: PhotoResourceDigestSet] = [:]
-
-            for assetID in candidateGroup.sorted() {
-                try Task.checkCancellation()
-                guard let asset = assetsByID[assetID] else { continue }
+            if let asset = assetsByID[assetID] {
                 do {
                     if let digest = try await digestSet(for: asset) {
                         digestsByAssetID[assetID] = digest
@@ -667,15 +657,10 @@ struct SystemPhotoDuplicateVerifier {
                     // A single unavailable local resource only removes exact-duplicate evidence.
                 }
             }
-
-            exactGroups.append(
-                contentsOf: PhotoExactDuplicateGrouper.groups(
-                    candidateAssetIDs: candidateGroup,
-                    digestsByAssetID: digestsByAssetID
-                )
-            )
+            await onProgress(.duplicateVerification(completed: index + 1, total: candidateIDs.count))
         }
-        return exactGroups
+
+        return PhotoExactDuplicateGrouper.groups(candidateAssetIDs: candidateIDs, digestsByAssetID: digestsByAssetID)
     }
 
     private func digestSet(for asset: PHAsset) async throws -> PhotoResourceDigestSet? {
@@ -811,6 +796,7 @@ final class PhotoRequestCancellation<RequestID: Sendable>: @unchecked Sendable {
 enum PhotoScanProgress: Hashable, Sendable {
     case coarseAnalysis(completed: Int, total: Int)
     case candidateRefinement(completed: Int, total: Int)
+    case duplicateVerification(completed: Int, total: Int)
     case finalizing
 }
 
@@ -831,18 +817,19 @@ extension PhotoLibraryScanning {
 }
 
 struct SystemPhotoLibraryScanner: PhotoLibraryScanning {
-    private let policy: PhotoLibraryScanPolicy
+    private let configuredPolicy: PhotoLibraryScanPolicy?
+    private var policy: PhotoLibraryScanPolicy { configuredPolicy ?? .init() }
     private let analysisPolicy: PhotoVisualAnalysisPolicy
     private let qualityScorer: any PhotoQualityScoring
     private let now: @Sendable () -> Date
 
     init(
-        policy: PhotoLibraryScanPolicy = .init(),
+        policy: PhotoLibraryScanPolicy? = nil,
         analysisPolicy: PhotoVisualAnalysisPolicy = .init(),
         qualityScorer: (any PhotoQualityScoring)? = nil,
         now: @escaping @Sendable () -> Date = { Date() }
     ) {
-        self.policy = policy
+        self.configuredPolicy = policy
         self.analysisPolicy = analysisPolicy
         self.qualityScorer = qualityScorer ?? VisionPhotoQualityScorer()
         self.now = now
@@ -859,17 +846,20 @@ struct SystemPhotoLibraryScanner: PhotoLibraryScanning {
 
         let referenceDate = now()
         do {
-            return PhotoScanResultBuilder.state(
-                from: try await fetchAssetSnapshots(
+            let scanned = try await fetchAssetSnapshots(
                     dateRange: dateRange,
                     referenceDate: referenceDate,
                     onProgress: onProgress
                 )
-            )
+            var state = PhotoScanResultBuilder.state(from: scanned.snapshots)
+            state.scanReport = scanned.report
+            return state
         } catch is CancellationError {
             return PhotoScanResultBuilder.state(from: [])
         } catch {
-            return PhotoScanResultBuilder.state(from: [])
+            var state = PhotoScanResultBuilder.state(from: [])
+            state.scanErrorMessage = "扫描未完成，请重试。\(error.localizedDescription)"
+            return state
         }
     }
 
@@ -877,10 +867,11 @@ struct SystemPhotoLibraryScanner: PhotoLibraryScanning {
         dateRange: PhotoScanDateRange,
         referenceDate: Date,
         onProgress: @escaping PhotoScanProgressHandler
-    ) async throws -> [PhotoAssetSnapshot] {
+    ) async throws -> (snapshots: [PhotoAssetSnapshot], report: PhotoScanReport) {
+        let started = Date()
         let options = fetchOptions(dateRange: dateRange, referenceDate: referenceDate)
         let photoAssets = PHAsset.fetchAssets(with: .image, options: options)
-        let visualClassifications = try await fetchVisualClassifications(
+        let visualResult = try await fetchVisualClassifications(
             from: photoAssets,
             onProgress: onProgress
         )
@@ -894,7 +885,7 @@ struct SystemPhotoLibraryScanner: PhotoLibraryScanning {
                 kind: .photo,
                 isScreenshot: asset.mediaSubtypes.contains(.photoScreenshot),
                 duration: 0,
-                visualClassification: visualClassifications[asset.localIdentifier]
+                visualClassification: visualResult.classifications[asset.localIdentifier]
             )
         }
 
@@ -913,17 +904,29 @@ struct SystemPhotoLibraryScanner: PhotoLibraryScanning {
         }
 
         await onProgress(.finalizing)
-        return photoSnapshots + videoSnapshots
+        var report = visualResult.report
+        report.elapsedSeconds = Date().timeIntervalSince(started)
+        report.sampledPeakMemoryMB = max(report.sampledPeakMemoryMB, PhotoMemorySample.megabytes())
+        return (photoSnapshots + videoSnapshots, report)
     }
 
     private func fetchVisualClassifications(
         from photoAssets: PHFetchResult<PHAsset>,
         onProgress: @escaping PhotoScanProgressHandler
-    ) async throws -> [String: PhotoVisualClassification] {
-        guard policy.effectiveVisualClassificationLimit > 0 else { return [:] }
-
+    ) async throws -> (classifications: [String: PhotoVisualClassification], report: PhotoScanReport) {
+        let policy = policy
         let imageManager = PHCachingImageManager()
-        let maxCount = min(photoAssets.count, policy.effectiveVisualClassificationLimit)
+        var eligibleAssets: [PHAsset] = []
+        photoAssets.enumerateObjects { asset, _, _ in
+            if !asset.mediaSubtypes.contains(.photoScreenshot) { eligibleAssets.append(asset) }
+        }
+        let maxCount = eligibleAssets.count
+        var report = PhotoScanReport(eligiblePhotos: maxCount, lowPowerMode: policy.isLowPowerModeEnabled)
+        var cache = PhotoAnalysisCache.load()
+        cache.retainAssets(Set(eligibleAssets.map(\.localIdentifier)))
+        // Keep the bounded prior snapshot readable even when this scan inserts enough
+        // new entries to evict it; otherwise large sequential libraries thrash the cache.
+        let cachedSnapshot = cache
         var coarseInputs: [PhotoVisualInput] = []
         coarseInputs.reserveCapacity(maxCount)
         var assetsByID: [String: PHAsset] = [:]
@@ -932,16 +935,20 @@ struct SystemPhotoLibraryScanner: PhotoLibraryScanning {
         for index in 0..<maxCount {
             try Task.checkCancellation()
 
-            let asset = photoAssets.object(at: index)
+            let asset = eligibleAssets[index]
             assetsByID[asset.localIdentifier] = asset
-            if !asset.mediaSubtypes.contains(.photoScreenshot),
-               let metrics = Self.visualMetrics(
+            let key = PhotoAnalysisCache.key(for: asset, stage: "coarse-\(analysisPolicy)")
+            let cached = cachedSnapshot.metrics(for: key)
+            if let metrics = cached ?? autoreleasepool(invoking: { Self.visualMetrics(
                     for: asset,
                     imageManager: imageManager,
                     qualityScorer: qualityScorer,
                     stage: .coarse,
                     policy: analysisPolicy
-               ) {
+               ) }) {
+                if cached != nil { report.cacheHits += 1 }
+                cache.insert(metrics, key: key, assetID: asset.localIdentifier)
+                report.analyzedPhotos += 1
                 coarseInputs.append(
                     PhotoVisualInput(
                         assetID: asset.localIdentifier,
@@ -949,19 +956,25 @@ struct SystemPhotoLibraryScanner: PhotoLibraryScanning {
                         metrics: metrics
                     )
                 )
+            } else {
+                report.unavailablePhotos += 1
             }
 
             await onProgress(.coarseAnalysis(completed: index + 1, total: maxCount))
 
-            if index.isMultiple(of: 25) {
+            if (index + 1).isMultiple(of: policy.visualBatchSize) {
+                imageManager.stopCachingImagesForAllAssets()
+                report.sampledPeakMemoryMB = max(report.sampledPeakMemoryMB, PhotoMemorySample.megabytes())
                 await Task.yield()
             }
         }
 
-        let refinementIDs = PhotoVisualClassifier.refinementAssetIDs(
+        var refinementIDs = PhotoVisualClassifier.refinementAssetIDs(
             from: coarseInputs,
             policy: analysisPolicy
         )
+        let crossTimeCandidates = PhotoVisualClassifier.crossTimeDuplicateCandidateGroups(from: coarseInputs)
+        refinementIDs.formUnion(crossTimeCandidates.flatMap { $0 })
         let orderedRefinementIDs = coarseInputs
             .map(\.assetID)
             .filter { refinementIDs.contains($0) }
@@ -973,19 +986,23 @@ struct SystemPhotoLibraryScanner: PhotoLibraryScanning {
 
         for (index, assetID) in orderedRefinementIDs.enumerated() {
             try Task.checkCancellation()
-            if let asset = assetsByID[assetID],
-               let metrics = Self.visualMetrics(
+            if let asset = assetsByID[assetID] {
+               let key = PhotoAnalysisCache.key(for: asset, stage: "refined-\(analysisPolicy)")
+               if let metrics = cachedSnapshot.metrics(for: key) ?? autoreleasepool(invoking: { Self.visualMetrics(
                     for: asset,
                     imageManager: imageManager,
                     qualityScorer: qualityScorer,
                     stage: .refined,
                     policy: analysisPolicy
-               ) {
+               ) }) {
+                cache.insert(metrics, key: key, assetID: assetID)
+                report.refinedPhotos += 1
                 refinedInputsByID[assetID] = PhotoVisualInput(
                     assetID: assetID,
                     creationDate: asset.creationDate,
                     metrics: metrics
                 )
+               }
             }
             await onProgress(
                 .candidateRefinement(
@@ -994,6 +1011,8 @@ struct SystemPhotoLibraryScanner: PhotoLibraryScanning {
                 )
             )
             if index.isMultiple(of: 10) {
+                imageManager.stopCachingImagesForAllAssets()
+                report.sampledPeakMemoryMB = max(report.sampledPeakMemoryMB, PhotoMemorySample.megabytes())
                 await Task.yield()
             }
         }
@@ -1011,18 +1030,22 @@ struct SystemPhotoLibraryScanner: PhotoLibraryScanning {
             from: refinedInputs,
             classifications: provisionalClassifications,
             policy: analysisPolicy
-        )
+        ) + PhotoVisualClassifier.crossTimeDuplicateCandidateGroups(from: refinedInputs)
         let exactGroups = try await SystemPhotoDuplicateVerifier().exactDuplicateGroups(
             candidateGroups: exactCandidates,
-            assetsByID: assetsByID
+            assetsByID: assetsByID,
+            onProgress: onProgress
         )
 
-        return PhotoVisualClassifier.finalClassifications(
+        try Task.checkCancellation()
+        cache.save()
+        let classifications = PhotoVisualClassifier.finalClassifications(
             coarseInputs: coarseInputs,
             refinedInputsByID: refinedInputsByID,
             exactDuplicateGroups: exactGroups,
             policy: analysisPolicy
         )
+        return (classifications, report)
     }
 
     private static func visualMetrics(
@@ -1113,8 +1136,17 @@ enum PhotoVisualClassifier {
             (lhs.creationDate ?? .distantPast) > (rhs.creationDate ?? .distantPast)
         }
 
-        for input in sortedInputs where !groupedAssetIDs.contains(input.assetID) {
-            let cluster = sortedInputs.filter { candidate in
+        var windowEnd = 0
+        for (index, input) in sortedInputs.enumerated() where !groupedAssetIDs.contains(input.assetID) {
+            windowEnd = max(windowEnd, index + 1)
+            if let date = input.creationDate {
+                while windowEnd < sortedInputs.count,
+                      let candidateDate = sortedInputs[windowEnd].creationDate,
+                      abs(date.timeIntervalSince(candidateDate)) <= policy.similarTimeWindow {
+                    windowEnd += 1
+                }
+            }
+            let cluster = sortedInputs[index..<windowEnd].filter { candidate in
                 guard !groupedAssetIDs.contains(candidate.assetID) else { return false }
                 return isSimilar(input, candidate, policy: policy)
             }
@@ -1174,6 +1206,7 @@ enum PhotoVisualClassifier {
         policy: PhotoVisualAnalysisPolicy = .init()
     ) -> [String: PhotoVisualClassification] {
         let refinementIDs = refinementAssetIDs(from: coarseInputs, policy: policy)
+            .union(exactDuplicateGroups.flatMap { $0 })
         let coarseByID = Dictionary(uniqueKeysWithValues: coarseInputs.map { ($0.assetID, $0) })
         let validExactDuplicateGroups = exactDuplicateGroups
             .map { group in
@@ -1245,6 +1278,16 @@ enum PhotoVisualClassifier {
             }
         }
         return result.sorted { $0.lexicographicallyPrecedes($1) }
+    }
+
+    static func crossTimeDuplicateCandidateGroups(from inputs: [PhotoVisualInput]) -> [[String]] {
+        // Equal coarse hashes only nominate candidates; resource digests decide equality.
+        let buckets = Dictionary(grouping: inputs) { input in
+            "\(input.metrics.perceptualHash)-\(Int((log(input.metrics.aspectRatio) * 100).rounded()))"
+        }
+        return buckets.values.filter { $0.count > 1 }
+            .map { $0.map(\.assetID).sorted() }
+            .sorted { $0.lexicographicallyPrecedes($1) }
     }
 
     private static func isSimilar(

@@ -1,7 +1,7 @@
 import Foundation
 import SwiftUI
 
-enum PhotoScanDateRange: String, CaseIterable, Identifiable, Hashable, Sendable {
+enum PhotoScanDateRange: String, CaseIterable, Identifiable, Hashable, Sendable, Codable {
     case lastMonth
     case lastThreeMonths
     case all
@@ -63,7 +63,7 @@ enum PhotoScanDateRange: String, CaseIterable, Identifiable, Hashable, Sendable 
     }
 }
 
-enum CleanupCategory: String, CaseIterable, Identifiable, Hashable {
+enum CleanupCategory: String, CaseIterable, Identifiable, Hashable, Codable {
     case similar
     case screenshots
     case accidental
@@ -93,7 +93,7 @@ enum CleanupCategory: String, CaseIterable, Identifiable, Hashable {
     }
 }
 
-enum CandidateConfidence: String, Hashable {
+enum CandidateConfidence: String, Hashable, Codable {
     case high
     case medium
     case low
@@ -107,17 +107,32 @@ enum CandidateConfidence: String, Hashable {
     }
 }
 
-struct ThumbnailStyle: Hashable {
+struct ThumbnailStyle: Hashable, Codable {
     var symbolName: String
     var topColor: Color
     var bottomColor: Color
+
+    private enum CodingKeys: CodingKey { case symbolName }
+
+    init(symbolName: String, topColor: Color, bottomColor: Color) {
+        self.symbolName = symbolName
+        self.topColor = topColor
+        self.bottomColor = bottomColor
+    }
+
+    init(from decoder: Decoder) throws {
+        symbolName = try decoder.container(keyedBy: CodingKeys.self).decode(String.self, forKey: .symbolName)
+        // Persist references, not photo pixels or theme-dependent color representations.
+        topColor = TrueKeepTheme.greenSoft
+        bottomColor = TrueKeepTheme.green
+    }
 }
 
 enum TrueKeepFeatureFlags {
     static let recommendedKeepEnabled = false
 }
 
-struct CleanupCandidate: Identifiable, Hashable {
+struct CleanupCandidate: Identifiable, Hashable, Codable {
     var id: String
     var category: CleanupCategory
     var confidence: CandidateConfidence
@@ -135,7 +150,7 @@ struct CleanupCandidate: Identifiable, Hashable {
     }
 }
 
-struct CleanupGroup: Identifiable, Hashable {
+struct CleanupGroup: Identifiable, Hashable, Codable {
     var id: String
     var category: CleanupCategory
     var title: String
@@ -153,7 +168,7 @@ struct CleanupGroup: Identifiable, Hashable {
     }
 }
 
-struct CleanupTask: Identifiable, Hashable {
+struct CleanupTask: Identifiable, Hashable, Codable {
     var id: String
     var category: CleanupCategory
     var description: String
@@ -234,7 +249,7 @@ enum CleanupTaskBuilder {
     }
 }
 
-struct ReviewBinItem: Identifiable, Hashable {
+struct ReviewBinItem: Identifiable, Hashable, Codable {
     var id: String { candidate.id }
     var candidate: CleanupCandidate
     var selectedForDelete: Bool
@@ -270,7 +285,7 @@ enum PhotoDeletionResult: Hashable, Sendable {
     }
 }
 
-struct PhotoDeletionSummary: Hashable, Sendable {
+struct PhotoDeletionSummary: Hashable, Sendable, Codable {
     private(set) var deletedAssetIDs: Set<String> = []
     private(set) var estimatedBytes: Int64 = 0
 
@@ -301,7 +316,7 @@ struct PhotoDeletionSummary: Hashable, Sendable {
     }
 }
 
-struct CleanupFlowState: Hashable {
+struct CleanupFlowState: Hashable, Codable {
     var tasks: [CleanupTask]
     var reviewGroups: [CleanupGroup]
     var currentReviewGroupIndex: Int
@@ -310,6 +325,9 @@ struct CleanupFlowState: Hashable {
     var deletionSummary: PhotoDeletionSummary?
     var deletionErrorMessage: String?
     var reviewGroupDeletionErrorMessage: String? = nil
+    var scanReport: PhotoScanReport? = nil
+    var scanErrorMessage: String? = nil
+    var reviewSelectionsByGroup: [String: Set<String>] = [:]
 
     var hasDeletedItems: Bool {
         deletionSummary != nil
@@ -320,7 +338,10 @@ struct CleanupFlowState: Hashable {
     }
 
     var currentReviewGroup: CleanupGroup {
-        reviewGroups[currentReviewGroupIndex]
+        guard reviewGroups.indices.contains(currentReviewGroupIndex) else {
+            return CleanupGroup(id: "unavailable", category: .similar, title: "这组已处理完成", subtitle: "", groupIndex: 0, totalGroups: 0, explanation: "请返回首页查看剩余任务。", candidates: [])
+        }
+        return reviewGroups[currentReviewGroupIndex]
     }
 
     var currentReviewSelectionCount: Int {
@@ -354,6 +375,19 @@ struct CleanupFlowState: Hashable {
         tasks.map(\.estimatedBytes).reduce(0, +)
     }
 
+    var evaluationJSON: String {
+        let export = ScanEvaluationExport(
+            similarGroups: reviewGroups.filter { $0.category == .similar && !$0.candidates.allSatisfy(\.isExactDuplicate) }.map { $0.candidates.map(\.id) },
+            exactGroups: reviewGroups.filter { $0.category == .similar && $0.candidates.allSatisfy(\.isExactDuplicate) }.map { $0.candidates.map(\.id) },
+            blurry: reviewGroups.filter { $0.category == .blurry }.flatMap { $0.candidates.map(\.id) },
+            accidental: reviewGroups.filter { $0.category == .accidental }.flatMap { $0.candidates.map(\.id) },
+            report: scanReport
+        )
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        return (try? encoder.encode(export)).flatMap { String(data: $0, encoding: .utf8) } ?? "{}"
+    }
+
     var selectedReviewBinAssetIDs: [String] {
         reviewBinItems
             .filter(\.selectedForDelete)
@@ -367,6 +401,42 @@ struct CleanupFlowState: Hashable {
             guard selectedCandidateIDs.contains(candidate.id), !candidate.confirmedKeep else { return nil }
             return candidate.id
         }
+    }
+
+    mutating func mergeScanResult(_ result: CleanupFlowState, confirmedKeepAssetIDs: Set<String>) {
+        let retainedBin = reviewBinItems
+        let previousDeletionSummary = deletionSummary
+        let previousSelections = reviewSelectionsByGroup
+        self = result
+        reviewBinItems = retainedBin
+        deletionSummary = previousDeletionSummary
+        reviewSelectionsByGroup = previousSelections
+        removeCandidateReferences(previousDeletionSummary?.deletedAssetIDs ?? [])
+        applyConfirmedKeepAssetIDs(confirmedKeepAssetIDs, hideProtectedNonSimilarCandidates: true)
+        selectedCandidateIDs = []
+    }
+
+    mutating func removeCandidateReferences(_ ids: Set<String>) {
+        let currentID = currentReviewGroup.id
+        reviewBinItems.removeAll { ids.contains($0.id) }
+        selectedCandidateIDs.subtract(ids)
+        reviewGroups = reviewGroups.compactMap { group in
+            var group = group
+            group.candidates.removeAll { ids.contains($0.id) }
+            guard CleanupTaskBuilder.task(from: group) != nil else { return nil }
+            return group
+        }
+        normalizeReviewGroupMetadata()
+        tasks = CleanupTaskBuilder.tasks(from: reviewGroups)
+        currentReviewGroupIndex = reviewGroups.firstIndex(where: { $0.id == currentID }) ?? 0
+        reviewSelectionsByGroup = reviewSelectionsByGroup.filter { key, _ in
+            reviewGroups.contains { $0.id == key }
+        }.mapValues { $0.subtracting(ids) }
+    }
+
+    mutating func reconcileAccessibleAssets(_ accessibleIDs: Set<String>) {
+        let referenced = Set(reviewGroups.flatMap { $0.candidates.map(\.id) } + reviewBinItems.map(\.id))
+        removeCandidateReferences(referenced.subtracting(accessibleIDs))
     }
 
     var canMoveToPreviousReviewGroup: Bool {
@@ -389,6 +459,7 @@ struct CleanupFlowState: Hashable {
             selectedCandidateIDs.insert(candidate.id)
         }
         reviewGroupDeletionErrorMessage = nil
+        reviewSelectionsByGroup[currentReviewGroup.id] = Set(selectedCurrentReviewAssetIDs)
     }
 
     mutating func toggleAllCandidatesInCurrentGroup() {
@@ -401,6 +472,7 @@ struct CleanupFlowState: Hashable {
             selectedCandidateIDs.formUnion(selectableIDs)
         }
         reviewGroupDeletionErrorMessage = nil
+        reviewSelectionsByGroup[currentReviewGroup.id] = selectedCandidateIDs.intersection(selectableIDs)
     }
 
     @discardableResult
@@ -533,6 +605,7 @@ struct CleanupFlowState: Hashable {
 
         reviewBinItems.removeAll { assetIDs.contains($0.id) }
         selectedCandidateIDs.subtract(assetIDs)
+        reviewSelectionsByGroup = reviewSelectionsByGroup.mapValues { $0.subtracting(assetIDs) }
         let remainingCandidateIDs = Set(reviewGroups.flatMap { $0.candidates.map(\.id) })
         selectedCandidateIDs.formIntersection(remainingCandidateIDs)
         tasks = CleanupTaskBuilder.tasks(from: reviewGroups)
@@ -567,6 +640,7 @@ struct CleanupFlowState: Hashable {
 
         reviewBinItems.removeAll { deletedIDs.contains($0.id) }
         selectedCandidateIDs.subtract(deletedIDs)
+        reviewSelectionsByGroup = reviewSelectionsByGroup.mapValues { $0.subtracting(deletedIDs) }
 
         reviewGroups = reviewGroups.compactMap { group in
             var updatedGroup = group
@@ -601,6 +675,11 @@ struct CleanupFlowState: Hashable {
     private mutating func selectDefaultCandidatesInCurrentGroup() {
         guard reviewGroups.indices.contains(currentReviewGroupIndex) else {
             selectedCandidateIDs = []
+            return
+        }
+        if let remembered = reviewSelectionsByGroup[currentReviewGroup.id] {
+            let selectable = Set(currentReviewGroup.candidates.filter { !$0.confirmedKeep }.map(\.id))
+            selectedCandidateIDs = remembered.intersection(selectable)
             return
         }
         if currentReviewGroup.category == .similar,

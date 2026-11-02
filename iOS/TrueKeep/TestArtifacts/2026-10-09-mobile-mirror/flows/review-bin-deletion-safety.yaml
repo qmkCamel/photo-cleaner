@@ -1,0 +1,98 @@
+name: P0 复核箱二次确认与删除安全锁
+platform: ios
+appId: app.truekeep.ios
+---
+- launchApp
+- waitUntil:
+    target:
+      accessibilityId:
+        value: truekeep.welcome.learn-more
+        match: contains
+    timeout: 10
+- tap:
+    accessibilityId:
+      value: truekeep.welcome.learn-more
+      match: contains
+- waitUntil:
+    target:
+      text:
+        value: 首页
+        match: contains
+    timeout: 10
+- tap:
+    text:
+      value: 首页
+      match: contains
+- waitUntil:
+    target:
+      accessibilityId:
+        value: truekeep.cleanup.task.similar
+        match: contains
+    timeout: 10
+- tap:
+    accessibilityId:
+      value: truekeep.cleanup.task.similar
+      match: contains
+- waitUntil:
+    target:
+      accessibilityId:
+        value: truekeep.review.review-all
+        match: contains
+    timeout: 10
+- tap:
+    accessibilityId:
+      value: truekeep.review.review-all
+      match: contains
+- waitUntil:
+    target:
+      accessibilityId:
+        value: truekeep.review.add-to-review-bin
+        match: contains
+    timeout: 10
+- tap:
+    accessibilityId:
+      value: truekeep.review.add-to-review-bin
+      match: contains
+- waitUntil:
+    target:
+      accessibilityId:
+        value: truekeep.review-bin.delete-selection
+        match: contains
+    timeout: 10
+- assertVisible:
+    text:
+      value: 尚未删除任何内容
+      match: contains
+- tap:
+    accessibilityId:
+      value: truekeep.review-bin.delete-selection
+      match: contains
+- waitUntil:
+    target:
+      accessibilityId:
+        value: truekeep.delete.confirm
+        match: contains
+    timeout: 10
+- assertVisible:
+    text:
+      value: iCloud Photos 风险
+      match: contains
+- tap:
+    accessibilityId:
+      value: truekeep.delete.confirm
+      match: contains
+- waitUntil:
+    target:
+      text:
+        value: 删除未完成
+        match: contains
+    timeout: 10
+- assertVisible:
+    text:
+      value: 真机调试删除安全锁已开启，未删除任何照片或视频。
+      match: contains
+- assertVisible:
+    accessibilityId:
+      value: truekeep.review-bin.restore-selection
+      match: contains
+- done

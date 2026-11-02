@@ -1,0 +1,52 @@
+name: P0 扫描取消与恢复
+platform: ios
+appId: app.truekeep.ios
+---
+- launchApp
+- waitUntil:
+    target:
+      accessibilityId:
+        value: truekeep.scan.in-progress
+        match: contains
+    timeout: 10
+- assertVisible:
+    text:
+      value: 正在扫描你的相册
+      match: contains
+- assertVisible:
+    accessibilityId:
+      value: truekeep.scan.cancel
+      match: contains
+- tap:
+    accessibilityId:
+      value: truekeep.scan.cancel
+      match: contains
+- waitUntil:
+    target:
+      accessibilityId:
+        value: truekeep.scan.retry
+        match: contains
+    timeout: 10
+- assertVisible:
+    text:
+      value: 扫描已停止
+      match: contains
+- assertVisible:
+    text:
+      value: 取消扫描不会删除或移动任何照片或视频。
+      match: contains
+- tap:
+    accessibilityId:
+      value: truekeep.permission-issue.return-to-permission
+      match: contains
+- waitUntil:
+    target:
+      accessibilityId:
+        value: truekeep.cleanup.results
+        match: contains
+    timeout: 10
+- assertVisible:
+    accessibilityId:
+      value: truekeep.cleanup.task.similar
+      match: contains
+- done

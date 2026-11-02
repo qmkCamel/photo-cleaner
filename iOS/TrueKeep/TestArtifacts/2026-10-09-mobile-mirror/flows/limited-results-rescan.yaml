@@ -1,0 +1,52 @@
+name: P0 有限权限结果页重新扫描
+platform: ios
+appId: app.truekeep.ios
+---
+- launchApp
+- waitUntil:
+    target:
+      accessibilityId:
+        value: truekeep.scan.view-results
+        match: contains
+    timeout: 20
+- assertVisible:
+    text:
+      value: 访问范围有限
+      match: contains
+- tap:
+    accessibilityId:
+      value: truekeep.scan.view-results
+      match: contains
+- waitUntil:
+    target:
+      accessibilityId:
+        value: truekeep.cleanup.results
+        match: contains
+    timeout: 10
+- assertVisible:
+    accessibilityId:
+      value: truekeep.cleanup.scan
+      match: contains
+- assertVisible:
+    accessibilityId:
+      value: truekeep.cleanup.scan
+      match: contains
+    above:
+      text:
+        value: 首页
+        match: contains
+- tap:
+    accessibilityId:
+      value: truekeep.cleanup.scan
+      match: contains
+- waitUntilGone:
+    target:
+      accessibilityId:
+        value: truekeep.cleanup.scan
+        match: contains
+    timeout: 10
+- assertVisible:
+    text:
+      value: 本地扫描
+      match: contains
+- done

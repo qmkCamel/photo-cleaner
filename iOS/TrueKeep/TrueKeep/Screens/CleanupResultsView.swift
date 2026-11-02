@@ -10,11 +10,17 @@ struct CleanupResultsView: View {
     var selectedScanDateRange: PhotoScanDateRange = .defaultValue
     var completedScanDateRange: PhotoScanDateRange? = nil
     var activeScanProgress: PhotoScanProgress? = nil
+    var sessionMessage: String? = nil
+    var sessionNeedsRecovery = false
+    var onRetrySession: () -> Void = {}
+    var onRebuildSession: () -> Void = {}
+    var onManagePhotoAccess: () -> Void = {}
     var onRequestPhotoAccess: () -> Void = {}
     var onSelectScanDateRange: (PhotoScanDateRange) -> Void = { _ in }
     var onScan: () -> Void = {}
     var onViewScanProgress: () -> Void = {}
     var onReviewTask: (CleanupTask) -> Void
+    @State private var confirmsRebuild = false
 
     var body: some View {
         ScrollView {
@@ -49,6 +55,31 @@ struct CleanupResultsView: View {
                     ActiveScanNotice(progress: activeScanProgress, action: onViewScanProgress)
                 }
 
+                if let sessionMessage {
+                    SafetyNotice(title: "本地记录需要处理", message: sessionMessage)
+                    Button("重试本地记录", action: onRetrySession)
+                        .accessibilityIdentifier("session.retry")
+                    if sessionNeedsRecovery {
+                        Button("重建本地记录") { confirmsRebuild = true }
+                            .accessibilityIdentifier("session.rebuild")
+                    }
+                }
+
+                if let report = state.scanReport {
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text(report.summary)
+                        Text("耗时 \(report.elapsedSeconds, specifier: "%.1f") 秒。仅分析本机可读取内容；未读取不代表没有问题。")
+                    }
+                    .font(TrueKeepTheme.Font.caption)
+                    .accessibilityIdentifier("scan.coverage")
+                    ShareLink(item: state.evaluationJSON) {
+                        Label("导出本次复核报告", systemImage: "square.and.arrow.up")
+                    }
+                    .accessibilityIdentifier("scan.export-report")
+                    Text("报告含本地项目标识和分析统计，不含照片。分享前请确认接收方。")
+                        .font(TrueKeepTheme.Font.caption)
+                }
+
                 if canScan {
                     ScanDateRangeSelector(
                         title: hasCompletedScan || activeScanProgress != nil
@@ -69,6 +100,12 @@ struct CleanupResultsView: View {
                         title: "访问范围有限",
                         message: scanLimitationWarning
                     )
+                }
+
+                if scanLimitationWarning != nil || (!canScan && !shouldShowPhotoAccessPrompt) {
+                    Button("管理照片访问权限", action: onManagePhotoAccess)
+                        .frame(minHeight: 44)
+                        .accessibilityIdentifier("photos.manage-access")
                 }
 
                 if shouldShowPhotoAccessPrompt {
@@ -123,6 +160,12 @@ struct CleanupResultsView: View {
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .trueKeepScreenBackground()
+        .confirmationDialog("重建本地复核记录？", isPresented: $confirmsRebuild, titleVisibility: .visible) {
+            Button("保留备份并重建", action: onRebuildSession)
+            Button("取消", role: .cancel) {}
+        } message: {
+            Text("无法读取的旧记录会保留备份。新的记录使用当前会话，系统照片不会被删除。")
+        }
     }
 
     private var headerMessage: String {

@@ -1,5 +1,6 @@
 import SwiftUI
 import UIKit
+import Photos
 
 enum AppPhase: Hashable {
     case welcome
@@ -64,6 +65,8 @@ struct AppLaunchConfiguration: Hashable {
     var forcesNotDeterminedPhotoAccess: Bool
     var resetsConfirmedKeeps: Bool
     var uiTestScenario: AppUITestLaunchScenario?
+    var usesTestSession: Bool
+    var resetsTestSession: Bool
 
     init(
         arguments: [String] = ProcessInfo.processInfo.arguments,
@@ -79,6 +82,9 @@ struct AppLaunchConfiguration: Hashable {
         forcesNotDeterminedPhotoAccess = arguments.contains(Self.uiTestForceNotDeterminedAccessArgument)
         resetsConfirmedKeeps = arguments.contains(Self.resetConfirmedKeepsArgument)
         uiTestScenario = AppUITestLaunchScenario(arguments: arguments)
+        usesTestSession = arguments.contains("-TrueKeepUITestPersistentSession")
+            && usesSampleCleanupData
+        resetsTestSession = usesTestSession && arguments.contains("-TrueKeepResetReviewSession")
     }
 
     var initialCleanupState: CleanupFlowState {
@@ -88,7 +94,15 @@ struct AppLaunchConfiguration: Hashable {
         if uiTestScenario == .multipleSimilarGroups {
             return .multipleSimilarGroupsSample()
         }
-        return usesSampleCleanupData ? .sample() : PhotoScanResultBuilder.state(from: [])
+        var state = usesSampleCleanupData ? CleanupFlowState.sample() : PhotoScanResultBuilder.state(from: [])
+        if argumentsContainCoverageFixture {
+            state.scanReport = PhotoScanReport(eligiblePhotos: 701, analyzedPhotos: 699, unavailablePhotos: 2, cacheHits: 300, refinedPhotos: 8, elapsedSeconds: 12, sampledPeakMemoryMB: 90)
+        }
+        return state
+    }
+
+    private var argumentsContainCoverageFixture: Bool {
+        usesSampleCleanupData && ProcessInfo.processInfo.arguments.contains("-TrueKeepUITestCoverage")
     }
 
     func initialPhase(for access: PhotoLibraryAccess) -> AppPhase {
@@ -220,6 +234,7 @@ enum AppUITestActionDelay {
 }
 
 struct AppRootView: View {
+    @Environment(\.scenePhase) private var scenePhase
     @State private var phase: AppPhase = .welcome
     @State private var selectedTab: AppTab = .home
     @State private var homePath: [CleanupRoute] = []
@@ -237,6 +252,12 @@ struct AppRootView: View {
     @State private var isScanActive = false
     @State private var confirmedKeepAssetIDs: Set<String>
     @StateObject private var localModels = LocalPhotoModelController()
+    @State private var sessionMessage: String?
+    @State private var canSaveSession = true
+    @State private var libraryObserver: PhotoLibraryObserver?
+    private let sessionStore: ReviewSessionStore
+    private let usesPersistentSession: Bool
+    private let observesPhotoLibrary: Bool
 
     private let photoAuthorization: any PhotoLibraryAuthorizing
     private let photoScanner: any PhotoLibraryScanning
@@ -258,11 +279,31 @@ struct AppRootView: View {
             confirmedKeepStore.reset()
         }
         let initialConfirmedKeepAssetIDs = confirmedKeepStore.loadAssetIDs()
+        let observesPhotoLibrary = !launchConfiguration.usesSampleCleanupData
+            && launchConfiguration.uiTestScenario == nil
+            && !launchConfiguration.forcesNotDeterminedPhotoAccess
+        self.observesPhotoLibrary = observesPhotoLibrary
+        let usesPersistentSession = observesPhotoLibrary || launchConfiguration.usesTestSession
+        self.usesPersistentSession = usesPersistentSession
+        let store = launchConfiguration.usesTestSession
+            ? ReviewSessionStore(fileURL: URL.applicationSupportDirectory.appendingPathComponent("TrueKeep/ui-test-review-session.json"))
+            : ReviewSessionStore()
+        self.sessionStore = store
+        if launchConfiguration.resetsTestSession { try? FileManager.default.removeItem(at: store.fileURL) }
         var initialCleanupState = launchConfiguration.initialCleanupState
-        initialCleanupState.applyConfirmedKeepAssetIDs(
-            initialConfirmedKeepAssetIDs,
-            hideProtectedNonSimilarCandidates: true
-        )
+        var restoredRange: PhotoScanDateRange?
+        if usesPersistentSession {
+            do {
+                if let saved = try store.load() {
+                    initialCleanupState = saved.state
+                    restoredRange = saved.completedRange
+                }
+            } catch {
+                self._sessionMessage = State(initialValue: "暂时无法读取本地复核记录。原记录已保留，请稍后重试。")
+                self._canSaveSession = State(initialValue: false)
+            }
+        }
+        initialCleanupState.applyConfirmedKeepAssetIDs(initialConfirmedKeepAssetIDs, hideProtectedNonSimilarCandidates: true)
         let initialPhotoAccess: PhotoLibraryAccess
         if launchConfiguration.uiTestScenario != nil {
             initialPhotoAccess = launchConfiguration.initialPhotoAccess
@@ -273,11 +314,11 @@ struct AppRootView: View {
         }
         self._phase = State(initialValue: launchConfiguration.initialPhase(for: initialPhotoAccess))
         self._photoAccess = State(initialValue: initialPhotoAccess)
-        self._hasCompletedScan = State(initialValue: launchConfiguration.initialHasCompletedScan)
+        self._hasCompletedScan = State(initialValue: restoredRange != nil || launchConfiguration.initialHasCompletedScan)
         self._scanStatus = State(initialValue: launchConfiguration.initialScanStatus(for: initialCleanupState))
         self._scanProgress = State(initialValue: launchConfiguration.initialScanProgress)
         self._completedScanDateRange = State(
-            initialValue: launchConfiguration.initialHasCompletedScan ? .defaultValue : nil
+            initialValue: restoredRange ?? (launchConfiguration.initialHasCompletedScan ? .defaultValue : nil)
         )
         self._isScanActive = State(initialValue: launchConfiguration.initialHasActiveScan)
         self._confirmedKeepAssetIDs = State(initialValue: initialConfirmedKeepAssetIDs)
@@ -334,6 +375,86 @@ struct AppRootView: View {
             }
         }
         .tint(TrueKeepTheme.green)
+        .task {
+            guard observesPhotoLibrary else { return }
+            if photoAccess.canScan { libraryObserver = PhotoLibraryObserver() }
+            refreshPhotoLibrary()
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active { refreshPhotoLibrary() }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .trueKeepPhotoLibraryChanged).receive(on: RunLoop.main)) { _ in
+            guard observesPhotoLibrary else { return }
+            if isScanActive { handleScanCancelOrBack() }
+            PhotoAnalysisCache.clear()
+            refreshPhotoLibrary()
+        }
+        .onChange(of: cleanupState) { _, _ in
+            saveSession()
+        }
+    }
+
+    private func saveSession() {
+        guard usesPersistentSession, canSaveSession else { return }
+        do {
+            try sessionStore.save(SavedReviewSession(state: cleanupState, completedRange: completedScanDateRange))
+            sessionMessage = nil
+        } catch {
+            sessionMessage = "本地记录保存失败，当前选择仍在。请保持 App 打开并重试。"
+        }
+    }
+
+    private func retrySession() {
+        if canSaveSession { saveSession(); return }
+        do {
+            if let saved = try sessionStore.load() {
+                cleanupState = saved.state
+                cleanupState.applyConfirmedKeepAssetIDs(confirmedKeepAssetIDs, hideProtectedNonSimilarCandidates: true)
+                completedScanDateRange = saved.completedRange
+                hasCompletedScan = saved.completedRange != nil
+            }
+            canSaveSession = true
+            sessionMessage = nil
+            refreshPhotoLibrary()
+        } catch {
+            sessionMessage = "记录仍无法读取，原文件没有被覆盖。请稍后重试。"
+        }
+    }
+
+    private func rebuildSession() {
+        do {
+            try sessionStore.rebuildPreservingBackup(SavedReviewSession(state: cleanupState, completedRange: completedScanDateRange))
+            canSaveSession = true
+            sessionMessage = nil
+        } catch {
+            sessionMessage = "暂时无法重建记录，旧文件仍保留。请稍后重试。"
+        }
+    }
+
+    private func refreshPhotoLibrary() {
+        guard observesPhotoLibrary else { return }
+        let access = photoAuthorization.currentAccess()
+        let changed = access != photoAccess
+        photoAccess = access
+        if changed { PhotoAnalysisCache.clear() }
+        if changed, isScanActive { handleScanCancelOrBack() }
+        if access.canScan {
+            if libraryObserver == nil { libraryObserver = PhotoLibraryObserver() }
+            if case .permissionIssue = phase { phase = .main }
+        }
+        let ids = Set(cleanupState.reviewGroups.flatMap { $0.candidates.map(\.id) }
+            + cleanupState.reviewBinItems.map(\.id))
+        let cutoff = Date().addingTimeInterval(-30 * 86_400)
+        cleanupState.reviewBinItems.removeAll { $0.addedAt < cutoff }
+        var accessible: Set<String> = []
+        if access.canScan {
+            PHAsset.fetchAssets(withLocalIdentifiers: Array(ids), options: nil).enumerateObjects { asset, _, _ in
+                accessible.insert(asset.localIdentifier)
+            }
+        }
+        cleanupState.reconcileAccessibleAssets(accessible)
+        SystemPhotoThumbnailProvider.shared.clearCache()
+        NotificationCenter.default.post(name: .trueKeepThumbnailsInvalidated, object: nil)
     }
 
     private func requestPhotoAccess() {
@@ -377,10 +498,7 @@ struct AppRootView: View {
         activeScanDateRange = dateRange
         scanStatus = .scanning
         scanProgress = .coarseAnalysis(completed: 0, total: 0)
-        cleanupState = PhotoScanResultBuilder.state(from: [])
-        hasCompletedScan = false
         isScanActive = true
-        completedScanDateRange = nil
         phase = .scan
 
         let photoScanner = photoScanner
@@ -402,19 +520,18 @@ struct AppRootView: View {
 
                 if wasCancelled {
                     scanStatus = .interrupted(message: "用户已取消")
+                } else if let error = scannedState.scanErrorMessage {
+                    scanStatus = .interrupted(message: error)
                 } else {
-                    var reconciledState = scannedState
-                    reconciledState.applyConfirmedKeepAssetIDs(
-                        confirmedKeepAssetIDs,
-                        hideProtectedNonSimilarCandidates: true
-                    )
-                    cleanupState = reconciledState
+                    cleanupState.mergeScanResult(scannedState, confirmedKeepAssetIDs: confirmedKeepAssetIDs)
                     hasCompletedScan = true
                     completedScanDateRange = dateRange
-                    scanStatus = .completed(candidateCount: reconciledState.tasks.map(\.candidateCount).reduce(0, +))
+                    scanStatus = .completed(candidateCount: cleanupState.tasks.map(\.candidateCount).reduce(0, +))
                 }
                 isScanActive = false
                 scanTask = nil
+                if usesPersistentSession { refreshPhotoLibrary() }
+                saveSession()
             }
         }
     }
@@ -456,6 +573,11 @@ struct AppRootView: View {
                     selectedScanDateRange: selectedScanDateRange,
                     completedScanDateRange: completedScanDateRange,
                     activeScanProgress: isScanActive ? scanProgress : nil,
+                    sessionMessage: sessionMessage,
+                    sessionNeedsRecovery: !canSaveSession,
+                    onRetrySession: { retrySession() },
+                    onRebuildSession: { rebuildSession() },
+                    onManagePhotoAccess: { openAppSettings() },
                     onRequestPhotoAccess: { requestPhotoAccess() },
                     onSelectScanDateRange: { selectedScanDateRange = $0 },
                     onScan: {
@@ -475,9 +597,11 @@ struct AppRootView: View {
                 )
                 .navigationDestination(for: CleanupRoute.self) { route in
                     switch route {
-                    case .reviewGroup:
+                    case .reviewGroup(let id):
                         ReviewGroupView(
                             state: $cleanupState,
+                            groupID: id,
+                            onNavigate: { homePath = [.reviewGroup($0)] },
                             localModels: localModels,
                             photoDeletion: photoDeletion,
                             onAddedToReviewBin: {
@@ -486,6 +610,12 @@ struct AppRootView: View {
                             },
                             onSetConfirmedKeep: { assetID, isConfirmed in
                                 setConfirmedKeep(assetID, isConfirmed: isConfirmed)
+                            },
+                            onConfirmKeepGroup: { ids in
+                                let updated = confirmedKeepAssetIDs.union(ids)
+                                confirmedKeepStore.saveAssetIDs(updated)
+                                confirmedKeepAssetIDs = updated
+                                cleanupState.applyConfirmedKeepAssetIDs(updated)
                             }
                         )
                     }

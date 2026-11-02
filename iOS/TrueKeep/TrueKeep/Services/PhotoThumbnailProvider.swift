@@ -114,4 +114,9 @@ final class SystemPhotoThumbnailProvider: PhotoThumbnailProviding {
     func cancelRequest(_ requestID: PhotoThumbnailRequestID) {
         imageManager.cancelImageRequest(requestID)
     }
+
+    func clearCache() {
+        cache.removeAllObjects()
+        imageManager.stopCachingImagesForAllAssets()
+    }
 }

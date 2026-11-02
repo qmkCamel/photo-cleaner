@@ -1,0 +1,617 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -project iOS/TrueKeep/TrueKeep.xcodeproj -scheme TrueKeep -destination "platform=iOS Simulator,id=642F2F40-1DF5-4C73-A382-494BBE4C53AB" -derivedDataPath /tmp/truekeep-merge-cached-20261102 -resultBundlePath /tmp/truekeep-merge-ui-20261102.xcresult -skipPackageUpdates -disableAutomaticPackageResolution -parallel-testing-enabled NO "-only-testing:TrueKeepUITests/TrueKeepUITests/testMediaPreviewFailureAndConfirmedKeepWithScreenshots" "-only-testing:TrueKeepUITests/TrueKeepUITests/testReviewSessionSurvivesRelaunchWithScreenshot" "-only-testing:TrueKeepUITests/TrueKeepUITests/testCoverageSummaryIncludesUnreadablePhotosWithScreenshot" "-only-testing:TrueKeepUITests/TrueKeepUITests/testKeepEntireGroupRemovesTaskAndCanClearDecision" "-only-testing:TrueKeepUITests/TrueKeepUITests/testRecommendedKeepCapabilityIsHiddenAndSimilarGroupStartsUnselected" "-only-testing:TrueKeepUITests/TrueKeepUITests/testDirectDeleteShowsBusyStateAndRefreshesHomeTaskAfterSuccess" "-only-testing:TrueKeepUITests/TrueKeepUITests/testDirectDeleteFailurePreservesReviewCandidatesAndSelection" CODE_SIGNING_ALLOWED=NO
+
+Build settings from command line:
+    CODE_SIGNING_ALLOWED = NO
+
+Resolve Package Graph
+
+
+Resolved source packages:
+  swift-huggingface: https://github.com/huggingface/swift-huggingface.git @ 0.13.0
+  LocalPhotoModels: /Users/edge/side/photo-cleaner/iOS/TrueKeep/Packages/LocalPhotoModels
+  swift-numerics: https://github.com/apple/swift-numerics @ 1.1.1
+  swift-crypto: https://github.com/apple/swift-crypto.git @ 4.5.2
+  Jinja: https://github.com/huggingface/swift-jinja.git @ 2.5.2
+  swift-asn1: https://github.com/apple/swift-asn1.git @ 1.7.3
+  swift-collections: https://github.com/apple/swift-collections.git @ 1.7.4
+  swift-syntax: https://github.com/swiftlang/swift-syntax.git @ 603.0.2
+  mlx-swift: https://github.com/ml-explore/mlx-swift @ 0.32.3
+  swift-transformers: https://github.com/huggingface/swift-transformers @ 1.3.0
+  EventSource: https://github.com/mattt/EventSource.git @ 1.5.1
+  mlx-swift-lm: https://github.com/ml-explore/mlx-swift-lm @ 3.32.3
+  yyjson: https://github.com/ibireme/yyjson.git @ 0.12.0
+
+Writing result bundle at path:
+	/tmp/truekeep-merge-ui-20261102.xcresult
+
+2026-11-02 17:34:45.841 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-02 17:34:59.166957+0800 TrueKeepUITests-Runner[89202:14800510] [Default] Running tests...
+objc[89202]: Class UIAccessibilityLoaderWebShared is implemented in both /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x109f84310) and /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x109434398). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-11-02 17:35:04.416.
+Test Suite 'TrueKeepUITests.xctest' started at 2026-11-02 17:35:04.416.
+Test Suite 'TrueKeepUITests' started at 2026-11-02 17:35:04.417.
+Test Case '-[TrueKeepUITests.TrueKeepUITests testCoverageSummaryIncludesUnreadablePhotosWithScreenshot]' started.
+    t =     0.00s Start Test at 2026-11-02 17:35:04.417
+    t =     0.26s Set Up
+    t =     0.26s     Open app.truekeep.ios
+    t =     0.26s         Launch app.truekeep.ios
+2026-11-02 17:35:04.963 xcodebuild[88582:14796209] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-02 17:35:04.963 xcodebuild[88582:14796209] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-02 17:35:05.064 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     1.57s             Setting up automation session
+    t =     2.51s             Wait for app.truekeep.ios to idle
+    t =     3.78s Terminate app.truekeep.ios:89285
+2026-11-02 17:35:08.205 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-02 17:35:08.205 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     4.83s Open app.truekeep.ios
+    t =     4.83s     Launch app.truekeep.ios
+2026-11-02 17:35:09.248 xcodebuild[88582:14796209] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-02 17:35:09.248 xcodebuild[88582:14796209] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-02 17:35:09.265 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     5.04s         Setting up automation session
+    t =     5.92s         Wait for app.truekeep.ios to idle
+    t =     7.70s Waiting 5.0s for "scan.coverage" Any to exist
+    t =     8.73s     Checking `Expect predicate `existsNoRetry == 1` for object "scan.coverage" Any`
+    t =     8.74s         Checking existence of `"scan.coverage" Any`
+    t =     8.86s Checking existence of `StaticText (First Match)`
+    t =     9.02s Added attachment named 'scan-coverage-with-local-unavailable'
+    t =     9.02s Tear Down
+    t =     9.02s     Terminate app.truekeep.ios:89295
+2026-11-02 17:35:13.463 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-02 17:35:13.464 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testCoverageSummaryIncludesUnreadablePhotosWithScreenshot]' passed (10.140 seconds).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testDirectDeleteFailurePreservesReviewCandidatesAndSelection]' started.
+    t =     0.00s Start Test at 2026-11-02 17:35:14.558
+    t =     0.02s Set Up
+    t =     0.02s     Open app.truekeep.ios
+    t =     0.02s         Launch app.truekeep.ios
+2026-11-02 17:35:14.577 xcodebuild[88582:14796209] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-02 17:35:14.577 xcodebuild[88582:14796209] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-02 17:35:14.590 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     0.44s             Setting up automation session
+    t =     1.24s             Wait for app.truekeep.ios to idle
+    t =     2.52s Tap "truekeep.welcome.learn-more" Button
+    t =     2.52s     Wait for app.truekeep.ios to idle
+    t =     2.52s     Find the "truekeep.welcome.learn-more" Button
+    t =     2.58s     Check for interrupting elements affecting "truekeep.welcome.learn-more" Button
+    t =     2.59s     Synthesize event
+    t =     2.98s     Wait for app.truekeep.ios to idle
+    t =     3.11s Waiting 5.0s for "truekeep.settings.topic.how-it-works" Button to exist
+    t =     4.14s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.settings.topic.how-it-works" Button`
+    t =     4.15s         Checking existence of `"truekeep.settings.topic.how-it-works" Button`
+    t =     4.19s Tap "首页" Button
+    t =     4.19s     Wait for app.truekeep.ios to idle
+    t =     4.20s     Find the "首页" Button
+    t =     4.22s     Check for interrupting elements affecting "house" Button
+    t =     4.25s     Synthesize event
+    t =     4.54s     Wait for app.truekeep.ios to idle
+    t =     6.08s Waiting 5.0s for "truekeep.cleanup.results" ScrollView to exist
+    t =     7.12s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.cleanup.results" ScrollView`
+    t =     7.12s         Checking existence of `"truekeep.cleanup.results" ScrollView`
+    t =     7.17s Waiting 5.0s for "truekeep.cleanup.task.similar-family-12" Button to exist
+    t =     8.21s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.cleanup.task.similar-family-12" Button`
+    t =     8.21s         Checking existence of `"truekeep.cleanup.task.similar-family-12" Button`
+    t =     8.24s Find the "truekeep.cleanup.task.similar-family-12" Button
+    t =     8.29s Tap "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =     8.29s     Wait for app.truekeep.ios to idle
+    t =     8.29s     Find the "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =     8.32s     Check for interrupting elements affecting "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =     8.35s     Synthesize event
+    t =     8.64s     Wait for app.truekeep.ios to idle
+    t =     9.11s Waiting 5.0s for "截图复核" StaticText to exist
+    t =    10.15s     Checking `Expect predicate `existsNoRetry == 1` for object "截图复核" StaticText`
+    t =    10.15s         Checking existence of `"截图复核" StaticText`
+    t =    10.19s Tap "truekeep.review.direct-delete-selection" Button
+    t =    10.19s     Wait for app.truekeep.ios to idle
+    t =    10.19s     Find the "truekeep.review.direct-delete-selection" Button
+    t =    10.23s     Check for interrupting elements affecting "truekeep.review.direct-delete-selection" Button
+    t =    10.26s     Synthesize event
+    t =    10.55s     Wait for app.truekeep.ios to idle
+    t =    10.95s Waiting 5.0s for "truekeep.delete.confirm" Button to exist
+    t =    11.98s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.delete.confirm" Button`
+    t =    11.98s         Checking existence of `"truekeep.delete.confirm" Button`
+    t =    12.02s Tap "truekeep.delete.confirm" Button
+    t =    12.02s     Wait for app.truekeep.ios to idle
+    t =    12.02s     Find the "truekeep.delete.confirm" Button
+    t =    12.06s     Check for interrupting elements affecting "truekeep.delete.confirm" Button
+    t =    12.09s     Synthesize event
+    t =    12.38s     Wait for app.truekeep.ios to idle
+    t =    12.79s Waiting 5.0s for "删除未完成" StaticText to exist
+    t =    13.82s     Checking `Expect predicate `existsNoRetry == 1` for object "删除未完成" StaticText`
+    t =    13.82s         Checking existence of `"删除未完成" StaticText`
+    t =    13.86s Checking existence of `"真机调试删除安全锁已开启，未删除任何照片或视频。" StaticText`
+    t =    13.90s Waiting 5.0s for "truekeep.review.candidate.shot-01" Button to exist
+    t =    14.92s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.review.candidate.shot-01" Button`
+    t =    14.92s         Checking existence of `"truekeep.review.candidate.shot-01" Button`
+    t =    14.96s Find the "truekeep.review.candidate.shot-01" Button
+    t =    14.99s Find the "truekeep.review.direct-delete-selection" Button
+    t =    15.14s Added attachment named 'direct-delete-06-failure-preserved'
+    t =    15.14s Tear Down
+    t =    15.14s     Terminate app.truekeep.ios:89371
+2026-11-02 17:35:29.711 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-02 17:35:29.712 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testDirectDeleteFailurePreservesReviewCandidatesAndSelection]' passed (16.455 seconds).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testDirectDeleteShowsBusyStateAndRefreshesHomeTaskAfterSuccess]' started.
+    t =     0.00s Start Test at 2026-11-02 17:35:31.013
+    t =     0.02s Set Up
+    t =     0.03s     Open app.truekeep.ios
+    t =     0.03s         Launch app.truekeep.ios
+2026-11-02 17:35:31.040 xcodebuild[88582:14796209] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-02 17:35:31.040 xcodebuild[88582:14796209] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-02 17:35:31.079 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     0.24s             Setting up automation session
+    t =     1.32s             Wait for app.truekeep.ios to idle
+    t =     2.64s Terminate app.truekeep.ios:89643
+2026-11-02 17:35:33.673 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-02 17:35:33.674 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     3.70s Open app.truekeep.ios
+    t =     3.70s     Launch app.truekeep.ios
+2026-11-02 17:35:34.716 xcodebuild[88582:14796209] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-02 17:35:34.716 xcodebuild[88582:14796209] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-02 17:35:34.731 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     3.92s         Setting up automation session
+    t =     4.98s         Wait for app.truekeep.ios to idle
+    t =     6.32s Tap "truekeep.welcome.learn-more" Button
+    t =     6.32s     Wait for app.truekeep.ios to idle
+    t =     6.32s     Find the "truekeep.welcome.learn-more" Button
+    t =     6.40s     Check for interrupting elements affecting "truekeep.welcome.learn-more" Button
+    t =     6.42s     Synthesize event
+    t =     6.72s     Wait for app.truekeep.ios to idle
+    t =     6.76s Waiting 5.0s for "truekeep.settings.topic.how-it-works" Button to exist
+    t =     7.78s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.settings.topic.how-it-works" Button`
+    t =     7.78s         Checking existence of `"truekeep.settings.topic.how-it-works" Button`
+    t =     7.84s Tap "首页" Button
+    t =     7.84s     Wait for app.truekeep.ios to idle
+    t =     7.85s     Find the "首页" Button
+    t =     7.88s     Check for interrupting elements affecting "house" Button
+    t =     7.92s     Synthesize event
+    t =     8.22s     Wait for app.truekeep.ios to idle
+    t =     9.70s Waiting 5.0s for "truekeep.cleanup.results" ScrollView to exist
+    t =    10.73s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.cleanup.results" ScrollView`
+    t =    10.73s         Checking existence of `"truekeep.cleanup.results" ScrollView`
+    t =    10.78s Waiting 5.0s for "truekeep.cleanup.task.similar-family-12" Button to exist
+    t =    11.81s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.cleanup.task.similar-family-12" Button`
+    t =    11.81s         Checking existence of `"truekeep.cleanup.task.similar-family-12" Button`
+    t =    11.86s Find the "truekeep.cleanup.task.similar-family-12" Button
+    t =    11.91s Tap "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =    11.91s     Wait for app.truekeep.ios to idle
+    t =    11.91s     Find the "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =    11.95s     Check for interrupting elements affecting "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =    11.98s     Synthesize event
+    t =    12.26s     Wait for app.truekeep.ios to idle
+    t =    12.68s Waiting 5.0s for "截图复核" StaticText to exist
+    t =    13.71s     Checking `Expect predicate `existsNoRetry == 1` for object "截图复核" StaticText`
+    t =    13.71s         Checking existence of `"截图复核" StaticText`
+    t =    13.75s Waiting 5.0s for "truekeep.review.direct-delete-selection" Button to exist
+    t =    14.78s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.review.direct-delete-selection" Button`
+    t =    14.78s         Checking existence of `"truekeep.review.direct-delete-selection" Button`
+    t =    14.82s Find the "truekeep.review.direct-delete-selection" Button
+    t =    14.96s Added attachment named 'direct-delete-01-review-actions'
+    t =    14.96s Waiting 5.0s for "truekeep.review.direct-delete-selection" Button to exist
+    t =    15.99s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.review.direct-delete-selection" Button`
+    t =    15.99s         Checking existence of `"truekeep.review.direct-delete-selection" Button`
+    t =    16.03s Tap "truekeep.review.direct-delete-selection" Button[0.94, 0.50]
+    t =    16.03s     Wait for app.truekeep.ios to idle
+    t =    16.03s     Find the "truekeep.review.direct-delete-selection" Button
+    t =    16.07s     Check for interrupting elements affecting "truekeep.review.direct-delete-selection" Button
+    t =    16.11s     Synthesize event
+    t =    16.11s         Find the "truekeep.review.direct-delete-selection" Button
+    t =    16.15s         Find the "truekeep.review.direct-delete-selection" Button
+    t =    16.19s         Find the "truekeep.review.direct-delete-selection" Button
+    t =    16.51s     Wait for app.truekeep.ios to idle
+    t =    16.86s Waiting 5.0s for "truekeep.delete.confirm" Button to exist
+    t =    17.89s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.delete.confirm" Button`
+    t =    17.89s         Checking existence of `"truekeep.delete.confirm" Button`
+    t =    17.93s Checking existence of `"iCloud Photos 风险" StaticText`
+    t =    18.06s Added attachment named 'direct-delete-02-confirmation'
+    t =    18.06s Tap "truekeep.delete.confirm" Button
+    t =    18.06s     Wait for app.truekeep.ios to idle
+    t =    18.06s     Find the "truekeep.delete.confirm" Button
+    t =    18.10s     Check for interrupting elements affecting "truekeep.delete.confirm" Button
+    t =    18.13s     Synthesize event
+    t =    18.42s     Wait for app.truekeep.ios to idle
+    t =    19.45s Checking `Expect predicate `label CONTAINS "正在请求系统删除"` for object "truekeep.delete.confirm" Button`
+    t =    19.46s     Find the "truekeep.delete.confirm" Button
+    t =    20.56s Checking `Expect predicate `enabled == 0` for object "truekeep.delete.confirm" Button`
+    t =    20.56s     Find the "truekeep.delete.confirm" Button
+    t =    21.66s Checking `Expect predicate `enabled == 0` for object "truekeep.delete.cancel" Button`
+    t =    21.66s     Find the "truekeep.delete.cancel" Button
+    t =    21.84s Added attachment named 'direct-delete-03-loading'
+    t =    21.84s Swipe up Target Application 'app.truekeep.ios'
+    t =    21.84s     Wait for app.truekeep.ios to idle
+    t =    21.84s     Find the Target Application 'app.truekeep.ios'
+    t =    21.87s     Check for interrupting elements affecting "留真" Application
+    t =    21.90s     Synthesize event
+    t =    22.32s     Wait for app.truekeep.ios to idle
+    t =    22.49s Waiting 5.0s for "删除已完成" StaticText to exist
+    t =    23.52s     Checking `Expect predicate `existsNoRetry == 1` for object "删除已完成" StaticText`
+    t =    23.53s         Checking existence of `"删除已完成" StaticText`
+    t =    23.57s Checking existence of `"3 项已移入 Photos 的 Recently Deleted。返回首页时，任务数量、预计空间和预览会保持同步。" StaticText`
+    t =    23.60s Checking existence of `"预计释放 0 KB" StaticText`
+    t =    23.63s Checking existence of `"truekeep.review.candidate.shot-01" Button`
+    t =    23.65s Find the "truekeep.review.review-all" Button
+    t =    23.77s Added attachment named 'direct-delete-04-success'
+    t =    23.77s Waiting 5.0s for Button (Element at index 0) to exist
+    t =    24.79s     Checking `Expect predicate `existsNoRetry == 1` for object Button (Element at index 0)`
+    t =    24.80s         Checking existence of `Button (Element at index 0)`
+    t =    24.84s Tap Button (Element at index 0)
+    t =    24.84s     Wait for app.truekeep.ios to idle
+    t =    24.84s     Find the Button (Element at index 0)
+    t =    24.87s     Check for interrupting elements affecting "BackButton" Button
+    t =    24.91s     Synthesize event
+    t =    25.21s     Wait for app.truekeep.ios to idle
+    t =    26.05s Waiting 5.0s for "truekeep.cleanup.results" ScrollView to exist
+    t =    27.07s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.cleanup.results" ScrollView`
+    t =    27.08s         Checking existence of `"truekeep.cleanup.results" ScrollView`
+    t =    27.12s Checking existence of `"truekeep.cleanup.task.screenshots-chat-03" Button`
+    t =    27.15s Checking existence of `"truekeep.cleanup.task.similar-family-12" Button`
+    t =    27.30s Added attachment named 'direct-delete-05-home-synced'
+    t =    27.30s Tear Down
+    t =    27.30s     Terminate app.truekeep.ios:89665
+2026-11-02 17:35:58.329 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-02 17:35:58.329 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testDirectDeleteShowsBusyStateAndRefreshesHomeTaskAfterSuccess]' passed (28.424 seconds).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testKeepEntireGroupRemovesTaskAndCanClearDecision]' started.
+    t =     0.00s Start Test at 2026-11-02 17:35:59.438
+    t =     0.02s Set Up
+    t =     0.02s     Open app.truekeep.ios
+    t =     0.02s         Launch app.truekeep.ios
+2026-11-02 17:35:59.459 xcodebuild[88582:14796209] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-02 17:35:59.459 xcodebuild[88582:14796209] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-02 17:35:59.486 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     0.23s             Setting up automation session
+    t =     1.13s             Wait for app.truekeep.ios to idle
+    t =     2.43s Terminate app.truekeep.ios:90005
+2026-11-02 17:36:01.893 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-02 17:36:01.893 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     3.49s Open app.truekeep.ios
+    t =     3.50s     Launch app.truekeep.ios
+2026-11-02 17:36:02.941 xcodebuild[88582:14796209] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-02 17:36:02.941 xcodebuild[88582:14796209] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-02 17:36:02.972 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     3.72s         Setting up automation session
+    t =     4.63s         Wait for app.truekeep.ios to idle
+    t =     6.11s Waiting 5.0s for "truekeep.cleanup.task.similar-family-13" Button to exist
+    t =     7.13s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.cleanup.task.similar-family-13" Button`
+    t =     7.13s         Checking existence of `"truekeep.cleanup.task.similar-family-13" Button`
+    t =     7.29s Tap "truekeep.cleanup.task.similar-family-13" Button
+    t =     7.29s     Wait for app.truekeep.ios to idle
+    t =     7.29s     Find the "truekeep.cleanup.task.similar-family-13" Button
+    t =     7.34s     Check for interrupting elements affecting "truekeep.cleanup.task.similar-family-13" Button
+    t =     7.37s     Synthesize event
+    t =     7.66s     Wait for app.truekeep.ios to idle
+    t =     8.09s Checking existence of `"review.keep-group" Button`
+    t =     8.13s Find the "review.keep-group" Button
+    t =     8.17s Checking existence of `"review.keep-group" Button`
+    t =     8.20s Find the "review.keep-group" Button
+    t =     8.24s Tap "review.keep-group" Button
+    t =     8.24s     Wait for app.truekeep.ios to idle
+    t =     8.25s     Find the "review.keep-group" Button
+    t =     8.27s     Check for interrupting elements affecting "review.keep-group" Button
+    t =     8.30s     Synthesize event
+    t =     8.60s     Wait for app.truekeep.ios to idle
+    t =     8.60s Find the "truekeep.review.add-to-review-bin" Button
+    t =     8.75s Added attachment named 'review-entire-group-kept'
+    t =     8.75s Tap "设置" Button
+    t =     8.75s     Wait for app.truekeep.ios to idle
+    t =     8.75s     Find the "设置" Button
+    t =     8.78s     Check for interrupting elements affecting "设置" Button
+    t =     8.81s     Synthesize event
+    t =     9.10s     Wait for app.truekeep.ios to idle
+    t =    10.59s Tap "truekeep.settings.topic.confirmed-keeps" Button
+    t =    10.59s     Wait for app.truekeep.ios to idle
+    t =    10.60s     Find the "truekeep.settings.topic.confirmed-keeps" Button
+    t =    10.65s     Check for interrupting elements affecting "truekeep.settings.topic.confirmed-keeps" Button
+    t =    10.68s     Synthesize event
+    t =    10.98s     Wait for app.truekeep.ios to idle
+    t =    11.84s Checking existence of `"truekeep.settings.confirmed-keeps.reset" Button`
+    t =    11.87s Find the "truekeep.settings.confirmed-keeps.reset" Button
+    t =    11.91s Checking existence of `"truekeep.settings.confirmed-keeps.reset" Button`
+    t =    11.94s Find the "truekeep.settings.confirmed-keeps.reset" Button
+    t =    11.98s Waiting 5.0s for "truekeep.settings.confirmed-keeps.reset" Button to exist
+    t =    13.01s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.settings.confirmed-keeps.reset" Button`
+    t =    13.01s         Checking existence of `"truekeep.settings.confirmed-keeps.reset" Button`
+    t =    13.03s Tap "truekeep.settings.confirmed-keeps.reset" Button
+    t =    13.03s     Wait for app.truekeep.ios to idle
+    t =    13.04s     Find the "truekeep.settings.confirmed-keeps.reset" Button
+    t =    13.06s     Check for interrupting elements affecting "truekeep.settings.confirmed-keeps.reset" Button
+    t =    13.07s         Wait for com.apple.springboard to idle
+    t =    13.19s     Found 1 interrupting element:
+    t =    13.19s         Find the "“留真”想完全访问你的照片图库。" Alert
+    t =    13.21s "“留真”想完全访问你的照片图库。" Alert from Application 'com.apple.springboard'
+    t =    13.22s     Invoking UI interruption monitors for "“留真”想完全访问你的照片图库。" Alert from Application 'com.apple.springboard'
+    t =    13.22s         Find the "“留真”想完全访问你的照片图库。" Alert
+    t =    13.24s         Checking existence of `Button (Elements matching predicate 'userTestingAttributes CONTAINS "cancel-button"')`
+    t =    13.27s         Get all elements bound by accessibility element for: Elements matching predicate 'userTestingAttributes CONTAINS "default-button"'
+    t =    13.32s         Checking existence of `"不允许" Button`
+    t =    13.35s Default interruption handler attempting to dismiss alert by tapping "不允许" Button.
+    t =    13.35s         Tap "不允许" Button
+    t =    13.35s             Wait for com.apple.springboard to idle
+    t =    13.35s             Find the "不允许" Button
+    t =    13.39s             Check for interrupting elements affecting "不允许" Button
+    t =    13.43s             Synthesize event
+    t =    13.73s             Wait for com.apple.springboard to idle
+    t =    13.96s         Waiting 1.0s for Alert to not exist
+    t =    14.96s             Checking `Expect predicate `existsNoRetry == 0` for object Alert`
+    t =    14.96s                 Checking existence of `Alert`
+    t =    15.00s             Checking existence of `Alert`
+    t =    15.03s         Verifying handling...
+    t =    15.05s Confirmed successful handling of interrupting element
+    t =    15.05s     Synthesize event
+    t =    15.35s     Wait for app.truekeep.ios to idle
+    t =    15.68s Tap "全部取消保留" Button
+    t =    15.68s     Wait for app.truekeep.ios to idle
+    t =    15.68s     Find the "全部取消保留" Button
+    t =    15.74s     Check for interrupting elements affecting "全部取消保留" Button
+    t =    15.78s     Synthesize event
+    t =    16.07s     Wait for app.truekeep.ios to idle
+    t =    16.38s Waiting 5.0s for "还没有已确认保留的照片" StaticText to exist
+    t =    17.41s     Checking `Expect predicate `existsNoRetry == 1` for object "还没有已确认保留的照片" StaticText`
+    t =    17.41s         Checking existence of `"还没有已确认保留的照片" StaticText`
+    t =    17.54s Added attachment named 'review-confirmed-keeps-cleared'
+    t =    17.54s Tear Down
+    t =    17.54s     Terminate app.truekeep.ios:90038
+2026-11-02 17:36:16.988 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-02 17:36:16.988 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testKeepEntireGroupRemovesTaskAndCanClearDecision]' passed (18.642 seconds).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testMediaPreviewFailureAndConfirmedKeepWithScreenshots]' started.
+    t =     0.00s Start Test at 2026-11-02 17:36:18.081
+    t =     0.02s Set Up
+    t =     0.02s     Open app.truekeep.ios
+    t =     0.02s         Launch app.truekeep.ios
+2026-11-02 17:36:18.100 xcodebuild[88582:14796209] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-02 17:36:18.100 xcodebuild[88582:14796209] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-02 17:36:18.113 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     0.23s             Setting up automation session
+    t =     1.11s             Wait for app.truekeep.ios to idle
+    t =     2.39s Terminate app.truekeep.ios:90187
+2026-11-02 17:36:20.488 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-02 17:36:20.488 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     3.44s Open app.truekeep.ios
+    t =     3.45s     Launch app.truekeep.ios
+2026-11-02 17:36:21.530 xcodebuild[88582:14796209] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-02 17:36:21.531 xcodebuild[88582:14796209] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-02 17:36:21.551 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     3.66s         Setting up automation session
+    t =     4.55s         Wait for app.truekeep.ios to idle
+    t =     6.02s Tap "truekeep.cleanup.task.similar-family-12" Button
+    t =     6.02s     Wait for app.truekeep.ios to idle
+    t =     6.03s     Find the "truekeep.cleanup.task.similar-family-12" Button
+    t =     6.16s     Check for interrupting elements affecting "truekeep.cleanup.task.similar-family-12" Button
+    t =     6.19s     Synthesize event
+    t =     6.48s     Wait for app.truekeep.ios to idle
+    t =     6.96s Waiting 5.0s for "review.preview.keep-01" Button to exist
+    t =     7.99s     Checking `Expect predicate `existsNoRetry == 1` for object "review.preview.keep-01" Button`
+    t =     7.99s         Checking existence of `"review.preview.keep-01" Button`
+    t =     8.04s Tap "review.preview.keep-01" Button
+    t =     8.04s     Wait for app.truekeep.ios to idle
+    t =     8.05s     Find the "review.preview.keep-01" Button
+    t =     8.09s     Check for interrupting elements affecting "review.preview.keep-01" Button
+    t =     8.13s     Synthesize event
+    t =     8.42s     Wait for app.truekeep.ios to idle
+    t =     9.43s Waiting 5.0s for "media.unavailable" StaticText to exist
+    t =    10.45s     Checking `Expect predicate `existsNoRetry == 1` for object "media.unavailable" StaticText`
+    t =    10.45s         Checking existence of `"media.unavailable" StaticText`
+    t =    10.67s Added attachment named 'media-preview-local-unavailable'
+    t =    10.67s Tap "下一张" Button
+    t =    10.67s     Wait for app.truekeep.ios to idle
+    t =    10.67s     Find the "下一张" Button
+    t =    10.72s     Check for interrupting elements affecting "下一张" Button
+    t =    10.77s     Synthesize event
+    t =    11.06s     Wait for app.truekeep.ios to idle
+    t =    11.07s Tap "media.keep" Button
+    t =    11.07s     Wait for app.truekeep.ios to idle
+    t =    11.07s     Find the "media.keep" Button
+    t =    11.13s     Check for interrupting elements affecting "media.keep" Button
+    t =    11.18s     Synthesize event
+    t =    11.48s     Wait for app.truekeep.ios to idle
+    t =    12.30s Waiting 5.0s for "已确认保留" StaticText to exist
+    t =    13.33s     Checking `Expect predicate `existsNoRetry == 1` for object "已确认保留" StaticText`
+    t =    13.34s         Checking existence of `"已确认保留" StaticText`
+    t =    13.42s Checking existence of `"推荐保留" StaticText`
+    t =    13.59s Added attachment named 'review-preview-confirmed-keep'
+    t =    13.59s Tear Down
+    t =    13.59s     Terminate app.truekeep.ios:90283
+2026-11-02 17:36:31.681 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-02 17:36:31.682 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testMediaPreviewFailureAndConfirmedKeepWithScreenshots]' passed (14.673 seconds).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testRecommendedKeepCapabilityIsHiddenAndSimilarGroupStartsUnselected]' started.
+    t =     0.00s Start Test at 2026-11-02 17:36:32.755
+    t =     0.03s Set Up
+2026-11-02 17:36:32.794 xcodebuild[88582:14796209] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-02 17:36:32.794 xcodebuild[88582:14796209] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     0.03s     Open app.truekeep.ios
+    t =     0.03s         Launch app.truekeep.ios
+2026-11-02 17:36:32.814 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     0.25s             Setting up automation session
+    t =     1.13s             Wait for app.truekeep.ios to idle
+    t =     2.43s Tap "truekeep.welcome.learn-more" Button
+    t =     2.43s     Wait for app.truekeep.ios to idle
+    t =     2.44s     Find the "truekeep.welcome.learn-more" Button
+    t =     2.51s     Check for interrupting elements affecting "truekeep.welcome.learn-more" Button
+    t =     2.53s     Synthesize event
+    t =     2.82s     Wait for app.truekeep.ios to idle
+    t =     2.82s Waiting 5.0s for "truekeep.settings.topic.how-it-works" Button to exist
+    t =     3.85s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.settings.topic.how-it-works" Button`
+    t =     3.85s         Checking existence of `"truekeep.settings.topic.how-it-works" Button`
+    t =     3.89s Tap "首页" Button
+    t =     3.89s     Wait for app.truekeep.ios to idle
+    t =     3.89s     Find the "首页" Button
+    t =     3.93s     Check for interrupting elements affecting "house" Button
+    t =     3.96s     Synthesize event
+    t =     4.25s     Wait for app.truekeep.ios to idle
+    t =     5.74s Waiting 5.0s for "truekeep.cleanup.results" ScrollView to exist
+    t =     6.76s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.cleanup.results" ScrollView`
+    t =     6.76s         Checking existence of `"truekeep.cleanup.results" ScrollView`
+    t =     6.84s Waiting 5.0s for "truekeep.cleanup.task.similar-family-12" Button to exist
+    t =     7.86s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.cleanup.task.similar-family-12" Button`
+    t =     7.86s         Checking existence of `"truekeep.cleanup.task.similar-family-12" Button`
+    t =     7.92s Find the "truekeep.cleanup.task.similar-family-12" Button
+    t =     7.97s Find the "truekeep.cleanup.task.similar-family-12" Button
+    t =     8.00s Tap "truekeep.cleanup.task.similar-family-12" Button
+    t =     8.01s     Wait for app.truekeep.ios to idle
+    t =     8.01s     Find the "truekeep.cleanup.task.similar-family-12" Button
+    t =     8.04s     Check for interrupting elements affecting "truekeep.cleanup.task.similar-family-12" Button
+    t =     8.07s     Synthesize event
+    t =     8.36s     Wait for app.truekeep.ios to idle
+    t =     8.77s Waiting 5.0s for "相似照片" StaticText to exist
+    t =     9.80s     Checking `Expect predicate `existsNoRetry == 1` for object "相似照片" StaticText`
+    t =     9.80s         Checking existence of `"相似照片" StaticText`
+    t =     9.86s Waiting 5.0s for "truekeep.review.candidate.keep-01" Button to exist
+    t =    10.87s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.review.candidate.keep-01" Button`
+    t =    10.87s         Checking existence of `"truekeep.review.candidate.keep-01" Button`
+    t =    10.94s Find the "truekeep.review.candidate.keep-01" Button
+    t =    10.99s Find the "truekeep.review.candidate.keep-01" Button
+    t =    11.03s Find the "truekeep.review.candidate.keep-01" Button
+    t =    11.06s Find the "truekeep.review.add-to-review-bin" Button
+    t =    11.09s Find the "truekeep.review.direct-delete-selection" Button
+    t =    11.13s Find the "truekeep.review.add-to-review-bin" Button
+    t =    11.17s Find the "truekeep.review.direct-delete-selection" Button
+    t =    11.20s Find the "truekeep.review.review-all" Button
+    t =    11.35s Added attachment named 'recommended-keep-disabled-similar-review'
+    t =    11.36s Waiting 5.0s for "truekeep.review.candidate.keep-01" Button to exist
+    t =    12.38s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.review.candidate.keep-01" Button`
+    t =    12.38s         Checking existence of `"truekeep.review.candidate.keep-01" Button`
+    t =    12.45s Tap "truekeep.review.candidate.keep-01" Button[0.78, 0.25]
+    t =    12.45s     Wait for app.truekeep.ios to idle
+    t =    12.45s     Find the "truekeep.review.candidate.keep-01" Button
+    t =    12.50s     Check for interrupting elements affecting "truekeep.review.candidate.keep-01" Button
+    t =    12.54s     Synthesize event
+    t =    12.54s         Find the "truekeep.review.candidate.keep-01" Button
+    t =    12.58s         Find the "truekeep.review.candidate.keep-01" Button
+    t =    12.62s         Find the "truekeep.review.candidate.keep-01" Button
+    t =    12.94s     Wait for app.truekeep.ios to idle
+    t =    13.98s Checking `Expect predicate `label CONTAINS "已选择删除"` for object "truekeep.review.candidate.keep-01" Button`
+    t =    13.98s     Find the "truekeep.review.candidate.keep-01" Button
+    t =    14.03s Find the "truekeep.review.candidate.keep-01" Button
+    t =    14.07s Find the "truekeep.review.add-to-review-bin" Button
+    t =    14.10s Find the "truekeep.review.direct-delete-selection" Button
+    t =    14.26s Added attachment named 'recommended-keep-disabled-manual-selection'
+    t =    14.26s Waiting 5.0s for "truekeep.review.candidate.keep-01" Button to exist
+    t =    15.27s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.review.candidate.keep-01" Button`
+    t =    15.27s         Checking existence of `"truekeep.review.candidate.keep-01" Button`
+    t =    15.31s Tap "truekeep.review.candidate.keep-01" Button[0.78, 0.25]
+    t =    15.31s     Wait for app.truekeep.ios to idle
+    t =    15.32s     Find the "truekeep.review.candidate.keep-01" Button
+    t =    15.36s     Check for interrupting elements affecting "truekeep.review.candidate.keep-01" Button
+    t =    15.39s     Synthesize event
+    t =    15.39s         Find the "truekeep.review.candidate.keep-01" Button
+    t =    15.44s         Find the "truekeep.review.candidate.keep-01" Button
+    t =    15.48s         Find the "truekeep.review.candidate.keep-01" Button
+    t =    15.81s     Wait for app.truekeep.ios to idle
+    t =    16.85s Checking `Expect predicate `label CONTAINS "未选择删除"` for object "truekeep.review.candidate.keep-01" Button`
+    t =    16.85s     Find the "truekeep.review.candidate.keep-01" Button
+    t =    17.94s Checking `Expect predicate `enabled == 0` for object "truekeep.review.add-to-review-bin" Button`
+    t =    17.94s     Find the "truekeep.review.add-to-review-bin" Button
+    t =    18.00s Tap "truekeep.review.review-all" Button
+    t =    18.00s     Wait for app.truekeep.ios to idle
+    t =    18.01s     Find the "truekeep.review.review-all" Button
+    t =    18.06s     Check for interrupting elements affecting "truekeep.review.review-all" Button
+    t =    18.09s     Synthesize event
+    t =    18.39s     Wait for app.truekeep.ios to idle
+    t =    19.43s Checking `Expect predicate `label CONTAINS "取消全选"` for object "truekeep.review.review-all" Button`
+    t =    19.43s     Find the "truekeep.review.review-all" Button
+    t =    19.50s Find the "truekeep.review.add-to-review-bin" Button
+    t =    19.55s Tap "truekeep.review.review-all" Button
+    t =    19.55s     Wait for app.truekeep.ios to idle
+    t =    19.55s     Find the "truekeep.review.review-all" Button
+    t =    19.59s     Check for interrupting elements affecting "truekeep.review.review-all" Button
+    t =    19.63s     Synthesize event
+    t =    19.92s     Wait for app.truekeep.ios to idle
+    t =    20.96s Checking `Expect predicate `label CONTAINS "未选择删除"` for object "truekeep.review.candidate.keep-01" Button`
+    t =    20.96s     Find the "truekeep.review.candidate.keep-01" Button
+    t =    22.01s Checking `Expect predicate `enabled == 0` for object "truekeep.review.add-to-review-bin" Button`
+    t =    22.01s     Find the "truekeep.review.add-to-review-bin" Button
+    t =    22.05s Tear Down
+    t =    22.05s     Terminate app.truekeep.ios:90352
+2026-11-02 17:36:54.821 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-02 17:36:54.821 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testRecommendedKeepCapabilityIsHiddenAndSimilarGroupStartsUnselected]' passed (23.171 seconds).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testReviewSessionSurvivesRelaunchWithScreenshot]' started.
+    t =     0.00s Start Test at 2026-11-02 17:36:55.926
+    t =     0.03s Set Up
+    t =     0.03s     Open app.truekeep.ios
+    t =     0.03s         Launch app.truekeep.ios
+2026-11-02 17:36:55.956 xcodebuild[88582:14796209] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-02 17:36:55.956 xcodebuild[88582:14796209] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-02 17:36:56.031 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     0.44s             Setting up automation session
+    t =     1.27s             Wait for app.truekeep.ios to idle
+    t =     2.55s Terminate app.truekeep.ios:90650
+2026-11-02 17:36:58.487 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-02 17:36:58.487 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     3.58s Open app.truekeep.ios
+    t =     3.59s     Launch app.truekeep.ios
+2026-11-02 17:36:59.517 xcodebuild[88582:14796209] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-02 17:36:59.517 xcodebuild[88582:14796209] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-02 17:36:59.552 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     3.80s         Setting up automation session
+    t =     4.76s         Wait for app.truekeep.ios to idle
+    t =     6.21s Tap "truekeep.cleanup.task.similar-family-12" Button
+    t =     6.21s     Wait for app.truekeep.ios to idle
+    t =     6.28s     Find the "truekeep.cleanup.task.similar-family-12" Button
+    t =     6.44s     Check for interrupting elements affecting "truekeep.cleanup.task.similar-family-12" Button
+    t =     6.47s     Synthesize event
+    t =     6.76s     Wait for app.truekeep.ios to idle
+    t =     7.20s Tap "truekeep.review.candidate.similar-02" Button
+    t =     7.20s     Wait for app.truekeep.ios to idle
+    t =     7.20s     Find the "truekeep.review.candidate.similar-02" Button
+    t =     7.27s     Check for interrupting elements affecting "truekeep.review.candidate.similar-02" Button
+    t =     7.31s     Synthesize event
+    t =     7.60s     Wait for app.truekeep.ios to idle
+    t =     7.60s Tap "truekeep.review.add-to-review-bin" Button
+    t =     7.60s     Wait for app.truekeep.ios to idle
+    t =     7.61s     Find the "truekeep.review.add-to-review-bin" Button
+    t =     7.65s     Check for interrupting elements affecting "truekeep.review.add-to-review-bin" Button
+    t =     7.69s     Synthesize event
+    t =     7.98s     Wait for app.truekeep.ios to idle
+    t =     8.55s Waiting 5.0s for "truekeep.review-bin.delete-selection" Button to exist
+    t =     9.59s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.review-bin.delete-selection" Button`
+    t =     9.59s         Checking existence of `"truekeep.review-bin.delete-selection" Button`
+    t =     9.75s Added attachment named 'review-session-before-relaunch'
+    t =     9.75s Terminate app.truekeep.ios:90689
+2026-11-02 17:37:05.688 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-02 17:37:05.688 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =    10.80s Open app.truekeep.ios
+    t =    10.80s     Launch app.truekeep.ios
+2026-11-02 17:37:06.729 xcodebuild[88582:14796209] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-02 17:37:06.729 xcodebuild[88582:14796209] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-02 17:37:06.762 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =    11.01s         Setting up automation session
+    t =    11.94s         Wait for app.truekeep.ios to idle
+    t =    13.39s Tap "复核箱" Button
+    t =    13.39s     Wait for app.truekeep.ios to idle
+    t =    13.40s     Find the "复核箱" Button
+    t =    13.56s     Check for interrupting elements affecting "复核箱" Button
+    t =    13.59s     Synthesize event
+    t =    13.88s     Wait for app.truekeep.ios to idle
+    t =    15.40s Waiting 5.0s for "truekeep.review-bin.delete-selection" Button to exist
+    t =    16.42s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.review-bin.delete-selection" Button`
+    t =    16.42s         Checking existence of `"truekeep.review-bin.delete-selection" Button`
+    t =    16.45s Find the "truekeep.review-bin.delete-selection" Button
+    t =    16.57s Added attachment named 'review-session-restored-after-relaunch'
+    t =    16.57s Tear Down
+    t =    16.57s     Terminate app.truekeep.ios:90732
+2026-11-02 17:37:12.510 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-02 17:37:12.510 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testReviewSessionSurvivesRelaunchWithScreenshot]' passed (17.670 seconds).
+Test Suite 'TrueKeepUITests' passed at 2026-11-02 17:37:13.596.
+	 Executed 7 tests, with 0 failures (0 unexpected) in 129.175 (129.180) seconds
+Test Suite 'TrueKeepUITests.xctest' passed at 2026-11-02 17:37:13.597.
+	 Executed 7 tests, with 0 failures (0 unexpected) in 129.175 (129.180) seconds
+Test Suite 'Selected tests' passed at 2026-11-02 17:37:13.597.
+	 Executed 7 tests, with 0 failures (0 unexpected) in 129.175 (129.181) seconds
+2026-11-02 17:37:13.630 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-02 17:37:13.630 xcodebuild[88582:14796209] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-02 17:37:13.913 xcodebuild[88582:14796209] [MT] IDETestOperationsObserverDebug: 151.404 elapsed -- Testing started completed.
+2026-11-02 17:37:13.913 xcodebuild[88582:14796209] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-11-02 17:37:13.913 xcodebuild[88582:14796209] [MT] IDETestOperationsObserverDebug: 151.404 sec, +151.404 sec -- end
+
+Test session results, code coverage, and logs:
+	/tmp/truekeep-merge-ui-20261102.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

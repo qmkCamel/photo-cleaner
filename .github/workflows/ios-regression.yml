@@ -1,0 +1,29 @@
+name: iOS regression
+on:
+  pull_request:
+  push:
+    branches: [dev, main]
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v6
+      - name: Python regression
+        run: python3 -m unittest discover -s iOS/TrueKeep/Scripts/tests -p 'test_*.py'
+      - name: Release preflight
+        run: python3 iOS/TrueKeep/Scripts/release_preflight.py
+      - name: Unit and safe UI regression
+        env:
+          TRUEKEEP_DISABLE_PHOTO_DELETION: '1'
+        run: |
+          DEVICE_ID=$(xcrun simctl list devices available -j | python3 -c 'import json,sys; d=json.load(sys.stdin); print(next(x["udid"] for a in d["devices"].values() for x in a if x["name"].startswith("iPhone")))')
+          xcodebuild test -project iOS/TrueKeep/TrueKeep.xcodeproj -scheme TrueKeep -destination "platform=iOS Simulator,id=$DEVICE_ID" -resultBundlePath TestResults.xcresult CODE_SIGNING_ALLOWED=NO
+      - name: Keep test reports and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: truekeep-safe-regression
+          path: TestResults.xcresult
+          retention-days: 30

@@ -5,6 +5,7 @@ struct ReviewBinView: View {
     @Binding var state: CleanupFlowState
     @State private var showsDeleteConfirmation = false
     @State private var isDeleting = false
+    @State private var previewCandidate: CleanupCandidate?
 
     private let photoDeletion: any PhotoLibraryDeleting
 
@@ -44,6 +45,9 @@ struct ReviewBinView: View {
                 .presentationDragIndicator(.hidden)
                 .interactiveDismissDisabled(isDeleting)
             }
+            .fullScreenCover(item: $previewCandidate) { candidate in
+                MediaReviewView(candidates: state.reviewBinItems.map(\.candidate), initialID: candidate.id)
+            }
         }
     }
 
@@ -53,7 +57,7 @@ struct ReviewBinView: View {
 
     private var reviewBinContent: some View {
         VStack(alignment: .leading, spacing: 14) {
-            Text("\(selectedCount) 项 · \(state.reviewBinItems.map { $0.candidate.estimatedBytes }.reduce(0, +).formattedStorage)")
+            Text("已选 \(selectedCount) 项 · 约 \(state.reviewBinItems.filter(\.selectedForDelete).map { $0.candidate.estimatedBytes }.reduce(0, +).formattedStorage)")
                 .font(TrueKeepTheme.Font.caption)
                 .foregroundStyle(TrueKeepTheme.muted)
                 .frame(maxWidth: .infinity, alignment: .center)
@@ -75,6 +79,7 @@ struct ReviewBinView: View {
 
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
                 ForEach(state.reviewBinItems) { item in
+                    VStack(spacing: 2) {
                     Button {
                         state.toggleReviewBinItem(item)
                     } label: {
@@ -93,6 +98,10 @@ struct ReviewBinView: View {
                     .accessibilityLabel(reviewBinItemAccessibilityLabel(item))
                     .accessibilityHint(item.selectedForDelete ? "轻点可从删除选择中取消" : "轻点可重新选择删除")
                     .accessibilityAddTraits(item.selectedForDelete ? .isSelected : [])
+                    Button("预览") { previewCandidate = item.candidate }
+                        .frame(maxWidth: .infinity, minHeight: 44)
+                        .accessibilityIdentifier("bin.preview.\(item.id)")
+                    }
                 }
             }
 

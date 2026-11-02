@@ -1,0 +1,9 @@
+# Private local engine evidence and journals stay on this machine.
+*/runs/
+*/runner.log
+*/*.job.json
+*/*.junit.xml
+semantic-rerun/*/runs/
+semantic-rerun/*/runner.log
+semantic-rerun/*/*.job.json
+semantic-rerun/*/*.junit.xml

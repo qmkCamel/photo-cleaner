@@ -4,6 +4,9 @@ struct ReviewGroupView: View {
     @ObservedObject private var localModels: LocalPhotoModelController
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Binding var state: CleanupFlowState
+    var groupID: String?
+    var onNavigate: (String) -> Void
+    @State private var previewCandidate: CleanupCandidate?
     @State private var showsDeleteConfirmation = false
     @State private var isDeleting = false
     @State private var deletionSuccessMessage: String?
@@ -13,23 +16,50 @@ struct ReviewGroupView: View {
     private let photoDeletion: any PhotoLibraryDeleting
     var onAddedToReviewBin: () -> Void
     var onSetConfirmedKeep: (String, Bool) -> Void
+    var onConfirmKeepGroup: (Set<String>) -> Void
 
     init(
         state: Binding<CleanupFlowState>,
+        groupID: String? = nil,
+        onNavigate: @escaping (String) -> Void = { _ in },
         localModels: LocalPhotoModelController = .init(),
         photoDeletion: any PhotoLibraryDeleting = SystemPhotoLibraryDeletionService(),
         onAddedToReviewBin: @escaping () -> Void,
-        onSetConfirmedKeep: @escaping (String, Bool) -> Void = { _, _ in }
+        onSetConfirmedKeep: @escaping (String, Bool) -> Void = { _, _ in },
+        onConfirmKeepGroup: @escaping (Set<String>) -> Void = { _ in }
     ) {
         self._state = state
+        self.groupID = groupID
+        self.onNavigate = onNavigate
         self.localModels = localModels
         self.photoDeletion = photoDeletion
         self.onAddedToReviewBin = onAddedToReviewBin
         self.onSetConfirmedKeep = onSetConfirmedKeep
+        self.onConfirmKeepGroup = onConfirmKeepGroup
+    }
+
+    private var displayedGroup: CleanupGroup? {
+        if let completedGroup { return completedGroup }
+        if let groupID { return state.reviewGroups.first { $0.id == groupID } }
+        return state.reviewGroups.first { $0.id == state.currentReviewGroup.id }
     }
 
     var body: some View {
-        let group = completedGroup ?? state.currentReviewGroup
+        if let group = displayedGroup {
+            groupContent(group)
+                .fullScreenCover(item: $previewCandidate) { candidate in
+                    MediaReviewView(candidates: group.candidates, initialID: candidate.id, onKeep: { id in
+                        onSetConfirmedKeep(id, true)
+                        confirmedKeepFeedbackAssetID = id
+                        previewCandidate = nil
+                    })
+                }
+        } else {
+            ContentUnavailableView("这组已处理完成", systemImage: "checkmark.circle", description: Text("请返回首页查看剩余任务。"))
+        }
+    }
+
+    private func groupContent(_ group: CleanupGroup) -> some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 13) {
                 VStack(spacing: 3) {
@@ -59,7 +89,13 @@ struct ReviewGroupView: View {
 
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
                     ForEach(group.candidates) { candidate in
-                        candidateCell(candidate)
+                        VStack(spacing: 2) {
+                            candidateCell(candidate)
+                            Button("预览") { previewCandidate = candidate }
+                                .frame(maxWidth: .infinity, minHeight: 44)
+                                .accessibilityIdentifier("review.preview.\(candidate.id)")
+                                .accessibilityLabel("预览，\(candidate.reason)")
+                        }
                         .gridCellColumns(candidate.isRecommendedKeepActive ? 3 : 1)
                     }
                 }
@@ -148,6 +184,7 @@ struct ReviewGroupView: View {
                     InlineTextActionButton(title: "上一组", minWidth: 64) {
                         deletionSuccessMessage = nil
                         state.moveToPreviousReviewGroup()
+                        onNavigate(state.currentReviewGroup.id)
                     }
                     .disabled(!state.canMoveToPreviousReviewGroup)
                     .opacity(state.canMoveToPreviousReviewGroup ? 1 : 0.45)
@@ -158,6 +195,7 @@ struct ReviewGroupView: View {
                     InlineTextActionButton(title: "下一组", minWidth: 64) {
                         deletionSuccessMessage = nil
                         state.moveToNextReviewGroup()
+                        onNavigate(state.currentReviewGroup.id)
                     }
                     .disabled(!state.canMoveToNextReviewGroup)
                     .opacity(state.canMoveToNextReviewGroup ? 1 : 0.45)
@@ -165,6 +203,13 @@ struct ReviewGroupView: View {
                 }
                 .padding(.top, 2)
             }
+
+            Button("这组都保留") {
+                if let group = displayedGroup { onConfirmKeepGroup(Set(group.candidates.map(\.id))) }
+            }
+            .disabled(isDeleting || completedGroup != nil || displayedGroup?.candidates.allSatisfy(\.confirmedKeep) != false)
+            .frame(minHeight: 44)
+            .accessibilityIdentifier("review.keep-group")
         }
         .padding(.horizontal, 20)
         .padding(.top, 12)

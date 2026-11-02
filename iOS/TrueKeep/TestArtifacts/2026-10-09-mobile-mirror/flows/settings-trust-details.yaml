@@ -1,0 +1,48 @@
+name: P0 隐私与安全说明导航
+platform: ios
+appId: app.truekeep.ios
+---
+- launchApp
+- waitUntil:
+    target:
+      accessibilityId:
+        value: truekeep.welcome.learn-more
+        match: contains
+    timeout: 10
+- tap:
+    accessibilityId:
+      value: truekeep.welcome.learn-more
+      match: contains
+- waitUntil:
+    target:
+      accessibilityId:
+        value: truekeep.settings.topic.how-it-works
+        match: contains
+    timeout: 10
+- assertVisible:
+    accessibilityId:
+      value: truekeep.settings.topic.privacy-details
+      match: contains
+- assertVisible:
+    accessibilityId:
+      value: truekeep.settings.topic.help-support
+      match: contains
+- tap:
+    accessibilityId:
+      value: truekeep.settings.topic.privacy-details
+      match: contains
+- waitUntil:
+    target:
+      accessibilityId:
+        value: truekeep.settings.topic.privacy-details.detail
+        match: contains
+    timeout: 10
+- assertVisible:
+    text:
+      value: 照片和视频不会上传到服务器。
+      match: contains
+- assertVisible:
+    text:
+      value: 不做跨 App 追踪
+      match: contains
+- done

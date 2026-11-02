@@ -45,3 +45,9 @@
 - App Store 竞品评分、订阅价格和隐私标签。
 - Apple Foundation Models / App Intents / Core AI 的正式 API 可用性和设备要求。
 - `TrueKeep`、`留真` 及相关名称的商标、域名和 App Store 占用情况。
+
+## 当前迭代
+
+三轮可靠性、复核与扫描覆盖的实现和验收状态见 [三轮迭代状态](11-three-round-iteration-status.md)。历史调研与路线图不替代该执行记录。
+
+当前单元、UI、脚本及 P0 流程覆盖见 [自动化测试清单](12-test-inventory.md)，其中链接各次实际运行报告和截图。

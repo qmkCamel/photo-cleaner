@@ -80,6 +80,22 @@ class ReleasePreflightScriptTests(unittest.TestCase):
                 self.assertEqual(result.status, "FAIL")
                 self.assertIn("no-collection/no-tracking", result.detail)
 
+    def test_guard_allows_scanner_sha256_but_rejects_encryption(self):
+        module = load_module()
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source = root / "TrueKeep" / "Services" / "PhotoLibraryScanner.swift"
+            source.parent.mkdir(parents=True)
+            with patch.object(module, "REPO_ROOT", root), patch.object(module, "IOS_ROOT", root):
+                source.write_text("import CryptoKit\nlet hash = SHA256()\n")
+                valid = module.Preflight(run_xcode=False)
+                valid.check_source_guardrails()
+                self.assertEqual(valid.results[0].status, "PASS")
+                source.write_text("import CryptoKit\nlet box = AES.GCM.self\n")
+                invalid = module.Preflight(run_xcode=False)
+                invalid.check_source_guardrails()
+                self.assertEqual(invalid.results[0].status, "FAIL")
+
     def test_signing_state_accepts_confirmed_team_and_current_xcode_profile_directory(self):
         module = load_module()
 

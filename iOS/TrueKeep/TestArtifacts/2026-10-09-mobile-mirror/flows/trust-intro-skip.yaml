@@ -1,0 +1,42 @@
+name: P0 授权说明与暂不授权
+platform: ios
+appId: app.truekeep.ios
+---
+- launchApp
+- waitUntil:
+    target:
+      accessibilityId:
+        value: truekeep.permission.not-now
+        match: contains
+    timeout: 10
+- assertVisible:
+    text:
+      value: 授权前先说清楚
+      match: contains
+- assertVisible:
+    text:
+      value: 100% 本地处理
+      match: contains
+- assertVisible:
+    text:
+      value: 删除前先复核
+      match: contains
+- tap:
+    accessibilityId:
+      value: truekeep.permission.not-now
+      match: contains
+- waitUntil:
+    target:
+      accessibilityId:
+        value: truekeep.cleanup.results
+        match: contains
+    timeout: 10
+- assertVisible:
+    accessibilityId:
+      value: truekeep.permission.allow-photos
+      match: contains
+- assertVisible:
+    text:
+      value: 需要照片访问才能扫描
+      match: contains
+- done

@@ -288,6 +288,12 @@ struct ThumbnailView: View {
             .onDisappear {
                 cancelThumbnailRequest()
             }
+            .onReceive(NotificationCenter.default.publisher(for: .trueKeepThumbnailsInvalidated).receive(on: RunLoop.main)) { _ in
+                cancelThumbnailRequest()
+                loadedRequestKey = nil
+                thumbnailImage = nil
+                loadThumbnail(size: proxy.size)
+            }
         }
     }
 

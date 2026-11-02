@@ -18,20 +18,16 @@ final class PhotoLibraryScanPolicyTests: XCTestCase {
         XCTAssertEqual(lowPowerPolicy.effectiveBatchSize, 50)
     }
 
-    func testUsesSmallerVisualClassificationLimitInLowPowerMode() {
+    func testUsesSmallerVisualBatchesWithoutTruncatingTheLibrary() {
         let standardPolicy = PhotoLibraryScanPolicy(
-            isLowPowerModeEnabled: false,
-            standardVisualClassificationLimit: 300,
-            lowPowerVisualClassificationLimit: 80
+            isLowPowerModeEnabled: false
         )
         let lowPowerPolicy = PhotoLibraryScanPolicy(
-            isLowPowerModeEnabled: true,
-            standardVisualClassificationLimit: 300,
-            lowPowerVisualClassificationLimit: 80
+            isLowPowerModeEnabled: true
         )
 
-        XCTAssertEqual(standardPolicy.effectiveVisualClassificationLimit, 300)
-        XCTAssertEqual(lowPowerPolicy.effectiveVisualClassificationLimit, 80)
+        XCTAssertEqual(standardPolicy.visualBatchSize, 200)
+        XCTAssertEqual(lowPowerPolicy.visualBatchSize, 50)
     }
 
     func testBatchRangesCoverAllItemsWithoutOvershooting() {

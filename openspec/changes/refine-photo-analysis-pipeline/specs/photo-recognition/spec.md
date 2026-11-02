@@ -102,7 +102,7 @@
 
 扫描器 MUST 在有边界的近期照片分类上限和较短创建时间窗口内，本地粗筛相似照片，并只对粗筛相似组执行候选复核。最终相似分组和推荐保留 MUST 使用复核后的系统图片质量、Feature Print 与可用的人脸拍摄质量。当两张复核照片都具备可比较的 Vision Feature Print 时，扫描器 MUST 优先使用 Feature Print distance，而不是 pHash distance。当 Feature Print 不可用或不可比较时，扫描器 MAY 回退到保持完整构图且宽高比可比较的 pHash distance。
 
-#### Scenario: Vision Feature Print 可用
+#### Scenario: Vision feature print 可用
 
 - **WHEN** 两张非截图照片落在相似时间窗口内
 - **AND** 粗筛将它们纳入同一候选子图
@@ -111,13 +111,13 @@
 - **THEN** 扫描器将它们分组为相似照片复核组
 - **AND** 推荐一张保留项，但不得自动删除其他照片
 
-#### Scenario: Vision Feature Print 距离较远
+#### Scenario: Vision feature print 距离较远
 
 - **WHEN** 两张复核照片有可比较的 Vision Feature Print
 - **AND** 它们的 Feature Print distance 超出复核阈值
 - **THEN** 扫描器不得再通过 pHash 兜底把它们保留在同一相似关系中
 
-#### Scenario: Vision Feature Print 不可用
+#### Scenario: Vision feature print 不可用
 
 - **WHEN** 一张或两张复核照片缺少可比较的 Vision Feature Print
 - **AND** 两张照片宽高比可比较
@@ -198,7 +198,7 @@
 - **THEN** 扫描器必须使用禁止网络访问的高质量本地图片请求重试同一粗筛或复核阶段
 - **AND** 成功读取的图片必须继续进入该阶段的 Feature Print 和质量评估
 
-#### Scenario: 粗筛本地图像数据不可用
+#### Scenario: 本地图像数据不可用
 
 - **WHEN** Photos 无法在不允许网络访问的情况下通过快速和高质量请求提供粗筛图片
 - **THEN** 跳过该资源的视觉粗筛

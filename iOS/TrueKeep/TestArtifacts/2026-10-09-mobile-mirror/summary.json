@@ -1,0 +1,22 @@
+[
+  {
+    "id": "settings-trust-details",
+    "exitCode": 1,
+    "elapsedSeconds": 37.639
+  },
+  {
+    "id": "review-bin-deletion-safety",
+    "exitCode": 1,
+    "elapsedSeconds": 33.512
+  },
+  {
+    "id": "permission-denied-retry",
+    "exitCode": 1,
+    "elapsedSeconds": 21.927
+  },
+  {
+    "id": "scan-cancel-recovery",
+    "exitCode": 1,
+    "elapsedSeconds": 24.626
+  }
+]

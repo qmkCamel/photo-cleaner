@@ -328,20 +328,24 @@ class Preflight:
             "import StoreKit": "payments",
             "import AdSupport": "advertising",
             "import AppTrackingTransparency": "tracking",
-            "import CryptoKit": "custom crypto",
+            "AES.": "encryption outside local digest scope",
+            "ChaChaPoly": "encryption outside local digest scope",
+            "Curve25519": "key agreement outside local digest scope",
             "CommonCrypto": "custom crypto",
             "SecKey": "key management",
         }
         hits = []
         for path in swift_files:
             text = path.read_text(encoding="utf-8")
+            if "import CryptoKit" in text and path.name != "PhotoLibraryScanner.swift":
+                hits.append(f"{path.relative_to(REPO_ROOT)} uses CryptoKit outside the reviewed local SHA-256 scanner")
             for pattern, label in forbidden.items():
                 if pattern in text:
                     hits.append(f"{path.relative_to(REPO_ROOT)} contains {pattern} ({label})")
         if hits:
             self.fail("source-privacy-guardrails", "; ".join(hits))
         else:
-            self.pass_("source-privacy-guardrails", "no networking, ads, tracking, StoreKit, WebKit, or custom crypto patterns found")
+            self.pass_("source-privacy-guardrails", "no networking, ads, tracking, StoreKit, WebKit, or unreviewed crypto patterns; local scanner SHA-256 allowed")
 
     def check_localized_copy_guardrails(self) -> None:
         checks = [
