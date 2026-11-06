@@ -1,0 +1,464 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -project iOS/TrueKeep/TrueKeep.xcodeproj -scheme TrueKeep -destination "platform=iOS Simulator,id=62A87288-C41F-42F7-981B-DD066ECC5CA8" -derivedDataPath /tmp/truekeep-duo-20261105 -parallel-testing-enabled NO -collect-test-diagnostics never "-only-testing:TrueKeepUITests/TrueKeepUITests/testDuoDeletionSafetyTextAccessibility" "-only-testing:TrueKeepUITests/TrueKeepUITests/testDuoReviewSelectionSurvivesRotation" "-only-testing:TrueKeepUITests/TrueKeepUITests/testRedesignMenuDeletionShowsBusyAndSuccess" "-only-testing:TrueKeepUITests/LocalPhotoModelsUITests/testModelSettingsSupportsAccessibilityTextSize" -resultBundlePath /tmp/TrueKeepDuo-20261105-native-recheck.xcresult CODE_SIGNING_ALLOWED=NO
+
+Build settings from command line:
+    CODE_SIGNING_ALLOWED = NO
+
+Resolve Package Graph
+
+
+Resolved source packages:
+  swift-crypto: https://github.com/apple/swift-crypto.git @ 4.5.2
+  swift-huggingface: https://github.com/huggingface/swift-huggingface.git @ 0.13.0
+  LocalPhotoModels: /Users/edge/side/photo-cleaner/iOS/TrueKeep/Packages/LocalPhotoModels
+  Jinja: https://github.com/huggingface/swift-jinja.git @ 2.5.2
+  mlx-swift: https://github.com/ml-explore/mlx-swift @ 0.32.3
+  swift-transformers: https://github.com/huggingface/swift-transformers @ 1.3.0
+  yyjson: https://github.com/ibireme/yyjson.git @ 0.12.0
+  swift-asn1: https://github.com/apple/swift-asn1.git @ 1.7.3
+  swift-collections: https://github.com/apple/swift-collections.git @ 1.7.4
+  mlx-swift-lm: https://github.com/ml-explore/mlx-swift-lm @ 3.32.3
+  swift-syntax: https://github.com/swiftlang/swift-syntax.git @ 603.0.2
+  EventSource: https://github.com/mattt/EventSource.git @ 1.5.1
+  swift-numerics: https://github.com/apple/swift-numerics @ 1.1.1
+
+Writing result bundle at path:
+	/tmp/TrueKeepDuo-20261105-native-recheck.xcresult
+
+2026-11-05 17:37:59.050 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:37:59.050 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+2026-11-05 17:38:01.418088+0800 TrueKeepUITests-Runner[96850:24788558] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-11-05 17:38:04.972.
+Test Suite 'TrueKeepUITests.xctest' started at 2026-11-05 17:38:04.973.
+Test Suite 'LocalPhotoModelsUITests' started at 2026-11-05 17:38:04.973.
+Test Case '-[TrueKeepUITests.LocalPhotoModelsUITests testModelSettingsSupportsAccessibilityTextSize]' started.
+    t =     0.01s Start Test at 2026-11-05 17:38:04.982
+    t =     0.04s Set Up
+    t =     0.04s     Open app.truekeep.ios
+    t =     0.04s         Launch app.truekeep.ios
+    t =     0.05s             Terminate app.truekeep.ios:90287
+2026-11-05 17:38:06.101 xcodebuild[96557:24786383] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:38:06.101 xcodebuild[96557:24786383] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:38:06.159 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:06.160 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+objc[96850]: Class UIAccessibilityLoaderWebShared is implemented in both /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.94232.0.cjy1L8/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.1.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x105f0c310) and /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.94232.0.cjy1L8/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.1.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x1064b4398). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     1.95s             Setting up automation session
+    t =     5.30s             Wait for app.truekeep.ios to idle
+    t =     7.53s     Tap "设置" Button
+    t =     7.53s         Wait for app.truekeep.ios to idle
+    t =     7.53s         Find the "设置" Button
+    t =     7.74s         Check for interrupting elements affecting "设置" Button
+    t =     7.83s             Wait for com.apple.springboard to idle
+    t =     7.89s         Synthesize event
+    t =     8.25s         Wait for app.truekeep.ios to idle
+    t =     9.93s Terminate app.truekeep.ios:96902
+2026-11-05 17:38:14.913 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:14.913 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+2026-11-05 17:38:14.913 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:14.913 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+2026-11-05 17:38:14.914 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:14.914 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+    t =    10.96s Open app.truekeep.ios
+    t =    10.96s     Launch app.truekeep.ios
+2026-11-05 17:38:15.939 xcodebuild[96557:24786383] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:38:15.939 xcodebuild[96557:24786383] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:38:15.956 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:15.956 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+    t =    11.18s         Setting up automation session
+    t =    14.42s         Wait for app.truekeep.ios to idle
+    t =    16.44s Tap "设置" Button
+    t =    16.44s     Wait for app.truekeep.ios to idle
+    t =    16.44s     Find the "设置" Button
+    t =    16.78s     Check for interrupting elements affecting "设置" Button
+    t =    16.81s         Wait for com.apple.springboard to idle
+    t =    16.84s     Synthesize event
+    t =    17.14s     Wait for app.truekeep.ios to idle
+    t =    18.57s Checking existence of `"truekeep.settings.local-models" Button`
+    t =    18.64s Checking existence of `"truekeep.settings.local-models" Button`
+    t =    18.67s Swipe up Target Application 'app.truekeep.ios'
+    t =    18.67s     Wait for app.truekeep.ios to idle
+    t =    18.67s     Find the Target Application 'app.truekeep.ios'
+    t =    18.70s     Check for interrupting elements affecting "留真" Application
+    t =    18.74s         Wait for com.apple.springboard to idle
+    t =    18.78s     Synthesize event
+    t =    19.28s     Wait for app.truekeep.ios to idle
+    t =    21.21s Checking existence of `"truekeep.settings.local-models" Button`
+    t =    21.25s Find the "truekeep.settings.local-models" Button
+    t =    21.29s Tap "truekeep.settings.local-models" Button
+    t =    21.29s     Wait for app.truekeep.ios to idle
+    t =    21.30s     Find the "truekeep.settings.local-models" Button
+    t =    21.32s     Check for interrupting elements affecting "truekeep.settings.local-models" Button
+    t =    21.36s         Wait for com.apple.springboard to idle
+    t =    21.39s     Synthesize event
+    t =    21.69s     Wait for app.truekeep.ios to idle
+    t =    22.30s Checking existence of `"truekeep.models.picker" Button`
+    t =    22.36s Find the "truekeep.models.picker" Button
+    t =    22.52s Added attachment named 'local-model-08-accessibility-settings'
+    t =    22.52s Checking existence of `"truekeep.models.remove" Button`
+    t =    22.55s Checking existence of `"truekeep.models.remove" Button`
+    t =    22.58s Swipe up Target Application 'app.truekeep.ios'
+    t =    22.58s     Wait for app.truekeep.ios to idle
+    t =    22.58s     Find the Target Application 'app.truekeep.ios'
+    t =    22.61s     Check for interrupting elements affecting "留真" Application
+    t =    22.64s         Wait for com.apple.springboard to idle
+    t =    22.67s     Synthesize event
+    t =    23.16s     Wait for app.truekeep.ios to idle
+    t =    25.10s Checking existence of `"truekeep.models.remove" Button`
+    t =    25.13s Checking existence of `"truekeep.models.remove" Button`
+    t =    25.16s Swipe up Target Application 'app.truekeep.ios'
+    t =    25.16s     Wait for app.truekeep.ios to idle
+    t =    25.16s     Find the Target Application 'app.truekeep.ios'
+    t =    25.18s     Check for interrupting elements affecting "留真" Application
+    t =    25.21s         Wait for com.apple.springboard to idle
+    t =    25.24s     Synthesize event
+    t =    25.73s     Wait for app.truekeep.ios to idle
+    t =    27.66s Checking existence of `"truekeep.models.remove" Button`
+    t =    27.70s Find the "truekeep.models.remove" Button
+    t =    27.73s Find the "truekeep.models.remove" Button
+    t =    27.86s Added attachment named 'local-model-09-accessibility-actions'
+    t =    27.87s Tear Down
+    t =    27.87s     Terminate app.truekeep.ios:96954
+2026-11-05 17:38:32.870 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:32.870 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+2026-11-05 17:38:32.871 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:32.871 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+2026-11-05 17:38:32.871 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:32.871 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+Test Case '-[TrueKeepUITests.LocalPhotoModelsUITests testModelSettingsSupportsAccessibilityTextSize]' passed (28.932 seconds).
+Test Suite 'LocalPhotoModelsUITests' passed at 2026-11-05 17:38:33.914.
+	 Executed 1 test, with 0 failures (0 unexpected) in 28.932 (28.941) seconds
+Test Suite 'TrueKeepUITests' started at 2026-11-05 17:38:33.919.
+Test Case '-[TrueKeepUITests.TrueKeepUITests testDuoDeletionSafetyTextAccessibility]' started.
+    t =     0.00s Start Test at 2026-11-05 17:38:33.920
+    t =     0.01s Set Up
+    t =     0.01s     Open app.truekeep.ios
+    t =     0.02s         Launch app.truekeep.ios
+2026-11-05 17:38:33.936 xcodebuild[96557:24786383] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:38:33.936 xcodebuild[96557:24786383] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:38:33.952 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:33.952 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+    t =     0.22s             Setting up automation session
+    t =     3.54s             Wait for app.truekeep.ios to idle
+    t =     5.20s Terminate app.truekeep.ios:97207
+2026-11-05 17:38:39.131 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:39.131 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+2026-11-05 17:38:39.131 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:39.131 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+2026-11-05 17:38:39.132 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:39.132 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+    t =     6.25s Open app.truekeep.ios
+    t =     6.25s     Launch app.truekeep.ios
+2026-11-05 17:38:40.173 xcodebuild[96557:24786383] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:38:40.173 xcodebuild[96557:24786383] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:38:40.188 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:40.188 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+    t =     6.46s         Setting up automation session
+    t =     9.67s         Wait for app.truekeep.ios to idle
+    t =    11.72s Tap "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =    11.72s     Wait for app.truekeep.ios to idle
+    t =    11.73s     Find the "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =    12.04s     Check for interrupting elements affecting "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =    12.07s         Wait for com.apple.springboard to idle
+    t =    12.11s     Synthesize event
+    t =    12.41s     Wait for app.truekeep.ios to idle
+    t =    12.63s Tap "review.more" Button
+    t =    12.63s     Wait for app.truekeep.ios to idle
+    t =    13.07s     Find the "review.more" Button
+    t =    13.12s     Check for interrupting elements affecting "review.more" Button
+    t =    13.16s         Wait for com.apple.springboard to idle
+    t =    13.19s     Synthesize event
+    t =    13.48s     Wait for app.truekeep.ios to idle
+    t =    14.60s Tap "truekeep.review.direct-delete-selection" Button
+    t =    14.60s     Wait for app.truekeep.ios to idle
+    t =    14.61s     Find the "truekeep.review.direct-delete-selection" Button
+    t =    14.66s     Check for interrupting elements affecting "truekeep.review.direct-delete-selection" Button
+    t =    14.69s         Wait for com.apple.springboard to idle
+    t =    14.73s     Synthesize event
+    t =    15.02s     Wait for app.truekeep.ios to idle
+    t =    16.19s Waiting 5.0s for "truekeep.delete.confirm" Button to exist
+    t =    17.22s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.delete.confirm" Button`
+    t =    17.22s         Checking existence of `"truekeep.delete.confirm" Button`
+    t =    19.70s Added attachment named 'accessibility-passed-duo-delete-confirmation'
+    t =    19.79s Added attachment named 'duo-delete-safe-text-all-visible'
+    t =    19.79s Tear Down
+    t =    19.79s     Setting device orientation to Portrait
+    t =    19.80s         Wait for app.truekeep.ios to idle
+    t =    19.80s         Wait for com.apple.springboard to idle
+    t =    19.80s     Terminate app.truekeep.ios:97250
+2026-11-05 17:38:53.740 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:53.740 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+2026-11-05 17:38:53.741 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:53.741 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+2026-11-05 17:38:53.741 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:53.745 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testDuoDeletionSafetyTextAccessibility]' passed (20.856 seconds).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testDuoReviewSelectionSurvivesRotation]' started.
+    t =     0.00s Start Test at 2026-11-05 17:38:54.777
+    t =     0.02s Set Up
+    t =     0.02s     Open app.truekeep.ios
+    t =     0.02s         Launch app.truekeep.ios
+2026-11-05 17:38:54.800 xcodebuild[96557:24786383] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:38:54.800 xcodebuild[96557:24786383] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:38:54.827 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:54.827 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+    t =     0.23s             Setting up automation session
+    t =     3.46s             Wait for app.truekeep.ios to idle
+    t =     4.97s Terminate app.truekeep.ios:97486
+2026-11-05 17:38:59.757 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:59.757 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+2026-11-05 17:38:59.757 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:59.757 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+2026-11-05 17:38:59.758 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:59.758 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+    t =     6.01s Open app.truekeep.ios
+    t =     6.02s     Launch app.truekeep.ios
+2026-11-05 17:39:00.798 xcodebuild[96557:24786383] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:39:00.798 xcodebuild[96557:24786383] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:39:00.814 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:39:00.814 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+    t =     6.23s         Setting up automation session
+    t =     9.47s         Wait for app.truekeep.ios to idle
+    t =    11.51s Checking existence of `"truekeep.cleanup.task.similar-family-13" Button`
+    t =    11.80s Find the "truekeep.cleanup.task.similar-family-13" Button
+    t =    11.87s Checking existence of `"truekeep.cleanup.task.similar-family-13" Button`
+    t =    11.91s Find the "truekeep.cleanup.task.similar-family-13" Button
+    t =    11.96s Tap "truekeep.cleanup.task.similar-family-13" Button
+    t =    11.96s     Wait for app.truekeep.ios to idle
+    t =    11.97s     Find the "truekeep.cleanup.task.similar-family-13" Button
+    t =    12.01s     Check for interrupting elements affecting "truekeep.cleanup.task.similar-family-13" Button
+    t =    12.10s         Wait for com.apple.springboard to idle
+    t =    12.14s     Synthesize event
+    t =    12.43s     Wait for app.truekeep.ios to idle
+    t =    12.56s Waiting 5.0s for "truekeep.review.candidate.similar-13-delete" Button to exist
+    t =    13.59s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.review.candidate.similar-13-delete" Button`
+    t =    13.59s         Checking existence of `"truekeep.review.candidate.similar-13-delete" Button`
+    t =    13.65s Tap "truekeep.review.candidate.similar-13-delete" Button
+    t =    13.65s     Wait for app.truekeep.ios to idle
+    t =    13.65s     Find the "truekeep.review.candidate.similar-13-delete" Button
+    t =    13.69s     Check for interrupting elements affecting "truekeep.review.candidate.similar-13-delete" Button
+    t =    13.72s         Wait for com.apple.springboard to idle
+    t =    13.75s     Synthesize event
+    t =    14.04s     Wait for app.truekeep.ios to idle
+    t =    14.05s Find the "truekeep.review.add-to-review-bin" Button
+    t =    14.19s Added attachment named 'duo-review-portrait-selected'
+    t =    14.19s Find the Target Application 'app.truekeep.ios'
+    t =    14.21s Setting device orientation to Landscape Left
+    t =    14.23s     Device orientation changed to Landscape Left
+    t =    14.23s     Wait for app.truekeep.ios to idle
+    t =    14.23s     Wait for com.apple.springboard to idle
+    t =    15.27s Find the Target Application 'app.truekeep.ios'
+    t =    15.30s Find the Target Application 'app.truekeep.ios'
+    t =    16.34s Find the Target Application 'app.truekeep.ios'
+    t =    16.37s Find the Target Application 'app.truekeep.ios'
+    t =    17.25s Find the Target Application 'app.truekeep.ios'
+    t =    17.28s Find the Target Application 'app.truekeep.ios'
+    t =    17.41s Added attachment named 'duo-orientation-request-no-window-change'
+/Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeepUITests/TrueKeepUITests.swift:139: -[TrueKeepUITests.TrueKeepUITests testDuoReviewSelectionSurvivesRotation] : Test skipped - 当前模拟器未实际改变窗口尺寸；方向指令成功不代表跨尺寸验证。需要 Device Hub 姿态/显示控制。
+    t =    17.43s Tear Down
+    t =    17.43s     Setting device orientation to Portrait
+    t =    17.43s         Device orientation changed to Portrait
+    t =    17.44s         Wait for app.truekeep.ios to idle
+    t =    17.44s         Wait for com.apple.springboard to idle
+    t =    17.44s     Terminate app.truekeep.ios:97516
+2026-11-05 17:39:12.231 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:39:12.231 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+2026-11-05 17:39:12.231 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:39:12.231 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+2026-11-05 17:39:12.232 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:39:12.232 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testDuoReviewSelectionSurvivesRotation]' skipped (18.496 seconds).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testRedesignMenuDeletionShowsBusyAndSuccess]' started.
+    t =     0.00s Start Test at 2026-11-05 17:39:13.274
+    t =     0.02s Set Up
+    t =     0.02s     Open app.truekeep.ios
+    t =     0.02s         Launch app.truekeep.ios
+2026-11-05 17:39:13.298 xcodebuild[96557:24786383] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:39:13.298 xcodebuild[96557:24786383] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:39:13.312 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:39:13.312 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+    t =     0.23s             Setting up automation session
+    t =     3.43s             Wait for app.truekeep.ios to idle
+    t =     4.96s Terminate app.truekeep.ios:97588
+2026-11-05 17:39:18.243 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:39:18.243 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+2026-11-05 17:39:18.244 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:39:18.244 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+2026-11-05 17:39:18.244 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:39:18.244 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+    t =     6.00s Open app.truekeep.ios
+    t =     6.00s     Launch app.truekeep.ios
+2026-11-05 17:39:19.279 xcodebuild[96557:24786383] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:39:19.279 xcodebuild[96557:24786383] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:39:19.296 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:39:19.296 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+    t =     6.22s         Setting up automation session
+    t =     9.45s         Wait for app.truekeep.ios to idle
+    t =    11.10s Tap "truekeep.welcome.learn-more" Button
+    t =    11.10s     Wait for app.truekeep.ios to idle
+    t =    11.10s     Find the "truekeep.welcome.learn-more" Button
+    t =    11.18s     Check for interrupting elements affecting "truekeep.welcome.learn-more" Button
+    t =    11.20s         Wait for com.apple.springboard to idle
+    t =    11.24s     Synthesize event
+    t =    11.25s         Scroll element to visible
+    t =    11.26s         Find the "truekeep.welcome.learn-more" Button
+    t =    11.27s         Computed hit point {324.16666666666663, 598.16666666666652} after scrolling to visible
+    t =    11.56s     Wait for app.truekeep.ios to idle
+    t =    12.28s Waiting 5.0s for "truekeep.settings.topic.how-it-works" Button to exist
+    t =    13.31s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.settings.topic.how-it-works" Button`
+    t =    13.31s         Checking existence of `"truekeep.settings.topic.how-it-works" Button`
+    t =    13.41s Tap "首页" Button
+    t =    13.41s     Wait for app.truekeep.ios to idle
+    t =    13.41s     Find the "首页" Button
+    t =    13.45s     Check for interrupting elements affecting "house" Button
+    t =    13.48s         Wait for com.apple.springboard to idle
+    t =    13.52s     Synthesize event
+    t =    13.81s     Wait for app.truekeep.ios to idle
+    t =    15.13s Waiting 5.0s for "truekeep.cleanup.results" ScrollView to exist
+    t =    16.15s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.cleanup.results" ScrollView`
+    t =    16.15s         Checking existence of `"truekeep.cleanup.results" ScrollView`
+    t =    16.21s Waiting 5.0s for "truekeep.cleanup.task.similar-family-12" Button to exist
+    t =    17.22s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.cleanup.task.similar-family-12" Button`
+    t =    17.23s         Checking existence of `"truekeep.cleanup.task.similar-family-12" Button`
+    t =    17.28s Find the "truekeep.cleanup.task.similar-family-12" Button
+    t =    17.32s Tap "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =    17.32s     Wait for app.truekeep.ios to idle
+    t =    17.33s     Find the "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =    17.37s     Check for interrupting elements affecting "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =    17.40s         Wait for com.apple.springboard to idle
+    t =    17.44s     Synthesize event
+    t =    17.73s     Wait for app.truekeep.ios to idle
+    t =    18.15s Tap "review.more" Button
+    t =    18.15s     Wait for app.truekeep.ios to idle
+    t =    18.15s     Find the "review.more" Button
+    t =    18.20s     Check for interrupting elements affecting "review.more" Button
+    t =    18.24s         Wait for com.apple.springboard to idle
+    t =    18.27s     Synthesize event
+    t =    18.56s     Wait for app.truekeep.ios to idle
+    t =    19.63s Tap "truekeep.review.direct-delete-selection" Button
+    t =    19.63s     Wait for app.truekeep.ios to idle
+    t =    19.64s     Find the "truekeep.review.direct-delete-selection" Button
+    t =    19.68s     Check for interrupting elements affecting "truekeep.review.direct-delete-selection" Button
+    t =    19.72s         Wait for com.apple.springboard to idle
+    t =    19.75s     Synthesize event
+    t =    20.04s     Wait for app.truekeep.ios to idle
+    t =    21.11s Waiting 5.0s for "truekeep.delete.confirm" Button to exist
+    t =    22.14s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.delete.confirm" Button`
+    t =    22.14s         Checking existence of `"truekeep.delete.confirm" Button`
+    t =    22.29s Added attachment named 'redesign-delete-confirm'
+    t =    22.29s Tap "truekeep.delete.cancel" Button
+    t =    22.29s     Wait for app.truekeep.ios to idle
+    t =    22.29s     Find the "truekeep.delete.cancel" Button
+    t =    22.33s     Check for interrupting elements affecting "truekeep.delete.cancel" Button
+    t =    22.37s         Wait for com.apple.springboard to idle
+    t =    22.40s     Synthesize event
+    t =    22.69s     Wait for app.truekeep.ios to idle
+    t =    23.08s Find the "truekeep.review.add-to-review-bin" Button
+    t =    23.24s Added attachment named 'redesign-delete-cancelled'
+    t =    23.24s Tap "review.more" Button
+    t =    23.24s     Wait for app.truekeep.ios to idle
+    t =    23.24s     Find the "review.more" Button
+    t =    23.28s     Check for interrupting elements affecting "review.more" Button
+    t =    23.31s         Wait for com.apple.springboard to idle
+    t =    23.34s     Synthesize event
+    t =    23.63s     Wait for app.truekeep.ios to idle
+    t =    24.50s Tap "truekeep.review.direct-delete-selection" Button
+    t =    24.50s     Wait for app.truekeep.ios to idle
+    t =    24.50s     Find the "truekeep.review.direct-delete-selection" Button
+    t =    24.54s     Check for interrupting elements affecting "truekeep.review.direct-delete-selection" Button
+    t =    24.57s         Wait for com.apple.springboard to idle
+    t =    24.60s     Synthesize event
+    t =    24.90s     Wait for app.truekeep.ios to idle
+    t =    25.93s Tap "truekeep.delete.confirm" Button
+    t =    25.93s     Wait for app.truekeep.ios to idle
+    t =    25.94s     Find the "truekeep.delete.confirm" Button
+    t =    25.98s     Check for interrupting elements affecting "truekeep.delete.confirm" Button
+    t =    26.02s         Wait for com.apple.springboard to idle
+    t =    26.05s     Synthesize event
+    t =    26.34s     Wait for app.truekeep.ios to idle
+    t =    27.36s Checking `Expect predicate `enabled == 0` for object "truekeep.delete.confirm" Button`
+    t =    27.37s     Find the "truekeep.delete.confirm" Button
+    t =    27.53s Added attachment named 'redesign-delete-busy'
+    t =    27.53s Waiting 10.0s for "删除已完成" StaticText to exist
+    t =    28.57s     Checking `Expect predicate `existsNoRetry == 1` for object "删除已完成" StaticText`
+    t =    28.57s         Checking existence of `"删除已完成" StaticText`
+    t =    28.62s         Capturing element debug description
+    t =    29.54s     Checking `Expect predicate `existsNoRetry == 1` for object "删除已完成" StaticText`
+    t =    29.54s         Checking existence of `"删除已完成" StaticText`
+    t =    29.60s         Capturing element debug description
+    t =    30.63s     Checking `Expect predicate `existsNoRetry == 1` for object "删除已完成" StaticText`
+    t =    30.63s         Checking existence of `"删除已完成" StaticText`
+    t =    30.66s Checking existence of `"truekeep.review.candidate.shot-01" Button`
+    t =    30.79s Added attachment named 'redesign-delete-success'
+    t =    30.79s Waiting 5.0s for Button (Element at index 0) to exist
+    t =    31.82s     Checking `Expect predicate `existsNoRetry == 1` for object Button (Element at index 0)`
+    t =    31.83s         Checking existence of `Button (Element at index 0)`
+    t =    31.89s         Capturing element debug description
+    t =    32.86s     Checking `Expect predicate `existsNoRetry == 1` for object Button (Element at index 0)`
+    t =    32.86s         Checking existence of `Button (Element at index 0)`
+    t =    32.90s         Capturing element debug description
+    t =    33.81s     Checking `Expect predicate `existsNoRetry == 1` for object Button (Element at index 0)`
+    t =    33.81s         Checking existence of `Button (Element at index 0)`
+    t =    33.84s         Capturing element debug description
+    t =    34.86s     Checking `Expect predicate `existsNoRetry == 1` for object Button (Element at index 0)`
+    t =    34.87s         Checking existence of `Button (Element at index 0)`
+    t =    34.89s         Capturing element debug description
+    t =    35.79s     Checking `Expect predicate `existsNoRetry == 1` for object Button (Element at index 0)`
+    t =    35.79s         Checking existence of `Button (Element at index 0)`
+    t =    35.83s         Capturing element debug description
+    t =    35.83s     Checking existence of `Button (Element at index 0)`
+    t =    35.86s Collecting debug information to assist test failure triage
+    t =    35.86s     Requesting snapshot of accessibility hierarchy for app with pid 97766
+/Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeepUITests/TrueKeepUITests.swift:1194: error: -[TrueKeepUITests.TrueKeepUITests testRedesignMenuDeletionShowsBusyAndSuccess] : XCTAssertTrue failed
+    t =    36.01s Tear Down
+    t =    36.01s     Setting device orientation to Portrait
+    t =    36.02s         Wait for app.truekeep.ios to idle
+    t =    36.03s         Wait for com.apple.springboard to idle
+    t =    36.03s     Terminate app.truekeep.ios:97766
+2026-11-05 17:39:49.320 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:39:49.320 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+2026-11-05 17:39:49.320 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:39:49.320 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+2026-11-05 17:39:49.320 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:39:49.320 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testRedesignMenuDeletionShowsBusyAndSuccess]' failed (37.086 seconds).
+2026-11-05 17:39:50.359129+0800 TrueKeepUITests-Runner[96850:24788558] [Default] Flushing outgoing messages to the IDE with timeout 600.00s
+2026-11-05 17:39:50.359307+0800 TrueKeepUITests-Runner[96850:24788712] [Default] Received confirmation that IDE processed remaining outgoing messages
+2026-11-05 17:39:50.452 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:39:50.453 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+2026-11-05 17:39:50.453 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:39:50.453 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+2026-11-05 17:39:50.453 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:39:50.453 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+2026-11-05 17:39:50.724 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:39:50.724 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+2026-11-05 17:39:51.993278+0800 TrueKeepUITests-Runner[98117:24795878] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+
+Restarting after unexpected exit, crash, or test timeout; summary will include totals from previous launches.
+
+Test Suite 'Selected tests' started at 2026-11-05 17:39:55.193.
+Test Suite 'TrueKeepUITests.xctest' started at 2026-11-05 17:39:55.193.
+Test Suite 'TrueKeepUITests.xctest' passed at 2026-11-05 17:39:55.194.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-11-05 17:39:55.194.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+2026-11-05 17:39:55.213 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:39:55.213 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+2026-11-05 17:39:55.213 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:39:55.213 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+2026-11-05 17:39:55.214 xcodebuild[96557:24786383] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:39:55.214 xcodebuild[96557:24786383] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+2026-11-05 17:39:55.499 xcodebuild[96557:24786383] [MT] IDETestOperationsObserverDebug: 116.552 elapsed -- Testing started completed.
+2026-11-05 17:39:55.499 xcodebuild[96557:24786383] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-11-05 17:39:55.499 xcodebuild[96557:24786383] [MT] IDETestOperationsObserverDebug: 116.552 sec, +116.552 sec -- end
+
+Test session results, code coverage, and logs:
+	/tmp/TrueKeepDuo-20261105-native-recheck.xcresult
+
+Failing tests:
+	TrueKeepUITests.testRedesignMenuDeletionShowsBusyAndSuccess()
+
+** TEST EXECUTE FAILED **
+
+Testing started

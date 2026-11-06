@@ -294,11 +294,11 @@ struct PhotoDeletionSummary: Hashable, Sendable, Codable {
     }
 
     var recoveryMessage: String {
-        "所选项目已移至 Photos 的“最近删除”。建议保留恢复窗口，不要立即清空。"
+        "所选项目已移至照片 App 的“最近删除”。建议保留恢复窗口，不要立即清空。"
     }
 
     var detailMessage: String {
-        "这些项目仍可在 Photos 中恢复，空间可能尚未立即释放。"
+        "这些项目仍可在照片 App 中恢复，空间可能尚未立即释放。"
     }
 
     var accessibilityAnnouncement: String {
@@ -348,6 +348,18 @@ struct CleanupFlowState: Hashable, Codable {
         selectedCurrentReviewAssetIDs.count
     }
 
+    var currentReviewSelectionSummary: String {
+        let ids = Set(selectedCurrentReviewAssetIDs)
+        guard !ids.isEmpty else { return "选择要整理的照片" }
+        let candidates = currentReviewGroup.candidates.reduce(into: [String: CleanupCandidate]()) {
+            if ids.contains($1.id) { $0[$1.id] = $1 }
+        }.values
+        let bytes = candidates.reduce(Int64(0)) { $0 + max(0, $1.estimatedBytes) }
+        let unknown = candidates.contains { $0.estimatedBytes <= 0 }
+        let size = bytes > 0 ? "预计 \(bytes.formattedStorage)" : "大小未知"
+        return "已选 \(ids.count) 项 · \(size)" + (unknown && bytes > 0 ? "，部分大小未知" : "")
+    }
+
     var currentReviewCandidateIDs: Set<String> {
         guard reviewGroups.indices.contains(currentReviewGroupIndex) else { return [] }
         return Set(currentReviewGroup.candidates.map(\.id))
@@ -375,17 +387,20 @@ struct CleanupFlowState: Hashable, Codable {
         tasks.map(\.estimatedBytes).reduce(0, +)
     }
 
-    var evaluationJSON: String {
-        let export = ScanEvaluationExport(
+    var evaluationExport: ScanEvaluationExport {
+        ScanEvaluationExport(
             similarGroups: reviewGroups.filter { $0.category == .similar && !$0.candidates.allSatisfy(\.isExactDuplicate) }.map { $0.candidates.map(\.id) },
             exactGroups: reviewGroups.filter { $0.category == .similar && $0.candidates.allSatisfy(\.isExactDuplicate) }.map { $0.candidates.map(\.id) },
             blurry: reviewGroups.filter { $0.category == .blurry }.flatMap { $0.candidates.map(\.id) },
             accidental: reviewGroups.filter { $0.category == .accidental }.flatMap { $0.candidates.map(\.id) },
             report: scanReport
         )
+    }
+
+    var evaluationJSON: String {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-        return (try? encoder.encode(export)).flatMap { String(data: $0, encoding: .utf8) } ?? "{}"
+        return (try? encoder.encode(evaluationExport)).flatMap { String(data: $0, encoding: .utf8) } ?? "{}"
     }
 
     var selectedReviewBinAssetIDs: [String] {
@@ -396,9 +411,10 @@ struct CleanupFlowState: Hashable, Codable {
 
     var selectedCurrentReviewAssetIDs: [String] {
         guard reviewGroups.indices.contains(currentReviewGroupIndex) else { return [] }
-
+        var seen: Set<String> = []
         return currentReviewGroup.candidates.compactMap { candidate in
-            guard selectedCandidateIDs.contains(candidate.id), !candidate.confirmedKeep else { return nil }
+            guard selectedCandidateIDs.contains(candidate.id), !candidate.confirmedKeep,
+                  seen.insert(candidate.id).inserted else { return nil }
             return candidate.id
         }
     }
@@ -409,7 +425,7 @@ struct CleanupFlowState: Hashable, Codable {
         let previousSelections = reviewSelectionsByGroup
         self = result
         reviewBinItems = retainedBin
-        deletionSummary = previousDeletionSummary
+        deletionSummary = nil
         reviewSelectionsByGroup = previousSelections
         removeCandidateReferences(previousDeletionSummary?.deletedAssetIDs ?? [])
         applyConfirmedKeepAssetIDs(confirmedKeepAssetIDs, hideProtectedNonSimilarCandidates: true)

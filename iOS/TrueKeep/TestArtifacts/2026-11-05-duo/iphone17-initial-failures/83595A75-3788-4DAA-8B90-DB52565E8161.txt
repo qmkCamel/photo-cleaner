@@ -1,0 +1,26 @@
+Failed to tap "truekeep.review.direct-delete-selection" Button: No matches found for Elements matching predicate '"truekeep.review.direct-delete-selection" IN identifiers' from input {(
+    Button, identifier: 'house', label: '首页', Selected,
+    Button, identifier: 'trash', label: '复核箱',
+    Button, identifier: 'gearshape', label: '设置',
+    Button, identifier: 'BackButton', label: 'Back',
+    Button, identifier: 'review.more', label: '更多复核操作',
+    Button,
+    Button, identifier: 'truekeep.review.review-all', label: '取消全选',
+    Button, identifier: 'truekeep.review.add-to-review-bin', label: '加入复核箱（3）',
+    Button, identifier: 'truekeep.review.previous-group', label: '上一组',
+    Button, identifier: 'truekeep.review.next-group', label: '下一组',
+    Button, identifier: 'review.preview.shot-01', label: '预览，已选择删除，截图和聊天截图，旧截图。，1.1 MB',
+    Button, identifier: 'truekeep.review.candidate.shot-01', label: '已选择删除，截图和聊天截图，旧截图。', Selected,
+    Button, identifier: 'review.preview.shot-02', label: '预览，已选择删除，截图和聊天截图，临时聊天截图。，1 MB',
+    Button, identifier: 'truekeep.review.candidate.shot-02', label: '已选择删除，截图和聊天截图，临时聊天截图。', Selected,
+    Button, identifier: 'review.preview.shot-03', label: '预览，已选择删除，截图和聊天截图，重复截图。，1.3 MB',
+    Button, identifier: 'truekeep.review.candidate.shot-03', label: '已选择删除，截图和聊天截图，重复截图。', Selected
+)}
+Possibly caused by runtime issues:
+Automation type mismatch: computed Button from legacy attributes vs PopUpButton from modern attribute. Input attributes and values: {
+    "XC_kAXXCAttributeAutomationType" = 14;
+    "XC_kAXXCAttributeElementBaseType" = UIResponder;
+    "XC_kAXXCAttributeElementType" = "SwiftUI.AccessibilityNode";
+    "XC_kAXXCAttributeTraits" = 1108101562369;
+}
+See test report attachments for more detail.

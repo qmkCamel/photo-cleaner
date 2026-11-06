@@ -111,13 +111,13 @@ final class ReviewIterationTests: XCTestCase {
         XCTAssertTrue(state.reviewGroups[0].candidates.first { $0.id == keep }!.confirmedKeep)
     }
 
-    func testRescanKeepsDeletionSummaryAndDoesNotResurrectDeletedItems() {
+    func testSuccessfulRescanResetsDeletionSummaryAndDoesNotResurrectDeletedItems() {
         var state = CleanupFlowState.sample()
         let id = state.currentReviewGroup.candidates[0].id
         state.applyDirectDeletionResult(.success(deletedAssetIDs: [id]))
-        let summary = state.deletionSummary
+        XCTAssertNotNil(state.deletionSummary)
         state.mergeScanResult(.sample(), confirmedKeepAssetIDs: [])
-        XCTAssertEqual(state.deletionSummary, summary)
+        XCTAssertNil(state.deletionSummary)
         XCTAssertFalse(state.reviewGroups.flatMap(\.candidates).contains { $0.id == id })
     }
 

@@ -1,0 +1,766 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -project iOS/TrueKeep/TrueKeep.xcodeproj -scheme TrueKeep -destination "platform=iOS Simulator,id=642F2F40-1DF5-4C73-A382-494BBE4C53AB" -derivedDataPath /tmp/truekeep-duo-20261105 -parallel-testing-enabled YES -parallel-testing-worker-count 2 -collect-test-diagnostics never -resultBundlePath /tmp/TrueKeepDuo-20261105-candidate7-full.xcresult CODE_SIGNING_ALLOWED=NO
+
+Build settings from command line:
+    CODE_SIGNING_ALLOWED = NO
+
+Resolve Package Graph
+
+
+Resolved source packages:
+  LocalPhotoModels: /Users/edge/side/photo-cleaner/iOS/TrueKeep/Packages/LocalPhotoModels
+  swift-crypto: https://github.com/apple/swift-crypto.git @ 4.5.2
+  EventSource: https://github.com/mattt/EventSource.git @ 1.5.1
+  Jinja: https://github.com/huggingface/swift-jinja.git @ 2.5.2
+  swift-numerics: https://github.com/apple/swift-numerics @ 1.1.1
+  swift-transformers: https://github.com/huggingface/swift-transformers @ 1.3.0
+  swift-asn1: https://github.com/apple/swift-asn1.git @ 1.7.3
+  mlx-swift: https://github.com/ml-explore/mlx-swift @ 0.32.3
+  mlx-swift-lm: https://github.com/ml-explore/mlx-swift-lm @ 3.32.3
+  swift-collections: https://github.com/apple/swift-collections.git @ 1.7.4
+  swift-huggingface: https://github.com/huggingface/swift-huggingface.git @ 0.13.0
+  swift-syntax: https://github.com/swiftlang/swift-syntax.git @ 603.0.2
+  yyjson: https://github.com/ibireme/yyjson.git @ 0.12.0
+
+Writing result bundle at path:
+	/tmp/TrueKeepDuo-20261105-candidate7-full.xcresult
+
+2026-11-05 17:48:43.146 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:48:59.607 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+Testing started
+Test suite 'PhotoScanResultBuilderTests' started on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)'
+Test case 'PhotoScanResultBuilderTests.testAspectPreservingRasterDimensionsKeepLandscapePortraitAndPanoramaComposition()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoScanResultBuilderTests.testBuildsScreenshotAndLargeVideoTasksFromAssetSnapshots()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoScanResultBuilderTests.testBuildsVisualClassifierTasksFromClassifiedPhotoSnapshots()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoScanResultBuilderTests.testConfirmedKeepIsFilteredFromNonSimilarScanTasks()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoScanResultBuilderTests.testConfirmedKeepRemainsProtectedReferenceInSimilarGroup()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoScanResultBuilderTests.testCoreMLQualityScorerParsesNamedModelOutputs()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoScanResultBuilderTests.testExactDuplicateGrouperSeparatesStillLiveAndIncompleteResources()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoScanResultBuilderTests.testExactDuplicateGroupUsesDistinctUserFacingCopy()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoScanResultBuilderTests.testExactDuplicateRequiresCompletedRefinementForEveryMarkedMember()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoScanResultBuilderTests.testFixtureCandidatesDoNotClaimPhotoAssetThumbnails()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoScanResultBuilderTests.testHashFallbackRejectsMateriallyDifferentAspectRatios()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoScanResultBuilderTests.testInternalRecommendationStillCreatesReviewTaskWhenCapabilityIsDisabled()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoScanResultBuilderTests.testOrientationNormalizerAppliesRightRotationBeforeAnalysis()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoScanResultBuilderTests.testPhotoImageRequestOptionsStayLocalForBothDeliveryModes()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoScanResultBuilderTests.testPhotoImageRequestStrategyFallsBackToHighQualityImage()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoScanResultBuilderTests.testPhotoImageRequestStrategyReturnsNilAfterBothLocalRequestsFail()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoScanResultBuilderTests.testPhotoImageRequestStrategyStopsAfterFastImageIsAvailable()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoScanResultBuilderTests.testRealScanCandidatesKeepPhotoAssetIdentifierForThumbnails()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoScanResultBuilderTests.testRefinedFeaturePrintCanSplitCoarseSimilarGroup()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoScanResultBuilderTests.testRefinedQualityCanChangeRecommendedKeep()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoScanResultBuilderTests.testRefinementCanRemoveCoarseBlurAndAccidentalFindings()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoScanResultBuilderTests.testRefinementSelectionIncludesAllSimilarMembersAndRiskBoundaryCandidates()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoScanResultBuilderTests.testResourceDigestAccumulatorHashesIncrementalChunks()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoScanResultBuilderTests.testResourceDigestOptionsNeverAllowNetworkAccess()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoScanResultBuilderTests.testResourceRequestCancellationHandlesCancellationBeforeRequestIDArrives()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoScanResultBuilderTests.testSimilarVisualGroupKeepsInternalRankingButStartsWithNoDeletionSelection()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoScanResultBuilderTests.testUnavailableRefinementKeepsCandidateLowConfidenceAndUnselected()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoScanResultBuilderTests.testUnclassifiedSnapshotsDoNotCreateVisualReviewTasks()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoScanResultBuilderTests.testVisionQualityScorerDoesNotTreatUtilityAsAccidental()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoScanResultBuilderTests.testVisionQualityScorerNormalizesAestheticsAndAveragesFaceQuality()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoScanResultBuilderTests.testVisionQualityScorerUsesOnlyExtremelyLowNonUtilityScoreAsAccidentalRisk()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoScanResultBuilderTests.testVisualAnalyzerFallsBackToHeuristicsWhenVisionScoringFails()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.086 seconds)
+Test case 'PhotoScanResultBuilderTests.testVisualAnalyzerRetainsSourceAspectRatioAtBothStages()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.010 seconds)
+Test case 'PhotoScanResultBuilderTests.testVisualClassifierDoesNotGroupNearHashesOutsideTimeWindow()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoScanResultBuilderTests.testVisualClassifierDoesNotUseHashFallbackWhenFeaturePrintsAreComparableAndDistant()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoScanResultBuilderTests.testVisualClassifierFallsBackToPerceptualHashWhenFeaturePrintIsMissing()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoScanResultBuilderTests.testVisualClassifierGroupsNearHashesAndKeepsSharpestInput()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoScanResultBuilderTests.testVisualClassifierMarksAccidentalAndBlurrySingles()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoScanResultBuilderTests.testVisualClassifierPrefersFeaturePrintSimilarityOverPerceptualHash()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoScanResultBuilderTests.testVisualClassifierUsesFaceCaptureQualityAsRecommendedKeepSupport()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoScanResultBuilderTests.testVisualClassifierUsesQualityAssessmentForBlurrySingles()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoScanResultBuilderTests.testVisualClassifierUsesQualityScoreForRecommendedKeep()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test suite 'ReviewIterationTests' started on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)'
+Test case 'ReviewIterationTests.testBatchRangesCoverBeyondBothFormerGlobalLimits()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'ReviewIterationTests.testCacheInvalidatesModifiedAssetsAndKeepsBoundedSize()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.018 seconds)
+Test case 'ReviewIterationTests.testConfirmedKeepClearsBinAndRememberedSelectionWithoutEnablingRecommendation()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'ReviewIterationTests.testConfirmedSimilarReferenceSurvivesPermissionReconciliation()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'ReviewIterationTests.testCorruptSessionThrowsAndRemainsUntouched()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.003 seconds)
+Test case 'ReviewIterationTests.testCrossTimeDuplicatesNeedResourceEvidenceBeforeExactClassification()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'ReviewIterationTests.testLatestConfirmedKeepStoreOverridesRestoredSnapshot()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.010 seconds)
+Test case 'ReviewIterationTests.testPartialSelectionSurvivesGroupNavigation()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'ReviewIterationTests.testPermissionShrinkAndEmptyGroupAreSafeWithoutDeletionSummary()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'ReviewIterationTests.testRebuildKeepsCorruptFileBackup()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.017 seconds)
+Test case 'ReviewIterationTests.testRescanMergeRetainsBinAndAppliesConfirmedKeeps()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'ReviewIterationTests.testSessionRoundTripAndExpirationNeverDeletePhotos()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.004 seconds)
+Test case 'ReviewIterationTests.testSuccessfulRescanResetsDeletionSummaryAndDoesNotResurrectDeletedItems()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.003 seconds)
+Test suite 'LocalPhotoModelControllerTests' started on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)'
+Test case 'LocalPhotoModelControllerTests.testAnalysisFailurePreservesReportAndSwitchClearsIt()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.024 seconds)
+Test case 'LocalPhotoModelControllerTests.testCancellationBlocksStaleResultsAndDuplicateSubmission()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.012 seconds)
+Test case 'LocalPhotoModelControllerTests.testDefaultIsDisabledAndModelSelectionPersists()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.007 seconds)
+Test case 'LocalPhotoModelControllerTests.testFixtureRequiresDeletionSafetyFlag()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.002 seconds)
+Test case 'LocalPhotoModelControllerTests.testMissingModelFailsWithoutStartingTask()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.003 seconds)
+Test suite 'CleanupFlowStateTests' started on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)'
+Test case 'CleanupFlowStateTests.testCancellingConfirmedKeepRestoresEligibilityWithoutSelectingForDeletion()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'CleanupFlowStateTests.testConfirmedKeepRemovesCandidateFromDeletionPathsAndTaskMetrics()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'CleanupFlowStateTests.testDeletingEarlierGroupPreservesCurrentReviewGroupByIdentity()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'CleanupFlowStateTests.testDeletingOtherCandidateKeepsInternalRecommendationAvailableForReview()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'CleanupFlowStateTests.testDeletionSummaryAccumulatesUniqueAssetsAcrossBatches()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'CleanupFlowStateTests.testDirectDeletionOfInternallyRankedCandidateRebuildsTaskWithoutRecommendationCopy()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'CleanupFlowStateTests.testDirectDeletionOnlyRemovesMatchingGroupWhenCategoriesRepeat()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'CleanupFlowStateTests.testDirectDeletionRemovesCandidatesAndSynchronizesHomeTaskAndReviewBin()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'CleanupFlowStateTests.testDisabledRecommendationCountsRawRecommendationInTaskMetrics()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'CleanupFlowStateTests.testFailedDirectDeletionPreservesCandidatesAndSelection()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'CleanupFlowStateTests.testFailedPhotoDeletionKeepsItemsAndShowsError()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'CleanupFlowStateTests.testHidingProtectedNonSimilarCandidatesKeepsSimilarReferenceOnly()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'CleanupFlowStateTests.testMovingOutOfBinOnlyRemovesBufferRecords()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'CleanupFlowStateTests.testNewScanStateDoesNotCarryDeletionSummary()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'CleanupFlowStateTests.testPartialDirectDeletionRemovesSuccessAndKeepsFailuresSelected()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'CleanupFlowStateTests.testPartialPhotoDeletionRemovesOnlySuccessesAndRebuildsRemainingTask()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'CleanupFlowStateTests.testRecommendedKeepCapabilityIsSuppressedAndCandidateCanBeToggledNormally()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'CleanupFlowStateTests.testReportExportContainsReferencesAndStatisticsNotPhotoContent()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.002 seconds)
+Test case 'CleanupFlowStateTests.testReviewGroupNavigationMovesBetweenGroupsAndRefreshesSelection()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'CleanupFlowStateTests.testReviewGroupNavigationSkipsGroupsWithOnlyConfirmedKeeps()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'CleanupFlowStateTests.testReviewSelectionMovesIntoReviewBinBeforeDeletion()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'CleanupFlowStateTests.testSampleTasksEachOpenAReviewGroup()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'CleanupFlowStateTests.testSelectedReviewBinAssetIDsOnlyIncludesSelectedItems()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'CleanupFlowStateTests.testSelectingMissingReviewGroupIDPreservesCurrentState()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'CleanupFlowStateTests.testSelectingReviewGroupByIDRefreshesDefaultSelection()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'CleanupFlowStateTests.testSelectingSimilarReviewGroupByIDClearsDefaultSelectionWhenRecommendationIsDisabled()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'CleanupFlowStateTests.testSelectionCountAndBytesDeduplicateResourceIDs()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.005 seconds)
+Test case 'CleanupFlowStateTests.testSelectionSummaryUsesOnlySelectedResourcesAndReportsUnknownSize()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'CleanupFlowStateTests.testSuccessfulDeletionClearsAllDerivedResultsAndExposesStructuredSummary()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'CleanupFlowStateTests.testSuccessfulRescanResetsSummaryWithoutRevivingDeletedOrKeptItems()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'CleanupFlowStateTests.testTogglingAllReviewCandidatesIncludesInternalRecommendationWhenCapabilityIsDisabled()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'CleanupFlowStateTests.testTogglingFullySelectedReviewGroupClearsAllCurrentCandidates()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'CleanupFlowStateTests.testZeroStorageFormattingUsesNumericValue()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test suite 'TrueKeepAccessibilityTests' started on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)'
+Test case 'TrueKeepAccessibilityTests.testAppSourcesDoNotUseFixedSizeTextFonts()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.022 seconds)
+Test case 'TrueKeepAccessibilityTests.testDynamicIdentifiersRemainStableForAutomation()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'TrueKeepAccessibilityTests.testPrimaryControlIdentifiersAreUniqueAndAutomationSafe()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'TrueKeepAccessibilityTests.testPrimaryControlIdentifiersCoverCriticalFlowActions()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test suite 'PhotoDeletionResultTests' started on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)'
+Test case 'PhotoDeletionResultTests.testDebugOptInPersistsAcrossDefaultsInstances()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.009 seconds)
+Test case 'PhotoDeletionResultTests.testDebugSafetyPolicyDisablesDeletionByDefault()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoDeletionResultTests.testDebugSafetyPolicyRequiresExplicitDestructiveDeletionOptIn()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoDeletionResultTests.testDeletionServiceHonorsDebugSafetyLockBeforeTouchingPhotos()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoDeletionResultTests.testExplicitDeletionDisableWinsOverDestructiveDeletionOptIn()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoDeletionResultTests.testExplicitDisableRevokesSavedOptInEvenWithEnableArgument()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.009 seconds)
+Test case 'PhotoDeletionResultTests.testReleaseDoesNotReadOrModifyDebugOptIn()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.006 seconds)
+Test case 'PhotoDeletionResultTests.testReleaseSafetyPolicyAllowsDeletionUnlessExplicitlyDisabled()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoDeletionResultTests.testResolvedDeletionResultFailsWhenNothingDeleted()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoDeletionResultTests.testResolvedDeletionResultReportsPartialMissingAssets()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoDeletionResultTests.testResolvedDeletionResultSucceedsWhenEveryRequestedAssetDeleted()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test suite 'PhotoLibraryAuthorizationTests' started on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)'
+Test case 'PhotoLibraryAuthorizationTests.testAllRangeHasNoDateBoundsAndRecentRangesExcludeUnknownDates()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoLibraryAuthorizationTests.testAuthorizedHomeScenarioStartsWithoutCompletedScan()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoLibraryAuthorizationTests.testConfirmedKeepStorePersistsUniqueSortedIDsAndResets()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.007 seconds)
+Test case 'PhotoLibraryAuthorizationTests.testDeniedAndRestrictedAccessRequireSettings()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoLibraryAuthorizationTests.testFullAndLimitedAccessCanScan()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoLibraryAuthorizationTests.testLaunchConfigurationRecognizesConfirmedKeepResetArgument()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoLibraryAuthorizationTests.testLimitedAccessExposesIncompleteResultsWarning()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoLibraryAuthorizationTests.testPermissionDecisionRoutesDeniedAndRestrictedToPermissionIssue()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoLibraryAuthorizationTests.testPermissionDecisionRoutesFullAndLimitedAccessToScan()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoLibraryAuthorizationTests.testPermissionDecisionRoutesNotDeterminedToMainAfterIntroAction()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoLibraryAuthorizationTests.testPhotoPermissionCopyDescribesOnDeviceVisualCandidatesWithSafetyLimits()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoLibraryAuthorizationTests.testPhotoScanDateRangeDefaultsToLastMonth()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoLibraryAuthorizationTests.testPostDeletionSuccessScenarioStartsOnLimitedHomeWithReconciledResults()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoLibraryAuthorizationTests.testRecentPhotoScanDateRangesUseRollingCalendarMonthsAndClosedBounds()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoLibraryAuthorizationTests.testSampleCleanupDataRepresentsCompletedScanResults()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test suite 'AdaptiveLayoutTests' started on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)'
+Test case 'AdaptiveLayoutTests.testGridBoundariesAndAccessibility()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'AdaptiveLayoutTests.testHorizontalFoldUsesUnobstructedPane()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'AdaptiveLayoutTests.testPhysicalAsymmetryDoesNotMirrorWithLanguage()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'AdaptiveLayoutTests.testSafeBoundsAreNotDeductedTwice()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'AdaptiveLayoutTests.testShortWindowMovesActionsIntoScrollContent()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'AdaptiveLayoutTests.testSplitRequiresEveryConstraint()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test suite 'DeletionCoordinatorTests' started on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)'
+Test case 'DeletionCoordinatorTests.testAllInvalidCannotSubmitAndCancelHasExplicitFeedback()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'DeletionCoordinatorTests.testChangedSnapshotNeedsAnotherExplicitConfirmation()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'DeletionCoordinatorTests.testDuplicateSubmissionAndDismissWhileRunning()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'DeletionCoordinatorTests.testFailureReleasesLockWithoutAutomaticRetry()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test suite 'PhotoLibraryScanPolicyTests' started on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)'
+Test case 'PhotoLibraryScanPolicyTests.testBatchCollectStopsBeforeReadingWhenCancelled()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PhotoLibraryScanPolicyTests.testBatchRangesCoverAllItemsWithoutOvershooting()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoLibraryScanPolicyTests.testUsesSmallerBatchSizeInLowPowerMode()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoLibraryScanPolicyTests.testUsesSmallerVisualBatchesWithoutTruncatingTheLibrary()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test suite 'PrivacyManifestTests' started on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)'
+Test case 'PrivacyManifestTests.testPrivacyManifestDeclaresAppLocalUserDefaultsUsage()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test case 'PrivacyManifestTests.testPrivacyManifestDeclaresNoCollectionOrTracking()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test suite 'PhotoThumbnailRequestKeyTests' started on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)'
+Test case 'PhotoThumbnailRequestKeyTests.testBuildsStablePixelCacheKeyFromAssetAndScaledSize()' passed on 'Clone 2 of iPho2026-11-05 17:49:20.570 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:49:20.570 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:49:20.852 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:49:21.287 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:49:21.287 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:49:21.392 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:49:24.646 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:49:24.646 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:49:24.677 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:49:24.689 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:49:24.690 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:49:25.722 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:49:25.722 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:49:25.741 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:49:37.232 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:49:37.233 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:49:38.382 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:49:38.382 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:49:38.399 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:49:40.949 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:49:40.949 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:49:42.025 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:49:42.025 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:49:42.042 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:49:47.383 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:49:47.384 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:49:48.543 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:49:48.543 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:49:48.563 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:49:51.545 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:49:51.546 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:49:52.646 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:49:52.646 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:49:52.661 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:49:57.796 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:49:57.796 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:49:58.875 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:49:58.875 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:49:58.895 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:02.733 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:02.733 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:03.883 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:50:03.885 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:50:03.903 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:06.409 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:06.409 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:07.327 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:07.327 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:07.478 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:50:07.478 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:50:07.504 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:08.486 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:50:08.486 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:50:08.502 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:13.276 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:13.277 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:14.365 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:50:14.365 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:50:14.384 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:18.046 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:18.047 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:19.125 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:50:19.125 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:50:19.141 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:28.805 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:28.807 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:29.978 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:50:29.978 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:50:29.994 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:31.042 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:31.042 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:32.126 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:50:32.126 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:50:32.143 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:44.493 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:44.494 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:45.646 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:50:45.646 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:50:45.662 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:48.015 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:48.015 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:49.063 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:50:49.063 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:50:49.075 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:54.166 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:54.166 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:55.276 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:50:55.276 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:50:55.289 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:57.642 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:57.642 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:57.697 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:57.697 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:58.690 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:50:58.690 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:50:58.706 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:58.838 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:50:58.838 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:51:06.411 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:51:06.412 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:51:07.462 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:51:07.462 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:51:07.479 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:51:13.472 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:51:13.472 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:51:14.531 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:51:14.531 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:51:14.547 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:51:37.875 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:51:37.875 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:51:39.038 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:51:39.038 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:51:39.059 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:51:41.506 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:51:41.506 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:51:42.570 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:51:42.570 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:51:42.584 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:51:49.484 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:51:49.484 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:51:50.600 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:51:50.600 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:51:50.616 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:51:53.005 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:51:53.006 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:51:54.063 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:51:54.063 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:51:54.097 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:52:15.596 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:52:15.596 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:52:16.757 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:52:16.757 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:52:16.780 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:52:34.359 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:52:34.360 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:52:35.530 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:52:35.530 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:52:35.558 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:52:37.969 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:52:37.969 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:52:39.020 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:52:39.020 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:52:39.037 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:53:03.780 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:53:03.780 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:53:04.915 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:53:04.915 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:53:04.929 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:53:07.250 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:53:07.250 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:53:08.290 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:53:08.290 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:53:08.310 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:53:23.890 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:53:23.890 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:53:24.928 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:53:24.928 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:53:24.950 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:53:39.244 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:53:39.244 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:53:40.373 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:53:40.373 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:53:40.387 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:53:42.721 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:53:42.721 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:53:43.781 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:53:43.781 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:53:43.814 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:53:53.912 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:53:53.912 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:53:55.034 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:53:55.034 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:53:55.048 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:53:57.398 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:53:57.398 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:53:58.456 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:53:58.456 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:53:58.474 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:54:14.005 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:54:14.005 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+ne 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PhotoThumbnailRequestKeyTests.testClampsEmptyTargetSizeToSinglePixel()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test suite 'PrivacySafetyTopicTests' started on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)'
+Test case 'PrivacySafetyTopicTests.testSettingsTopicsHaveStableAccessibilityIdentifiers()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test case 'PrivacySafetyTopicTests.testSettingsTopicsHaveTappableDestinations()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.000 seconds)
+Test suite 'PublicScanCapabilityCopyTests' started on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)'
+Test case 'PublicScanCapabilityCopyTests.testPhotoPermissionCopyClaimsOnlyOnDeviceReviewCandidatesWithSafetyLimits()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeep (5524)' (0.001 seconds)
+Test suite 'TrueKeepUITests' started on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)'
+Test suite 'LocalPhotoModelsUITests' started on 'Clone 2 of iPhone 17 Pro - TrueKeepUITests-Runner (5681)'
+Test case 'TrueKeepUITests.testAuthorizedColdLaunchCanStartAndRepeatScanFromHome()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (17.596 seconds)
+Test case 'LocalPhotoModelsUITests.testAnalysisProgressSelectionContinuitySuccessAndFailure()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeepUITests-Runner (5681)' (24.006 seconds)
+Test case 'TrueKeepUITests.testCandidateRefinementCanContinueBrowsingReturnAndCancelWithScreenshots()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (14.267 seconds)
+Test case 'TrueKeepUITests.testCombinedIntroCanBeSkippedAndDoesNotReturnOnRelaunch()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (11.237 seconds)
+Test case 'LocalPhotoModelsUITests.testCancelAnalysisAndChangingGroupDiscardPendingResult()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeepUITests-Runner (5681)' (19.945 seconds)
+Test case 'TrueKeepUITests.testCompletedResultsExposeRescanAboveTabBar()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (15.241 seconds)
+Test case 'LocalPhotoModelsUITests.testModelSettingsSupportsAccessibilityTextSize()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeepUITests-Runner (5681)' (21.489 seconds)
+Test case 'TrueKeepUITests.testConfirmedKeepPersistsAcrossRelaunchAndCanBeManaged()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (26.520 seconds)
+Test case 'TrueKeepUITests.testCoverageSummaryIncludesUnreadablePhotosWithScreenshot()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (9.632 seconds)
+Test case 'LocalPhotoModelsUITests.testModelSwitchRemovalDownloadCancellationAndNavigation()' passed on 'Clone 2 of iPhone 17 Pro - TrueKeepUITests-Runner (5681)' (28.837 seconds)
+Test case 'TrueKeepUITests.testCriticalScreensPassAccessibilityAudit()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (43.756 seconds)
+Test case 'TrueKeepUITests.testDefaultLaunchDoesNotExposeFixtureCleanupTasks()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (11.560 seconds)
+Test case 'TrueKeepUITests.testDeleteConfirmationShowsBusyStateAndPreservesItemsOnFailure()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (26.162 seconds)
+Test case 'TrueKeepUITests.testDirectDeleteFailurePreservesReviewCandidatesAndSelection()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (18.765 seconds)
+Test case 'TrueKeepUITests.testDirectDeleteShowsBusyStateAndRefreshesHomeTaskAfterSuccess()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (29.391 seconds)
+Test case 'TrueKeepUITests.testDuoDeleteConfirmationAndInflightRotation()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (35.461 seconds)
+Test case 'TrueKeepUITests.testDuoDeletionSafetyTextAccessibility()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (14.655 seconds)
+Test case 'TrueKeepUITests.testDuoReportRotationFailureAndRetry()' passed o2026-11-05 17:54:15.170 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:54:15.170 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:54:15.185 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:54:17.536 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:54:17.536 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:54:18.577 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:54:18.577 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:54:18.592 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:54:31.704 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:54:31.704 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:54:32.849 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:54:32.849 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:54:32.866 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:54:35.215 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:54:35.215 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:54:36.284 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:54:36.285 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:54:36.319 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:54:46.002 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:54:46.002 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:54:47.126 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:54:47.126 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:54:47.146 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:54:49.481 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:54:49.481 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:54:50.530 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:54:50.530 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:54:50.569 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:55:01.905 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:55:01.905 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:55:03.063 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:55:03.063 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:55:03.078 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:55:44.666 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:55:44.666 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:55:45.854 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:55:45.854 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:55:45.871 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:55:48.268 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:55:48.268 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:55:49.327 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:55:49.327 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:55:49.340 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:55:57.041 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:55:57.041 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:55:58.164 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:55:58.164 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:55:58.184 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:56:00.555 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:56:00.556 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:56:01.595 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:56:01.595 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:56:01.630 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:56:06.578 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:56:06.578 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:56:07.680 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:56:07.680 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:56:07.706 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:56:10.044 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:56:10.044 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:56:11.110 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:56:11.110 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:56:11.126 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:56:25.233 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:56:25.233 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:56:26.356 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:56:26.356 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:56:26.370 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:56:36.852 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:56:36.852 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:56:37.998 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:56:37.998 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:56:38.011 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:56:40.343 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:56:40.343 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:56:41.410 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:56:41.410 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:56:41.431 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:57:04.436 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:57:04.436 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:57:05.550 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:57:05.550 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:57:05.578 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:57:08.027 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:57:08.027 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:57:09.085 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:57:09.085 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:57:09.120 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:57:14.134 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:57:14.134 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:57:15.233 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:57:15.233 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:57:15.259 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:57:19.164 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:57:19.164 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:57:20.281 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:57:20.281 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:57:20.295 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:57:22.796 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:57:22.796 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:57:23.843 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:57:23.844 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:57:23.865 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:57:39.618 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:57:39.619 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:57:40.678 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:57:40.678 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:57:40.711 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:57:47.695 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:57:47.695 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:57:48.857 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:57:48.857 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:57:48.870 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:57:51.210 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:57:51.210 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:57:52.276 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:57:52.276 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:57:52.298 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:01.370 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:01.370 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:02.477 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:58:02.477 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:58:02.495 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:04.868 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:04.868 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:05.920 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:58:05.920 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:58:05.932 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:11.398 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:11.398 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:12.493 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:58:12.493 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:58:12.528 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:17.872 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:17.872 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:18.927 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:58:18.927 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:58:18.944 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:29.072 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:29.072 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:30.168 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:58:30.168 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:58:30.181 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:32.489 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:32.489 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:33.540 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:58:33.540 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:58:33.558 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:38.502 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:38.502 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:39.605 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:58:39.605 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:58:39.620 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:41.931 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:41.932 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:42.991 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:58:42.991 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:58:43.013 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:52.057 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:52.057 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:53.173 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:58:53.173 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:58:53.188 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:55.510 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:55.510 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:58:56.560 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:58:56.560 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:58:56.599 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:59:05.245 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:59:05.245 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:59:06.360 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:59:06.360 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:59:06.375 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:59:08.722 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:59:08.722 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:59:09.783 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:59:09.783 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:59:09.801 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:59:18.473 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:59:18.474 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:59:19.568 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:59:19.568 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:59:19.582 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:59:42.091 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:59:42.092 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:59:43.240 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:59:43.240 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:59:43.254 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:59:59.244 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:59:59.244 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:00:00.393 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 18:00:00.393 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 18:00:00.422 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:00:02.837 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:00:02.837 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:00:03.885 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 18:00:03.885 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 18:00:03.906 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:00:26.774 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:00:26.774 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:00:27.936 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 18:00:27.936 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 18:00:27.962 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:00:30.345 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:00:30.345 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:00:31.408 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 18:00:31.408 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 18:00:31.436 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:00:45.580 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:00:45.581 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:00:46.644 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 18:00:46.644 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 18:00:46.678 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:00:59.755 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:00:59.755 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:01:00.932 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 18:01:00.932 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 18:01:00.946 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:01:03.264 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:01:03.264 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:01:04.323 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 18:01:04.323 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 18:01:04.358 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:01:14.334 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:01:14.335 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:01:15.421 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 18:01:15.421 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 18:01:15.434 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:01:17.743 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:01:17.743 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:01:18.788 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 18:01:18.788 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 18:01:18.801 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:01:48.497 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:01:48.497 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:01:49.735 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 18:01:49.735 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 18:01:49.750 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:02:06.205 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:02:06.205 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+n 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (20.133 seconds)
+Test case 'TrueKeepUITests.testDuoReviewSelectionSurvivesRotation()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (17.681 seconds)
+Test case 'TrueKeepUITests.testDuoScanBusyRotateReturnAndCancel()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (14.273 seconds)
+Test case 'TrueKeepUITests.testDuoScanDraftSurvivesRotationAndCancel()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (15.935 seconds)
+Test case 'TrueKeepUITests.testEveryHomeTaskOpensAReviewGroup()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (42.793 seconds)
+Test case 'TrueKeepUITests.testHomePreviewsHideSelectionCirclesAndSecondSimilarTaskOpensSecondGroup()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (12.299 seconds)
+Test case 'TrueKeepUITests.testInterruptedScanStateIsReachableForAutomation()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (9.513 seconds)
+Test case 'TrueKeepUITests.testKeepEntireGroupRemovesTaskAndCanClearDecision()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (18.685 seconds)
+Test case 'TrueKeepUITests.testLargeVideoReviewShowsVideoPreviewMetadata()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (11.648 seconds)
+Test case 'TrueKeepUITests.testLargeVisualControlsRespondNearTheirEdges()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (27.544 seconds)
+Test case 'TrueKeepUITests.testLimitedCompletedScanShowsAccessWarningBeforeResults()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (9.685 seconds)
+Test case 'TrueKeepUITests.testMainTabsUseLocalizedChineseLabels()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (5.052 seconds)
+Test case 'TrueKeepUITests.testMarketingScreenshotCaptureFlow()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (28.574 seconds)
+Test case 'TrueKeepUITests.testMediaPreviewFailureAndConfirmedKeepWithScreenshots()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (13.615 seconds)
+Test case 'TrueKeepUITests.testPermissionAndScanStateScreensPassAccessibilityAudit()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (27.694 seconds)
+Test case 'TrueKeepUITests.testPermissionDeniedIssueStateIsReachableForAutomation()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (9.438 seconds)
+Test case 'TrueKeepUITests.testPermissionRetryShowsLocalBusyState()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (13.569 seconds)
+Test case 'TrueKeepUITests.testPostDeletionHomePassesAccessibilityAuditAtLargeTextSize()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (13.176 seconds)
+Test case 'TrueKeepUITests.testPostDeletionSuccessReconcilesHomeAndKeepsRescanAvailable()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (13.214 seconds)
+Test case 'TrueKeepUITests.testRecommendedKeepCapabilityIsHiddenAndSimilarGroupStartsUnselected()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (23.671 seconds)
+Test case 'TrueKeepUITests.testRedesignBinFailureAndMoveOut()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (17.156 seconds)
+Test case 'TrueKeepUITests.testRedesignMenuDeletionShowsBusyAndSuccess()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (27.540 seconds)
+Test case 'TrueKeepUITests.testRedesignPartialDeletionPreservesFailuresOnBothPaths()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (32.995 seconds)
+Test case 'TrueKeepUITests.testRedesignReportExportFailureRetryAndResult()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (14.490 seconds)
+Test case 'TrueKeepUITests.testRedesignReviewAndConfirmationAtMaximumTextSize()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (34.314 seconds)
+Test case 'TrueKeepUITests.testRedesignReviewPreviewSelectionAndKeep2026-11-05 18:02:07.374 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 18:02:07.374 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 18:02:07.389 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:02:09.732 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:02:09.733 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:02:10.808 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 18:02:10.808 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 18:02:10.823 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:02:24.004 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:02:24.004 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:02:25.162 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 18:02:25.162 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 18:02:25.305 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:02:53.216 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:02:53.216 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:02:54.429 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 18:02:54.429 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 18:02:54.443 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:03:19.979 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:03:19.980 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:03:21.159 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 18:03:21.159 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 18:03:21.177 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:03:34.462 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:03:34.463 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:03:35.590 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 18:03:35.590 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 18:03:35.605 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:03:55.069 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:03:55.069 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:03:56.210 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 18:03:56.211 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 18:03:56.224 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:04:13.655 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:04:13.655 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:04:14.893 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 18:04:14.893 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 18:04:14.934 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:04:17.408 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:04:17.408 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:04:18.441 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 18:04:18.441 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 18:04:18.455 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:04:24.925 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:04:24.925 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:04:25.975 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 18:04:25.975 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 18:04:25.994 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:04:31.531 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:04:31.531 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:04:32.688 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 18:04:32.688 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 18:04:32.701 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:04:35.017 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:04:35.018 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:04:36.066 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 18:04:36.066 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 18:04:36.081 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:04:40.985 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:04:40.985 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:04:42.110 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 18:04:42.110 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 18:04:42.124 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:04:44.466 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:04:44.466 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:04:45.517 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 18:04:45.517 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 18:04:45.542 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:05:01.401 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:05:01.401 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:05:02.513 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 18:05:02.513 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 18:05:02.540 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:05:04.993 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:05:04.993 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:05:06.043 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 18:05:06.043 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 18:05:06.071 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:05:14.522 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:05:14.522 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:05:15.664 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 18:05:15.664 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 18:05:15.677 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:05:38.396 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:05:38.396 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:05:39.539 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 18:05:39.539 xcodebuild[4202:24822750] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 18:05:39.554 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:05:51.296 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:05:51.297 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:05:52.527 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:05:52.528 xcodebuild[4202:24822750] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 18:05:52.905 xcodebuild[4202:24822750] [MT] IDETestOperationsObserverDebug: 1049.873 elapsed -- Testing started completed.
+2026-11-05 18:05:52.905 xcodebuild[4202:24822750] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-11-05 18:05:52.905 xcodebuild[4202:24822750] [MT] IDETestOperationsObserverDebug: 1049.873 sec, +1049.873 sec -- end
+
+Test session results, code coverage, and logs:
+	/tmp/TrueKeepDuo-20261105-candidate7-full.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Undo()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (17.629 seconds)
+Test case 'TrueKeepUITests.testRedesignScanSetupCancelAndCommit()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (17.797 seconds)
+Test case 'TrueKeepUITests.testRedesignSettingsEditAndUndo()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (29.265 seconds)
+Test case 'TrueKeepUITests.testReviewBinActionsAreDisabledWhenNoItemsAreSelected()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (26.728 seconds)
+Test case 'TrueKeepUITests.testReviewBinItemsExposeReasonAndSelectionStateForVoiceOver()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (14.421 seconds)
+Test case 'TrueKeepUITests.testReviewFlowDeleteSafetyLockAndRestoreSelection()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (20.632 seconds)
+Test case 'TrueKeepUITests.testReviewGroupBulkSelectionTogglesWithVisibleFeedback()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (18.679 seconds)
+Test case 'TrueKeepUITests.testReviewSessionSurvivesRelaunchWithScreenshot()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (17.798 seconds)
+Test case 'TrueKeepUITests.testScanBusyStateKeepsCancelAvailable()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (9.421 seconds)
+Test case 'TrueKeepUITests.testScanDateRangeSelectionIsAppliedAndKeptSeparateFromNextSelection()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (20.405 seconds)
+Test case 'TrueKeepUITests.testScanDateRangeSelectorSupportsAccessibilityTextSize()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (13.148 seconds)
+Test case 'TrueKeepUITests.testSettingsRowsNavigateToDetailPages()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (23.866 seconds)
+Test case 'TrueKeepUITests.testZeroSelectionReviewGroupDisablesAddToReviewBin()' passed on 'Clone 1 of iPhone 17 Pro - TrueKeepUITests-Runner (5455)' (12.926 seconds)

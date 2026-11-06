@@ -64,6 +64,7 @@ final class PhotoLibraryObserver: NSObject, PHPhotoLibraryChangeObserver, @unche
 }
 
 struct PhotoScanReport: Codable, Hashable, Sendable {
+    var completedAt: Date?
     var eligiblePhotos = 0
     var analyzedPhotos = 0
     var unavailablePhotos = 0
@@ -78,7 +79,7 @@ struct PhotoScanReport: Codable, Hashable, Sendable {
     }
 }
 
-struct ScanEvaluationExport: Codable {
+struct ScanEvaluationExport: Codable, Sendable {
     var similarGroups: [[String]]
     var exactGroups: [[String]]
     var blurry: [String]

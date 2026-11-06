@@ -1,0 +1,23 @@
+✓ change/adapt-iphone-duo
+✓ change/add-confirmed-keeps
+✓ change/add-direct-review-deletion
+✓ change/add-local-photo-models
+✓ change/add-media-review-decisions
+✓ spec/app-store-support-site
+✓ spec/debug-deletion-authorization
+✓ change/disable-recommended-keeps
+✓ change/expand-scan-coverage
+✓ change/fix-local-photo-image-fallback
+✓ change/harden-review-session
+✓ spec/photo-recognition
+✓ spec/platform-support
+✓ change/prioritize-home-review-results
+✓ change/reconcile-post-deletion-results
+✓ change/refine-photo-analysis-pipeline
+✓ change/reorganize-settings-and-onboarding
+✓ spec/review-task-navigation
+✓ spec/scan-entry
+✓ spec/scan-scope
+✓ change/simplify-review-interactions
+Totals: 21 passed, 0 failed (21 items)
+OpenSpec lifecycle check passed.

@@ -1,0 +1,53 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "62A87288-C41F-42F7-981B-DD066ECC5CA8",
+        "deviceName" : "iPhone Duo",
+        "exportedFileName" : "89C5D165-1D9A-4C67-8A44-C333A30C1190.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "redesign-home-after-delete_0_F10AE7EE-9E9F-4932-9905-E0C491A26502.png",
+        "timestamp" : 1793872050.498
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "62A87288-C41F-42F7-981B-DD066ECC5CA8",
+        "deviceName" : "iPhone Duo",
+        "exportedFileName" : "F704092C-B98E-4343-917E-77872F3C4909.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "redesign-delete-success_0_84786473-13F1-4C3E-A3C7-3E3E80F686F9.png",
+        "timestamp" : 1793872049.554
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "62A87288-C41F-42F7-981B-DD066ECC5CA8",
+        "deviceName" : "iPhone Duo",
+        "exportedFileName" : "4CE25CD4-D684-4E9C-B3BA-E0B23AFCB136.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "redesign-delete-busy_0_DFBE54EC-AACB-4BB4-BF82-62F4802517F9.png",
+        "timestamp" : 1793872046.358
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "62A87288-C41F-42F7-981B-DD066ECC5CA8",
+        "deviceName" : "iPhone Duo",
+        "exportedFileName" : "044E2512-BDAD-45AF-BACD-BD51CA20AB74.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "redesign-delete-cancelled_0_D16CBF65-A3AA-4E51-A2EA-C9E44EC010AA.png",
+        "timestamp" : 1793872042.057
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "62A87288-C41F-42F7-981B-DD066ECC5CA8",
+        "deviceName" : "iPhone Duo",
+        "exportedFileName" : "473BB422-8C94-4B69-8F15-0423CA758ACD.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "redesign-delete-confirm_0_D761A893-D4FC-4F25-92CC-FAC4D1BC6A0D.png",
+        "timestamp" : 1793872041.141
+      }
+    ],
+    "testIdentifier" : "TrueKeepUITests/testRedesignMenuDeletionShowsBusyAndSuccess()",
+    "testIdentifierURL" : "test://com.apple.xcode/TrueKeep/TrueKeepUITests/TrueKeepUITests/testRedesignMenuDeletionShowsBusyAndSuccess"
+  }
+]

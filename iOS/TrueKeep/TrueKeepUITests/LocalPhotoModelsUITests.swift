@@ -13,7 +13,7 @@ final class LocalPhotoModelsUITests: XCTestCase {
             "-TrueKeepResetConfirmedKeeps", "-TrueKeepUITestAuthorizedHome", "-TrueKeepUITestLocalModels"
         ]
         app.launch()
-        app.tabBars.buttons["设置"].tap()
+        app.buttons["设置"].tap()
     }
 
     override func tearDown() async throws {
@@ -23,23 +23,23 @@ final class LocalPhotoModelsUITests: XCTestCase {
     }
 
     func testAnalysisProgressSelectionContinuitySuccessAndFailure() {
-        app.tabBars.buttons["首页"].tap()
+        app.buttons["首页"].tap()
         app.buttons["truekeep.cleanup.task.screenshots-chat-03"].tap()
         let analyze = app.buttons["truekeep.models.analyze"]
-        reveal(analyze)
+        reveal(analyze, aboveReviewFooter: true)
         analyze.tap()
         XCTAssertTrue(app.buttons["truekeep.models.cancel"].waitForExistence(timeout: 5))
         let selection = app.buttons["truekeep.review.review-all"]
         XCTAssertTrue(selection.isEnabled)
         selection.tap()
-        XCTAssertEqual(selection.label, "全选本组可清理项")
+        XCTAssertEqual(selection.label, "全选可清理项")
         capture("local-model-01-running-selection-responsive")
         let result = app.descendants(matching: .any)["truekeep.models.result"].firstMatch
         XCTAssertTrue(result.waitForExistence(timeout: 15))
         reveal(result)
         capture("local-model-02-success-fixture")
-        XCTAssertEqual(selection.label, "全选本组可清理项")
-        reveal(analyze)
+        XCTAssertEqual(selection.label, "全选可清理项")
+        reveal(analyze, aboveReviewFooter: true)
         analyze.tap()
         XCTAssertTrue(app.staticTexts["truekeep.models.analysis-error"].waitForExistence(timeout: 15))
         XCTAssertTrue(result.exists)
@@ -69,18 +69,18 @@ final class LocalPhotoModelsUITests: XCTestCase {
         XCTAssertTrue(download.waitForExistence(timeout: 5))
         download.tap()
         app.alerts.buttons["下载"].tap()
-        app.tabBars.buttons["首页"].tap()
+        app.buttons["首页"].tap()
         XCTAssertTrue(app.buttons["truekeep.cleanup.task.screenshots-chat-03"].waitForExistence(timeout: 5))
-        app.tabBars.buttons["设置"].tap()
+        app.buttons["设置"].tap()
         XCTAssertTrue(remove.waitForExistence(timeout: 8))
         capture("local-model-05-download-complete-fixture")
     }
 
     func testCancelAnalysisAndChangingGroupDiscardPendingResult() {
-        app.tabBars.buttons["首页"].tap()
+        app.buttons["首页"].tap()
         app.buttons["truekeep.cleanup.task.screenshots-chat-03"].tap()
         let analyze = app.buttons["truekeep.models.analyze"]
-        reveal(analyze)
+        reveal(analyze, aboveReviewFooter: true)
         analyze.tap()
         let cancel = app.buttons["truekeep.models.cancel"]
         XCTAssertTrue(cancel.waitForExistence(timeout: 5))
@@ -90,7 +90,19 @@ final class LocalPhotoModelsUITests: XCTestCase {
         capture("local-model-06-analysis-cancelled")
         analyze.tap()
         XCTAssertTrue(cancel.waitForExistence(timeout: 5))
-        app.buttons["truekeep.review.next-group"].tap()
+        let next = app.buttons["truekeep.review.next-group"]
+        let positionBefore = app.staticTexts["review.group-position"].label
+        for _ in 0..<6 {
+            let overlappedByNavigation = app.navigationBars.allElementsBoundByIndex.contains { $0.frame.intersects(next.frame) }
+            if next.isHittable && next.frame.minY > app.frame.minY && !overlappedByNavigation { break }
+            app.swipeDown()
+        }
+        capture("local-model-group-navigation-before-tap")
+        next.tap()
+        let moved = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            self.app.staticTexts["review.group-position"].label != positionBefore
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [moved], timeout: 5), .completed, "必须实际进入下一组，不能仅凭 tap 返回认为已导航")
         XCTAssertTrue(analyze.waitForExistence(timeout: 5))
         XCTAssertFalse(app.descendants(matching: .any)["truekeep.models.result"].exists)
         XCTAssertFalse(app.staticTexts["truekeep.models.analysis-error"].exists)
@@ -101,7 +113,7 @@ final class LocalPhotoModelsUITests: XCTestCase {
         app.terminate()
         app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
         app.launch()
-        app.tabBars.buttons["设置"].tap()
+        app.buttons["设置"].tap()
         let settings = app.buttons["truekeep.settings.local-models"]
         reveal(settings)
         settings.tap()
@@ -114,18 +126,21 @@ final class LocalPhotoModelsUITests: XCTestCase {
         capture("local-model-09-accessibility-actions")
     }
 
-    private func reveal(_ element: XCUIElement) {
+    private func reveal(_ element: XCUIElement, aboveReviewFooter: Bool = false) {
         for _ in 0..<6 {
-            if element.exists && element.isHittable { return }
-            app.swipeUp()
+            if element.exists && element.isHittable && (!aboveReviewFooter || element.frame.midY < app.frame.height - 280) { return }
+            if element.exists && element.frame.maxY < 140 { app.swipeDown(velocity: .slow) }
+            else { app.swipeUp(velocity: .slow) }
         }
         XCTAssertTrue(element.isHittable)
     }
 
     private func capture(_ name: String) {
-        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        let screenshot = XCUIScreen.main.screenshot()
+        let attachment = XCTAttachment(screenshot: screenshot)
         attachment.name = name
         attachment.lifetime = .keepAlways
         add(attachment)
+        persistTestScreenshot(screenshot, name: name, test: self.name)
     }
 }

@@ -3,48 +3,39 @@ import UIKit
 
 struct ReviewBinView: View {
     @Binding var state: CleanupFlowState
-    @State private var showsDeleteConfirmation = false
-    @State private var isDeleting = false
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.windowLayout) private var layout
+    @ObservedObject private var deletion: DeletionCoordinator
+    private var isDeleting: Bool { deletion.isDeleting }
     @State private var previewCandidate: CleanupCandidate?
-
-    private let photoDeletion: any PhotoLibraryDeleting
 
     init(
         state: Binding<CleanupFlowState>,
-        photoDeletion: any PhotoLibraryDeleting = SystemPhotoLibraryDeletionService()
+        deletion: DeletionCoordinator = .init()
     ) {
         self._state = state
-        self.photoDeletion = photoDeletion
+        self.deletion = deletion
     }
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                if state.reviewBinItems.isEmpty {
-                    emptyState
-                } else {
-                    reviewBinContent
+            VStack(spacing: 0) {
+                ScrollView {
+                    if state.reviewBinItems.isEmpty {
+                        emptyState
+                    } else {
+                        reviewBinContent
+                        if layout.usesInlineActions { reviewBinActionsFooter }
+                    }
                 }
-            }
-            .safeAreaInset(edge: .bottom) {
-                if !state.reviewBinItems.isEmpty {
+                .clipped()
+                if !state.reviewBinItems.isEmpty && !layout.usesInlineActions {
                     reviewBinActionsFooter
                 }
             }
             .navigationTitle("复核箱")
             .navigationBarTitleDisplayMode(.inline)
             .trueKeepScreenBackground()
-            .sheet(isPresented: $showsDeleteConfirmation) {
-                DeleteConfirmationSheet(
-                    count: state.reviewBinItems.filter(\.selectedForDelete).count,
-                    isDeleting: isDeleting,
-                    onCancel: { showsDeleteConfirmation = false },
-                    onConfirm: { deleteSelectedAssets() }
-                )
-                .presentationDetents([.large])
-                .presentationDragIndicator(.hidden)
-                .interactiveDismissDisabled(isDeleting)
-            }
             .fullScreenCover(item: $previewCandidate) { candidate in
                 MediaReviewView(candidates: state.reviewBinItems.map(\.candidate), initialID: candidate.id)
             }
@@ -57,8 +48,9 @@ struct ReviewBinView: View {
 
     private var reviewBinContent: some View {
         VStack(alignment: .leading, spacing: 14) {
+            DeletionCancellationNotice(coordinator: deletion)
             Text("已选 \(selectedCount) 项 · 约 \(state.reviewBinItems.filter(\.selectedForDelete).map { $0.candidate.estimatedBytes }.reduce(0, +).formattedStorage)")
-                .font(TrueKeepTheme.Font.caption)
+                .font(TrueKeepTheme.Font.bodySmall)
                 .foregroundStyle(TrueKeepTheme.muted)
                 .frame(maxWidth: .infinity, alignment: .center)
 
@@ -77,51 +69,44 @@ struct ReviewBinView: View {
                 SafetyNotice(title: "删除未完成", message: deletionErrorMessage)
             }
 
-            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
+            deletionGuidance
+
+            AdaptivePhotoGrid {
                 ForEach(state.reviewBinItems) { item in
-                    VStack(spacing: 2) {
-                    Button {
-                        state.toggleReviewBinItem(item)
-                    } label: {
-                        ThumbnailView(
-                            style: item.candidate.thumbnail,
-                            assetID: item.candidate.thumbnailAssetID,
-                            isSelected: item.selectedForDelete,
-                            videoLabel: item.candidate.category == .largeVideos ? item.candidate.estimatedBytes.formattedStorage : nil
-                        )
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 108)
-                        .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityIdentifier(TrueKeepAccessibility.reviewBinItem(id: item.id))
-                    .accessibilityLabel(reviewBinItemAccessibilityLabel(item))
-                    .accessibilityHint(item.selectedForDelete ? "轻点可从删除选择中取消" : "轻点可重新选择删除")
-                    .accessibilityAddTraits(item.selectedForDelete ? .isSelected : [])
-                    Button("预览") { previewCandidate = item.candidate }
-                        .frame(maxWidth: .infinity, minHeight: 44)
+                    ZStack(alignment: .topTrailing) {
+                        Button { previewCandidate = item.candidate } label: {
+                            ThumbnailView(
+                                style: item.candidate.thumbnail,
+                                assetID: item.candidate.thumbnailAssetID,
+                                isSelected: item.selectedForDelete,
+                                showsSelectionIndicator: false,
+                                videoLabel: item.candidate.category == .largeVideos ? item.candidate.estimatedBytes.formattedStorage : nil
+                            ).aspectRatio(1, contentMode: .fit)
+                        }
+                        .buttonStyle(.plain)
+                        .disabled(isDeleting)
                         .accessibilityIdentifier("bin.preview.\(item.id)")
+                        .accessibilityLabel("预览，\(item.candidate.reason)")
+                        Button { state.toggleReviewBinItem(item) } label: {
+                            Image(systemName: item.selectedForDelete ? "checkmark.circle.fill" : "circle")
+                                .font(TrueKeepTheme.Font.iconMedium)
+                                .foregroundStyle(TrueKeepTheme.greenStrong)
+                                .background(TrueKeepTheme.paper, in: Circle())
+                                .frame(width: 44, height: 44)
+                                .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .disabled(isDeleting)
+                        .accessibilityIdentifier(TrueKeepAccessibility.reviewBinItem(id: item.id))
+                        .accessibilityLabel(reviewBinItemAccessibilityLabel(item))
+                        .accessibilityHint("切换删除选择")
+                        .accessibilityAddTraits(item.selectedForDelete ? .isSelected : [])
                     }
                 }
             }
 
-            VStack(alignment: .leading, spacing: 10) {
-                Text("删除安全清单")
-                    .font(TrueKeepTheme.Font.cardTitle)
-                    .lineLimit(nil)
-                    .fixedSize(horizontal: false, vertical: true)
-                SafetyCheckRow("项目仍在复核箱，还没有删除")
-                SafetyCheckRow("你可以逐张复核每一项")
-                SafetyCheckRow("删除后仍可从 Recently Deleted 恢复")
-                SafetyCheckRow("未经确认不会影响 iCloud")
-            }
-            .padding(13)
-            .background(TrueKeepTheme.yellowSoft)
-            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).stroke(TrueKeepTheme.yellowLine))
-
-            Text("复核箱项目仅本地保存 30 天。")
-                .font(TrueKeepTheme.Font.caption)
+            Text("待删除记录保留 30 天；过期只移除记录，不会删除照片。")
+                .font(TrueKeepTheme.Font.bodySmall)
                 .foregroundStyle(TrueKeepTheme.muted)
                 .frame(maxWidth: .infinity, alignment: .center)
         }
@@ -129,17 +114,42 @@ struct ReviewBinView: View {
         .padding(.bottom, 12)
     }
 
+    private var deletionGuidance: some View {
+        DisclosureGroup {
+            SafetyCheckRow("项目仍在复核箱，还没有删除")
+            SafetyCheckRow("你可以逐张复核每一项")
+            SafetyCheckRow("删除后仍可从 “最近删除” 恢复")
+            SafetyCheckRow("未经确认不会影响 iCloud")
+        } label: {
+            Text("删除前须知")
+                .font(TrueKeepTheme.Font.bodySmall.weight(.semibold))
+                .foregroundStyle(TrueKeepTheme.ink)
+                .frame(minHeight: 44)
+        }
+        .tint(TrueKeepTheme.greenStrong)
+        .padding(13)
+        .background(TrueKeepTheme.yellowSoft)
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).stroke(TrueKeepTheme.yellowLine))
+    }
+
     private var reviewBinActionsFooter: some View {
-        HStack(spacing: 10) {
-            SecondaryActionButton(title: "恢复选中") {
+        VStack(spacing: 8) {
+            Button {
                 state.restoreSelectedReviewBinItems()
+            } label: {
+                Text("移出复核箱")
+                    .frame(minWidth: 44, minHeight: 44)
+                    .contentShape(Rectangle())
             }
+            .buttonStyle(.plain)
+            .foregroundStyle(TrueKeepTheme.greenStrong)
             .disabled(selectedCount == 0 || isDeleting)
             .opacity(selectedCount == 0 || isDeleting ? 0.55 : 1)
             .accessibilityIdentifier(TrueKeepAccessibility.Control.restoreReviewBinSelection.id)
 
-            DangerActionButton(title: "删除选中（\(selectedCount)）") {
-                showsDeleteConfirmation = true
+            DangerActionButton(title: "删除所选 \(selectedCount) 项…") {
+                deletion.prepare(source: .reviewBin, assetIDs: state.selectedReviewBinAssetIDs)
             }
             .disabled(selectedCount == 0 || isDeleting)
             .opacity(selectedCount == 0 || isDeleting ? 0.55 : 1)
@@ -154,63 +164,6 @@ struct ReviewBinView: View {
                 .fill(TrueKeepTheme.line)
                 .frame(height: 1)
         }
-    }
-
-    private func deleteSelectedAssets() {
-        guard !isDeleting else { return }
-        let assetIDs = state.selectedReviewBinAssetIDs
-        guard !assetIDs.isEmpty else {
-            showsDeleteConfirmation = false
-            return
-        }
-
-        isDeleting = true
-        let selectedCandidatesByID = Dictionary(
-            uniqueKeysWithValues: state.reviewBinItems
-                .filter(\.selectedForDelete)
-                .map { ($0.id, $0.candidate) }
-        )
-        let photoDeletion = photoDeletion
-        Task {
-            let result = await photoDeletion.deleteAssets(withLocalIdentifiers: assetIDs)
-            await MainActor.run {
-                state.applyDeletionResult(result)
-                isDeleting = false
-                showsDeleteConfirmation = false
-                UIAccessibility.post(
-                    notification: .announcement,
-                    argument: deletionAnnouncement(
-                        for: result,
-                        selectedCandidatesByID: selectedCandidatesByID
-                    )
-                )
-            }
-        }
-    }
-
-    private func deletionAnnouncement(
-        for result: PhotoDeletionResult,
-        selectedCandidatesByID: [String: CleanupCandidate]
-    ) -> String {
-        switch result {
-        case .success(let deletedAssetIDs):
-            let bytes = estimatedBytes(for: deletedAssetIDs, candidatesByID: selectedCandidatesByID)
-            return "删除完成，\(Set(deletedAssetIDs).count) 项已移至最近删除，约 \(bytes.formattedStorage)。这些项目仍可恢复，空间可能尚未立即释放。"
-        case .partial(let deletedAssetIDs, let failedAssetIDs, let message):
-            let bytes = estimatedBytes(for: deletedAssetIDs, candidatesByID: selectedCandidatesByID)
-            return "部分删除完成，成功 \(Set(deletedAssetIDs).count) 项，约 \(bytes.formattedStorage)，失败 \(Set(failedAssetIDs).count) 项。\(message)"
-        case .failure(_, let message):
-            return "删除未完成。\(message)"
-        }
-    }
-
-    private func estimatedBytes(
-        for assetIDs: [String],
-        candidatesByID: [String: CleanupCandidate]
-    ) -> Int64 {
-        Set(assetIDs)
-            .compactMap { candidatesByID[$0]?.estimatedBytes }
-            .reduce(0, +)
     }
 
     private func reviewBinItemAccessibilityLabel(_ item: ReviewBinItem) -> String {
@@ -239,7 +192,7 @@ struct ReviewBinView: View {
         }
         .frame(maxWidth: .infinity)
         .padding(20)
-        .padding(.bottom, TrueKeepTheme.tabScrollBottomPadding)
+        .readableContent()
     }
 }
 
@@ -267,51 +220,53 @@ private struct SafetyCheckRow: View {
 struct DeleteConfirmationSheet: View {
     var count: Int
     var isDeleting: Bool
+    var message: String? = nil
     var onCancel: () -> Void
     var onConfirm: () -> Void
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 14) {
-                Capsule()
-                    .fill(TrueKeepTheme.line)
-                    .frame(width: 42, height: 5)
-                    .frame(maxWidth: .infinity)
-
-                Text("删除前再确认一次")
+        Form {
+            Section {
+                Text("删除 \(count) 项？")
                     .font(TrueKeepTheme.Font.sheetTitle)
                     .lineLimit(nil)
                     .multilineTextAlignment(.leading)
                     .fixedSize(horizontal: false, vertical: true)
-                Text("这 \(count) 项照片或视频会从系统照片图库移除。删除后通常可以在 Recently Deleted 中恢复。")
+                Text("这 \(count) 项照片或视频会从系统照片图库移除。删除后通常可以在照片 App 的“最近删除”中恢复。")
                     .font(TrueKeepTheme.Font.bodySmall)
                     .foregroundStyle(TrueKeepTheme.ink)
                     .lineLimit(nil)
                     .multilineTextAlignment(.leading)
                     .fixedSize(horizontal: false, vertical: true)
 
-                SafetyNotice(
-                    title: "iCloud Photos 风险",
-                    message: "如果你开启了 iCloud Photos，删除可能会同步到 iCloud 和其他设备。请不要立即清空 Recently Deleted。"
-                )
-
+            }
+            Section {
+                Text("如果你开启了 iCloud 照片，删除可能会同步到 iCloud 和其他设备。")
+                    .font(.body).fixedSize(horizontal: false, vertical: true)
+                Text("请不要立即清空“最近删除”。")
+                    .font(.body).fixedSize(horizontal: false, vertical: true)
+            } header: {
+                Text("iCloud 照片同步").font(.headline).foregroundStyle(TrueKeepTheme.ink)
+            }
+            Section {
+                if let message { SafetyNotice(title: "请重新核对", message: message) }
                 VStack(spacing: 10) {
                     DangerActionButton(
                         title: isDeleting ? "正在请求系统删除..." : "确认删除 \(count) 项",
                         isBusy: isDeleting,
                         action: onConfirm
                     )
-                    .disabled(isDeleting)
+                    .disabled(isDeleting || count == 0)
                     .accessibilityIdentifier(TrueKeepAccessibility.Control.confirmPhotoDeletion.id)
-                    SecondaryActionButton(title: "返回复核", action: onCancel)
+                    SecondaryActionButton(title: "取消", action: onCancel)
                         .disabled(isDeleting)
                         .accessibilityIdentifier(TrueKeepAccessibility.Control.cancelPhotoDeletion.id)
                 }
             }
-            .padding(20)
-            .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .scrollBounceBehavior(.basedOnSize)
+        .readableContent()
+        .scrollContentBackground(.hidden)
+        .trueKeepScreenBackground()
     }
 }
 

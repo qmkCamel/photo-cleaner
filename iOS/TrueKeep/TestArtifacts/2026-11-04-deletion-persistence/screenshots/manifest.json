@@ -1,0 +1,26 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "642F2F40-1DF5-4C73-A382-494BBE4C53AB",
+        "deviceName" : "iPhone 17 Pro",
+        "exportedFileName" : "debug-deletion-protected-review-bin-recovered.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "debug-deletion-protected-review-bin-recovered_0_033D0031-0447-4EB8-8812-67E5B3DE96F5.png",
+        "timestamp" : 1793795453.737
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "642F2F40-1DF5-4C73-A382-494BBE4C53AB",
+        "deviceName" : "iPhone 17 Pro",
+        "exportedFileName" : "debug-deletion-explicit-disable-protected.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "debug-deletion-explicit-disable-protected_0_A9FB4B9A-9E9B-418A-BC31-5D626BC16B23.png",
+        "timestamp" : 1793795451.78
+      }
+    ],
+    "testIdentifier" : "TrueKeepUITests/testReviewFlowDeleteSafetyLockAndRestoreSelection()",
+    "testIdentifierURL" : "test://com.apple.xcode/TrueKeep/TrueKeepUITests/TrueKeepUITests/testReviewFlowDeleteSafetyLockAndRestoreSelection"
+  }
+]

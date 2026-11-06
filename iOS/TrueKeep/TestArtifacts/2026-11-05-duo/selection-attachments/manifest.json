@@ -1,0 +1,35 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "62A87288-C41F-42F7-981B-DD066ECC5CA8",
+        "deviceName" : "iPhone Duo",
+        "exportedFileName" : "0621579A-1FF2-406F-BE04-C78FF9F6BA86.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "duo-review-returned-selected_0_2CDC5BA4-F01E-4673-A839-DB4CACB6B758.png",
+        "timestamp" : 1793870842.28
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "62A87288-C41F-42F7-981B-DD066ECC5CA8",
+        "deviceName" : "iPhone Duo",
+        "exportedFileName" : "434B65F8-1EB4-42BC-BABC-219351C872B5.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "duo-review-landscape-selected_0_E6A1EF4B-6715-4C52-A7E4-486861F95EC8.png",
+        "timestamp" : 1793870841.028
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "62A87288-C41F-42F7-981B-DD066ECC5CA8",
+        "deviceName" : "iPhone Duo",
+        "exportedFileName" : "1D2E334B-2D19-4FF7-BEA3-1A81B851C53D.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "duo-review-portrait-selected_0_1BA9E34F-A2D8-4F7B-AC30-11483B14705E.png",
+        "timestamp" : 1793870839.774
+      }
+    ],
+    "testIdentifier" : "TrueKeepUITests/testDuoReviewSelectionSurvivesRotation()",
+    "testIdentifierURL" : "test://com.apple.xcode/TrueKeep/TrueKeepUITests/TrueKeepUITests/testDuoReviewSelectionSurvivesRotation"
+  }
+]

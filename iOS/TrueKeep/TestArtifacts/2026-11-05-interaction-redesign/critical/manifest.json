@@ -1,0 +1,44 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "642F2F40-1DF5-4C73-A382-494BBE4C53AB",
+        "deviceName" : "iPhone 17 Pro",
+        "exportedFileName" : "A4332799-9B1F-407C-9944-801900160FA1.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "accessibility-passed-home-photo-access-prompt_0_9BAB9604-805D-4BC2-AEFE-57DF2B7DCE32.png",
+        "timestamp" : 1793862482.686
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "642F2F40-1DF5-4C73-A382-494BBE4C53AB",
+        "deviceName" : "iPhone 17 Pro",
+        "exportedFileName" : "0BA790F8-8F16-43E6-A3ED-26E482E44AC1.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "accessibility-passed-welcome_0_8F2C4234-C89E-49AA-9AA4-943850CC3A79.png",
+        "timestamp" : 1793862479.288
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "642F2F40-1DF5-4C73-A382-494BBE4C53AB",
+        "deviceName" : "iPhone 17 Pro",
+        "exportedFileName" : "4C35C68B-9223-48DF-9C48-080CF21BD114.png",
+        "isAssociatedWithFailure" : true,
+        "suggestedHumanReadableName" : "App Screenshot_0_1DE33EEA-9F33-48BE-96BD-5850D4E904B6.png",
+        "timestamp" : 1793862489.856
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "642F2F40-1DF5-4C73-A382-494BBE4C53AB",
+        "deviceName" : "iPhone 17 Pro",
+        "exportedFileName" : "90E68BCE-F704-4109-AA40-7FD5FC79BD05.png",
+        "isAssociatedWithFailure" : true,
+        "suggestedHumanReadableName" : "Element Screenshot_1_444FF4FE-29CD-4F0A-B88D-B6863B3170BE.png",
+        "timestamp" : 1793862489.856
+      }
+    ],
+    "testIdentifier" : "TrueKeepUITests/testCriticalScreensPassAccessibilityAudit()",
+    "testIdentifierURL" : "test://com.apple.xcode/TrueKeep/TrueKeepUITests/TrueKeepUITests/testCriticalScreensPassAccessibilityAudit"
+  }
+]

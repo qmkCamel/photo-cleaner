@@ -23,5 +23,5 @@ assertions:
   - waitUntil: truekeep.scan.retry
     timeout: 10
   - assert: 扫描已停止
-  - assert: 取消扫描不会删除或移动任何照片或视频。
+  - assert: 没有发布本轮未完成结果，也没有删除或移动照片。
   - done

@@ -15,8 +15,11 @@ steps:
   - assert: truekeep.cleanup.scan
   - assert: truekeep.cleanup.scan is above 首页
   - tap: truekeep.cleanup.scan
+  - waitUntil: scan.setup.start
+    timeout: 10
+  - tap: scan.setup.start
 assertions:
   - waitUntilGone: truekeep.cleanup.scan
     timeout: 10
-  - assert: 本地扫描
+  - assert: 扫描完成
   - done

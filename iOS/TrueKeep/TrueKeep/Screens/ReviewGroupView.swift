@@ -3,17 +3,20 @@ import SwiftUI
 struct ReviewGroupView: View {
     @ObservedObject private var localModels: LocalPhotoModelController
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.windowLayout) private var layout
+    @ObservedObject private var deletion: DeletionCoordinator
     @Binding var state: CleanupFlowState
     var groupID: String?
     var onNavigate: (String) -> Void
+    var onReturnToTasks: () -> Void
     @State private var previewCandidate: CleanupCandidate?
-    @State private var showsDeleteConfirmation = false
-    @State private var isDeleting = false
-    @State private var deletionSuccessMessage: String?
-    @State private var completedGroup: CleanupGroup?
-    @State private var confirmedKeepFeedbackAssetID: String?
+    private var isDeleting: Bool { deletion.isDeleting }
+    private var deletionSuccessMessage: String? {
+        deletion.resultSource == .group(groupID ?? state.currentReviewGroup.id) ? deletion.resultMessage : nil
+    }
+    private var completedGroup: CleanupGroup? { groupID.flatMap { deletion.completedGroups[$0] } }
+    @State private var confirmedKeepFeedbackIDs: Set<String> = []
 
-    private let photoDeletion: any PhotoLibraryDeleting
     var onAddedToReviewBin: () -> Void
     var onSetConfirmedKeep: (String, Bool) -> Void
     var onConfirmKeepGroup: (Set<String>) -> Void
@@ -22,8 +25,9 @@ struct ReviewGroupView: View {
         state: Binding<CleanupFlowState>,
         groupID: String? = nil,
         onNavigate: @escaping (String) -> Void = { _ in },
+        onReturnToTasks: @escaping () -> Void = {},
         localModels: LocalPhotoModelController = .init(),
-        photoDeletion: any PhotoLibraryDeleting = SystemPhotoLibraryDeletionService(),
+        deletion: DeletionCoordinator = .init(),
         onAddedToReviewBin: @escaping () -> Void,
         onSetConfirmedKeep: @escaping (String, Bool) -> Void = { _, _ in },
         onConfirmKeepGroup: @escaping (Set<String>) -> Void = { _ in }
@@ -31,8 +35,9 @@ struct ReviewGroupView: View {
         self._state = state
         self.groupID = groupID
         self.onNavigate = onNavigate
+        self.onReturnToTasks = onReturnToTasks
         self.localModels = localModels
-        self.photoDeletion = photoDeletion
+        self.deletion = deletion
         self.onAddedToReviewBin = onAddedToReviewBin
         self.onSetConfirmedKeep = onSetConfirmedKeep
         self.onConfirmKeepGroup = onConfirmKeepGroup
@@ -45,295 +50,269 @@ struct ReviewGroupView: View {
     }
 
     var body: some View {
+        Group {
         if let group = displayedGroup {
             groupContent(group)
                 .fullScreenCover(item: $previewCandidate) { candidate in
                     MediaReviewView(candidates: group.candidates, initialID: candidate.id, onKeep: { id in
                         onSetConfirmedKeep(id, true)
-                        confirmedKeepFeedbackAssetID = id
-                        previewCandidate = nil
+                        confirmedKeepFeedbackIDs = [id]
                     })
                 }
         } else {
             ContentUnavailableView("这组已处理完成", systemImage: "checkmark.circle", description: Text("请返回首页查看剩余任务。"))
+        }
+        }
+        .navigationBarBackButtonHidden(!layout.usesSplitNavigation)
+        .toolbar {
+            if !layout.usesSplitNavigation {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(action: onReturnToTasks) {
+                        Label("返回任务", systemImage: "chevron.left")
+                    }
+                    .accessibilityIdentifier("review.return-to-tasks")
+                }
+            }
         }
     }
 
     private func groupContent(_ group: CleanupGroup) -> some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 13) {
-                VStack(spacing: 3) {
-                    Text(group.title)
-                        .font(TrueKeepTheme.Font.sectionTitle)
-                        .lineLimit(nil)
-                        .fixedSize(horizontal: false, vertical: true)
-                    Text(group.subtitle)
-                        .font(TrueKeepTheme.Font.caption)
-                        .foregroundStyle(TrueKeepTheme.muted)
-                        .lineLimit(nil)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                .frame(maxWidth: .infinity)
+                groupNavigation(group)
+                DeletionCancellationNotice(coordinator: deletion)
+                Text(group.explanation)
+                    .font(TrueKeepTheme.Font.caption)
+                    .foregroundStyle(TrueKeepTheme.muted)
+                    .fixedSize(horizontal: false, vertical: true)
 
                 if let deletionSuccessMessage {
-                    SafetyNotice(title: "删除已完成", message: deletionSuccessMessage)
+                    SafetyNotice(title: state.reviewGroupDeletionErrorMessage == nil ? "删除已完成" : "已完成部分删除", message: deletionSuccessMessage)
                 }
 
                 if let deletionErrorMessage = state.reviewGroupDeletionErrorMessage {
                     SafetyNotice(title: "删除未完成", message: deletionErrorMessage)
                 }
 
-                if let confirmedKeepFeedbackAssetID {
-                    confirmedKeepFeedback(assetID: confirmedKeepFeedbackAssetID)
+                if !confirmedKeepFeedbackIDs.isEmpty {
+                    confirmedKeepFeedback
                 }
 
-                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
+                AdaptivePhotoGrid {
                     ForEach(group.candidates) { candidate in
-                        VStack(spacing: 2) {
-                            candidateCell(candidate)
-                            Button("预览") { previewCandidate = candidate }
-                                .frame(maxWidth: .infinity, minHeight: 44)
-                                .accessibilityIdentifier("review.preview.\(candidate.id)")
-                                .accessibilityLabel("预览，\(candidate.reason)")
-                        }
-                        .gridCellColumns(candidate.isRecommendedKeepActive ? 3 : 1)
+                        candidateCell(candidate)
                     }
                 }
 
-                HStack {
+                let summaryLayout = dynamicTypeSize.isAccessibilitySize
+                    ? AnyLayout(VStackLayout(alignment: .leading, spacing: 6))
+                    : AnyLayout(HStackLayout())
+                summaryLayout {
                     Text(groupCountText(group))
-                    Spacer()
-                    Text("预计释放 \(group.estimatedBytes.formattedStorage)")
+                    if !dynamicTypeSize.isAccessibilitySize { Spacer() }
+                    Text("本组预计可清理 \(group.estimatedBytes.formattedStorage)")
                 }
                 .font(TrueKeepTheme.Font.caption)
                 .foregroundStyle(TrueKeepTheme.muted)
 
-                SafetyNotice(title: "为什么标记这组？", message: group.explanation)
 
                 if localModels.isEnabled, group.category != .largeVideos, completedGroup == nil {
                     LocalPhotoAnalysisSection(controller: localModels, group: group, isDeleting: isDeleting)
                 }
 
+                if layout.usesInlineActions { reviewActionsFooter }
+
             }
             .padding(20)
             .padding(.bottom, 12)
         }
+        .clipped()
+        .contentShape(Rectangle())
         .safeAreaInset(edge: .bottom) {
-            reviewActionsFooter
+            if !layout.usesInlineActions { reviewActionsFooter }
         }
-        .navigationTitle(group.category.title)
+        .navigationTitle(group.title)
         .navigationBarTitleDisplayMode(.inline)
-        .trueKeepScreenBackground()
-        .sheet(isPresented: $showsDeleteConfirmation) {
-            DeleteConfirmationSheet(
-                count: state.currentReviewSelectionCount,
-                isDeleting: isDeleting,
-                onCancel: { showsDeleteConfirmation = false },
-                onConfirm: { deleteSelectedAssets() }
-            )
-            .presentationDetents([.large])
-            .presentationDragIndicator(.hidden)
-            .interactiveDismissDisabled(isDeleting)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu { directDeleteButton } label: {
+                    Image(systemName: "ellipsis").frame(width: 44, height: 44)
+                }
+                .accessibilityLabel("更多复核操作")
+                .accessibilityIdentifier("review.more")
+            }
         }
+        .trueKeepScreenBackground()
     }
 
     private var reviewActionsFooter: some View {
-        let canToggleAll = completedGroup == nil
-            && state.canToggleAllCandidatesInCurrentGroup
-            && !isDeleting
-
-        return VStack(spacing: 10) {
-            if dynamicTypeSize.isAccessibilitySize {
-                VStack(spacing: 10) {
-                    addToReviewBinButton
-                    directDeleteButton
-                }
+        VStack(spacing: 4) {
+            if completedGroup != nil {
+                Text("这组已处理完成").font(TrueKeepTheme.Font.cardTitle)
+                Text("请返回结果查看剩余任务。").font(TrueKeepTheme.Font.caption)
             } else {
-                ViewThatFits(in: .horizontal) {
-                    HStack(spacing: 10) {
-                        addToReviewBinButton
-                        directDeleteButton
-                    }
-
-                    VStack(spacing: 10) {
-                        addToReviewBinButton
-                        directDeleteButton
+                let selectionLayout = dynamicTypeSize.isAccessibilitySize
+                    ? AnyLayout(VStackLayout(alignment: .leading, spacing: 4))
+                    : AnyLayout(HStackLayout(spacing: 8))
+                selectionLayout {
+                    Text(state.currentReviewSelectionSummary)
+                        .font(TrueKeepTheme.Font.bodySmall)
+                        .foregroundStyle(TrueKeepTheme.muted)
+                    if !dynamicTypeSize.isAccessibilitySize { Spacer(minLength: 8) }
+                    if state.canToggleAllCandidatesInCurrentGroup {
+                        Button {
+                            state.toggleAllCandidatesInCurrentGroup()
+                        } label: {
+                            Text(state.areAllCandidatesInCurrentGroupSelected ? "取消全选" : "全选可清理项")
+                                .font(TrueKeepTheme.Font.bodySmall.weight(.semibold))
+                                .frame(minWidth: 44, minHeight: 44)
+                                .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .foregroundStyle(TrueKeepTheme.greenStrong)
+                        .disabled(isDeleting)
+                        .accessibilityIdentifier(TrueKeepAccessibility.Control.reviewAllInGroup.id)
                     }
                 }
-            }
-
-            SecondaryActionButton(
-                title: completedGroup == nil && state.areAllCandidatesInCurrentGroupSelected
-                    ? "取消全选"
-                    : "全选本组可清理项"
-            ) {
-                deletionSuccessMessage = nil
-                state.toggleAllCandidatesInCurrentGroup()
-            }
-            .disabled(!canToggleAll)
-            .opacity(canToggleAll ? 1 : 0.55)
-            .accessibilityIdentifier(TrueKeepAccessibility.Control.reviewAllInGroup.id)
-            .accessibilityHint(
-                state.areAllCandidatesInCurrentGroupSelected
-                    ? "取消当前分组所有可清理项的选择"
-                    : "选择当前分组所有未确认保留项"
-            )
-
-            if completedGroup == nil && (state.canMoveToPreviousReviewGroup || state.canMoveToNextReviewGroup) {
-                HStack {
-                    InlineTextActionButton(title: "上一组", minWidth: 64) {
-                        deletionSuccessMessage = nil
-                        state.moveToPreviousReviewGroup()
-                        onNavigate(state.currentReviewGroup.id)
+                addToReviewBinButton
+                if !remainingKeepIDs.isEmpty {
+                    Button {
+                        let ids = remainingKeepIDs
+                        onConfirmKeepGroup(ids)
+                        confirmedKeepFeedbackIDs = ids
+                    } label: {
+                        Text(state.currentReviewSelectionCount == 0 ? "全部保留" : "保留其余 \(remainingKeepIDs.count) 项")
+                            .frame(minWidth: 44, minHeight: 44)
+                            .contentShape(Rectangle())
                     }
-                    .disabled(!state.canMoveToPreviousReviewGroup)
-                    .opacity(state.canMoveToPreviousReviewGroup ? 1 : 0.45)
-                    .accessibilityIdentifier(TrueKeepAccessibility.Control.previousReviewGroup.id)
-
-                    Spacer()
-
-                    InlineTextActionButton(title: "下一组", minWidth: 64) {
-                        deletionSuccessMessage = nil
-                        state.moveToNextReviewGroup()
-                        onNavigate(state.currentReviewGroup.id)
-                    }
-                    .disabled(!state.canMoveToNextReviewGroup)
-                    .opacity(state.canMoveToNextReviewGroup ? 1 : 0.45)
-                    .accessibilityIdentifier(TrueKeepAccessibility.Control.nextReviewGroup.id)
+                    .buttonStyle(.plain)
+                    .foregroundStyle(TrueKeepTheme.greenStrong)
+                    .disabled(isDeleting)
+                    .accessibilityIdentifier("review.keep-group")
                 }
-                .padding(.top, 2)
             }
-
-            Button("这组都保留") {
-                if let group = displayedGroup { onConfirmKeepGroup(Set(group.candidates.map(\.id))) }
-            }
-            .disabled(isDeleting || completedGroup != nil || displayedGroup?.candidates.allSatisfy(\.confirmedKeep) != false)
-            .frame(minHeight: 44)
-            .accessibilityIdentifier("review.keep-group")
         }
         .padding(.horizontal, 20)
-        .padding(.top, 12)
-        .padding(.bottom, 12)
+        .padding(.vertical, 10)
         .background(TrueKeepTheme.page.ignoresSafeArea(edges: .bottom))
-        .overlay(alignment: .top) {
-            Rectangle()
-                .fill(TrueKeepTheme.line)
-                .frame(height: 1)
+        .overlay(alignment: .top) { Rectangle().fill(TrueKeepTheme.line).frame(height: 1) }
+    }
+
+    private var remainingKeepIDs: Set<String> {
+        Set((displayedGroup?.candidates ?? []).filter {
+            !$0.confirmedKeep && !state.selectedCandidateIDs.contains($0.id)
+        }.map(\.id))
+    }
+
+    private func groupNavigation(_ group: CleanupGroup) -> some View {
+        HStack {
+            Button {
+                confirmedKeepFeedbackIDs = []
+                state.moveToPreviousReviewGroup()
+                onNavigate(state.currentReviewGroup.id)
+            } label: {
+                Label("上一组", systemImage: "chevron.left").labelStyle(.iconOnly).frame(width: 44, height: 44)
+            }
+            .disabled(isDeleting || completedGroup != nil || !state.canMoveToPreviousReviewGroup)
+            .accessibilityIdentifier(TrueKeepAccessibility.Control.previousReviewGroup.id)
+            Spacer()
+            Text(completedGroup != nil ? "本组已处理完成" : "第 \(state.currentReviewGroupIndex + 1) 组 / \(state.reviewGroups.count) 组")
+                .font(TrueKeepTheme.Font.caption).foregroundStyle(TrueKeepTheme.muted)
+                .accessibilityIdentifier("review.group-position")
+            Spacer()
+            Button {
+                confirmedKeepFeedbackIDs = []
+                state.moveToNextReviewGroup()
+                onNavigate(state.currentReviewGroup.id)
+            } label: {
+                Label("下一组", systemImage: "chevron.right").labelStyle(.iconOnly).frame(width: 44, height: 44)
+            }
+            .disabled(isDeleting || completedGroup != nil || !state.canMoveToNextReviewGroup)
+            .accessibilityIdentifier(TrueKeepAccessibility.Control.nextReviewGroup.id)
         }
     }
 
     private func candidateCell(_ candidate: CleanupCandidate) -> some View {
-        ZStack(alignment: .bottomLeading) {
-            Button {
-                deletionSuccessMessage = nil
-                confirmedKeepFeedbackAssetID = nil
-                state.toggleReviewCandidate(candidate)
-            } label: {
+        ZStack(alignment: .topTrailing) {
+            Button { previewCandidate = candidate } label: {
                 ThumbnailView(
                     style: candidate.thumbnail,
                     assetID: candidate.thumbnailAssetID,
                     isSelected: state.selectedCandidateIDs.contains(candidate.id),
-                    isRecommendedKeep: candidate.isRecommendedKeepActive,
                     isConfirmedKeep: candidate.confirmedKeep,
-                    showsSelectionIndicator: !candidate.confirmedKeep,
+                    showsSelectionIndicator: false,
                     videoLabel: candidateVideoLabel(candidate)
                 )
-                .frame(maxWidth: .infinity)
-                .frame(height: candidate.isRecommendedKeepActive ? 178 : 104)
-                .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-            }
-            .buttonStyle(.plain)
-            .disabled(candidate.confirmedKeep || isDeleting)
-            .accessibilityIdentifier(TrueKeepAccessibility.reviewCandidate(id: candidate.id))
-            .accessibilityLabel(candidateAccessibilityLabel(candidate))
-            .accessibilityHint(candidateAccessibilityHint(candidate))
-            .accessibilityAddTraits(state.selectedCandidateIDs.contains(candidate.id) ? .isSelected : [])
-
-            Menu {
-                if candidate.confirmedKeep {
-                    Button {
-                        onSetConfirmedKeep(candidate.id, false)
-                        confirmedKeepFeedbackAssetID = nil
-                    } label: {
-                        Label("取消确认保留", systemImage: "arrow.uturn.backward")
-                    }
-                } else {
-                    Button {
-                        confirmKeep(candidate)
-                    } label: {
-                        Label("确认保留，不再提醒", systemImage: "checkmark.shield")
-                    }
-                }
-            } label: {
-                Image(systemName: "ellipsis")
-                    .font(TrueKeepTheme.Font.iconCaption)
-                    .foregroundStyle(TrueKeepTheme.ink)
-                    .frame(width: 32, height: 32)
-                    .background(.ultraThinMaterial, in: Circle())
-                    .frame(width: 44, height: 44)
-                    .contentShape(Circle())
+                .aspectRatio(1, contentMode: .fit)
+                .contentShape(RoundedRectangle(cornerRadius: 8))
             }
             .buttonStyle(.plain)
             .disabled(isDeleting)
-            .accessibilityIdentifier(TrueKeepAccessibility.reviewCandidateActions(id: candidate.id))
-            .accessibilityLabel(candidate.confirmedKeep ? "管理已确认保留" : "更多照片操作")
-            .accessibilityHint(candidate.confirmedKeep ? "可以取消确认保留" : "可以确认保留并在后续扫描中不再提醒")
-            .help(candidate.confirmedKeep ? "管理已确认保留" : "更多照片操作")
+            .accessibilityIdentifier("review.preview.\(candidate.id)")
+            .accessibilityLabel("预览，\(candidateAccessibilityLabel(candidate))，\(candidate.estimatedBytes > 0 ? candidate.estimatedBytes.formattedStorage : "大小未知")")
+            .accessibilityHint("查看完整内容，不改变删除选择")
+            .accessibilityAction(named: candidate.confirmedKeep ? "取消确认保留" : "确认保留") {
+                onSetConfirmedKeep(candidate.id, !candidate.confirmedKeep)
+                confirmedKeepFeedbackIDs = candidate.confirmedKeep ? [] : [candidate.id]
+            }
+            .contextMenu {
+                Button(candidate.confirmedKeep ? "取消确认保留" : "确认保留，不再提醒") {
+                    onSetConfirmedKeep(candidate.id, !candidate.confirmedKeep)
+                    confirmedKeepFeedbackIDs = candidate.confirmedKeep ? [] : [candidate.id]
+                }
+            }
+            if !candidate.confirmedKeep {
+                Button {
+                    state.toggleReviewCandidate(candidate)
+                } label: {
+                    Image(systemName: state.selectedCandidateIDs.contains(candidate.id) ? "checkmark.circle.fill" : "circle")
+                        .font(TrueKeepTheme.Font.iconMedium)
+                        .foregroundStyle(TrueKeepTheme.greenStrong)
+                        .background(TrueKeepTheme.paper, in: Circle())
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .disabled(isDeleting)
+                .accessibilityIdentifier(TrueKeepAccessibility.reviewCandidate(id: candidate.id))
+                .accessibilityLabel(candidateAccessibilityLabel(candidate))
+                .accessibilityHint("切换删除选择")
+                .accessibilityAddTraits(state.selectedCandidateIDs.contains(candidate.id) ? .isSelected : [])
+            }
         }
     }
 
-    private func confirmedKeepFeedback(assetID: String) -> some View {
-        HStack(alignment: .top, spacing: 10) {
-            Image(systemName: "checkmark.shield.fill")
-                .font(TrueKeepTheme.Font.iconMedium)
-                .foregroundStyle(TrueKeepTheme.greenStrong)
-                .accessibilityHidden(true)
-            VStack(alignment: .leading, spacing: 3) {
-                Text("已确认保留")
-                    .font(TrueKeepTheme.Font.cardTitle)
-                    .foregroundStyle(TrueKeepTheme.ink)
-                Text("这张照片不会再作为普通清理候选，仍可用于相似照片比较。")
-                    .font(TrueKeepTheme.Font.caption)
-                    .foregroundStyle(TrueKeepTheme.muted)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            Spacer(minLength: 4)
+    private var confirmedKeepFeedback: some View {
+        HStack {
+            Label("已确认保留 \(confirmedKeepFeedbackIDs.count) 项", systemImage: "checkmark.shield.fill")
+                .font(TrueKeepTheme.Font.caption)
+            Spacer(minLength: 8)
             Button("撤销") {
-                onSetConfirmedKeep(assetID, false)
-                confirmedKeepFeedbackAssetID = nil
-            }
-            .font(TrueKeepTheme.Font.inlineAction)
-            .frame(minWidth: 44, minHeight: 44)
+                let ids = confirmedKeepFeedbackIDs
+                confirmedKeepFeedbackIDs = []
+                for id in ids { onSetConfirmedKeep(id, false) }
+            }.frame(minWidth: 44, minHeight: 44)
         }
-        .padding(12)
-        .background(TrueKeepTheme.greenSoft)
-        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-        .accessibilityElement(children: .contain)
+        .foregroundStyle(TrueKeepTheme.greenStrong)
+        .padding(.horizontal, 12)
+        .background(TrueKeepTheme.greenSoft, in: RoundedRectangle(cornerRadius: 8))
         .accessibilityIdentifier(TrueKeepAccessibility.Control.confirmedKeepFeedback.id)
     }
 
-    private func confirmKeep(_ candidate: CleanupCandidate) {
-        deletionSuccessMessage = nil
-        onSetConfirmedKeep(candidate.id, true)
-        confirmedKeepFeedbackAssetID = candidate.id
-    }
-
     private var addToReviewBinButton: some View {
-        PrimaryActionButton(title: selectionActionTitle(empty: "选择项目后加入复核箱", selected: "加入复核箱")) {
+        PrimaryActionButton(title: selectionActionTitle(empty: "加入复核箱", selected: "加入复核箱")) {
             state.addCurrentSelectionToReviewBin()
             onAddedToReviewBin()
         }
         .disabled(completedGroup != nil || state.currentReviewSelectionCount == 0 || isDeleting)
-        .opacity(completedGroup != nil || state.currentReviewSelectionCount == 0 || isDeleting ? 0.55 : 1)
         .accessibilityIdentifier(TrueKeepAccessibility.Control.addToReviewBin.id)
     }
 
     private var directDeleteButton: some View {
-        DangerActionButton(title: selectionActionTitle(empty: "选择后直接删除", selected: "直接删除")) {
-            showsDeleteConfirmation = true
+        Button(selectionActionTitle(empty: "删除所选项目…", selected: "删除所选"), role: .destructive) {
+            deletion.prepare(source: .group(groupID ?? state.currentReviewGroup.id), assetIDs: state.selectedCurrentReviewAssetIDs)
         }
         .disabled(completedGroup != nil || state.currentReviewSelectionCount == 0 || isDeleting)
-        .opacity(completedGroup != nil || state.currentReviewSelectionCount == 0 || isDeleting ? 0.55 : 1)
         .accessibilityIdentifier(TrueKeepAccessibility.Control.directDeleteSelection.id)
     }
 
@@ -341,63 +320,6 @@ struct ReviewGroupView: View {
         state.currentReviewSelectionCount == 0
             ? empty
             : "\(selected)（\(state.currentReviewSelectionCount)）"
-    }
-
-    private func deleteSelectedAssets() {
-        guard !isDeleting else { return }
-        let assetIDs = state.selectedCurrentReviewAssetIDs
-        guard !assetIDs.isEmpty else {
-            showsDeleteConfirmation = false
-            return
-        }
-
-        deletionSuccessMessage = nil
-        isDeleting = true
-        let photoDeletion = photoDeletion
-        Task {
-            let result = await photoDeletion.deleteAssets(withLocalIdentifiers: assetIDs)
-            await MainActor.run {
-                completedGroup = completedGroupSnapshot(for: result, from: state.currentReviewGroup)
-                state.applyDirectDeletionResult(result)
-                deletionSuccessMessage = directDeletionSuccessMessage(for: result)
-                isDeleting = false
-                showsDeleteConfirmation = false
-            }
-        }
-    }
-
-    private func directDeletionSuccessMessage(for result: PhotoDeletionResult) -> String? {
-        let deletedCount: Int
-        switch result {
-        case .success(let deletedAssetIDs), .partial(let deletedAssetIDs, _, _):
-            deletedCount = deletedAssetIDs.count
-        case .failure:
-            return nil
-        }
-
-        guard deletedCount > 0 else { return nil }
-        return "\(deletedCount) 项已移入 Photos 的 Recently Deleted。返回首页时，任务数量、预计空间和预览会保持同步。"
-    }
-
-    private func completedGroupSnapshot(
-        for result: PhotoDeletionResult,
-        from group: CleanupGroup
-    ) -> CleanupGroup? {
-        let deletedAssetIDs: [String]
-        switch result {
-        case .success(let assetIDs), .partial(let assetIDs, _, _):
-            deletedAssetIDs = assetIDs
-        case .failure:
-            return nil
-        }
-
-        guard !deletedAssetIDs.isEmpty else { return nil }
-        let deletedIDs = Set(deletedAssetIDs)
-        var snapshot = group
-        snapshot.candidates.removeAll { deletedIDs.contains($0.id) }
-        guard CleanupTaskBuilder.task(from: snapshot) == nil else { return nil }
-        snapshot.subtitle = "\(snapshot.candidates.count) 项"
-        return snapshot
     }
 
     private func groupCountText(_ group: CleanupGroup) -> String {

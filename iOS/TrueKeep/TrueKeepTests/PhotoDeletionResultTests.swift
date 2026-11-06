@@ -2,6 +2,65 @@ import XCTest
 @testable import TrueKeep
 
 final class PhotoDeletionResultTests: XCTestCase {
+    func testDebugOptInPersistsAcrossDefaultsInstances() throws {
+        for useEnvironment in [false, true] {
+            let suite = "TrueKeepDeletionTests.\(UUID().uuidString)"
+            let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+            defer { defaults.removePersistentDomain(forName: suite) }
+            let firstLaunch = PhotoDeletionSafetyPolicy.resolved(
+                arguments: useEnvironment ? [] : [PhotoDeletionSafetyPolicy.destructiveDeletionEnabledArgument],
+                environment: useEnvironment ? [PhotoDeletionSafetyPolicy.destructiveDeletionEnabledEnvironmentKey: "1"] : [:],
+                isDebugBuild: true,
+                defaults: defaults
+            )
+            let relaunched = PhotoDeletionSafetyPolicy.resolved(
+                arguments: [], environment: [:], isDebugBuild: true,
+                defaults: try XCTUnwrap(UserDefaults(suiteName: suite))
+            )
+            XCTAssertFalse(firstLaunch.isDeletionDisabled)
+            XCTAssertFalse(relaunched.isDeletionDisabled)
+        }
+    }
+
+    func testExplicitDisableRevokesSavedOptInEvenWithEnableArgument() throws {
+        for useEnvironment in [false, true] {
+            let suite = "TrueKeepDeletionTests.\(UUID().uuidString)"
+            let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+            defer { defaults.removePersistentDomain(forName: suite) }
+            defaults.set(true, forKey: PhotoDeletionSafetyPolicy.persistedDestructiveDeletionKey)
+            var arguments = [PhotoDeletionSafetyPolicy.destructiveDeletionEnabledArgument]
+            if !useEnvironment { arguments.append(PhotoDeletionSafetyPolicy.deletionDisabledArgument) }
+            let disabled = PhotoDeletionSafetyPolicy.resolved(
+                arguments: arguments,
+                environment: useEnvironment ? [PhotoDeletionSafetyPolicy.deletionDisabledEnvironmentKey: "1"] : [:],
+                isDebugBuild: true, defaults: defaults
+            )
+            XCTAssertTrue(disabled.isDeletionDisabled)
+            XCTAssertNil(defaults.object(forKey: PhotoDeletionSafetyPolicy.persistedDestructiveDeletionKey))
+            XCTAssertTrue(PhotoDeletionSafetyPolicy.resolved(
+                arguments: [], environment: [:], isDebugBuild: true, defaults: defaults
+            ).isDeletionDisabled)
+        }
+    }
+
+    func testReleaseDoesNotReadOrModifyDebugOptIn() throws {
+        let suite = "TrueKeepDeletionTests.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        defaults.set(false, forKey: PhotoDeletionSafetyPolicy.persistedDestructiveDeletionKey)
+        XCTAssertFalse(PhotoDeletionSafetyPolicy.resolved(
+            arguments: [PhotoDeletionSafetyPolicy.destructiveDeletionEnabledArgument],
+            environment: [:], isDebugBuild: false, defaults: defaults
+        ).isDeletionDisabled)
+        XCTAssertFalse(defaults.bool(forKey: PhotoDeletionSafetyPolicy.persistedDestructiveDeletionKey))
+        defaults.set(true, forKey: PhotoDeletionSafetyPolicy.persistedDestructiveDeletionKey)
+        XCTAssertTrue(PhotoDeletionSafetyPolicy.resolved(
+            arguments: [PhotoDeletionSafetyPolicy.deletionDisabledArgument],
+            environment: [:], isDebugBuild: false, defaults: defaults
+        ).isDeletionDisabled)
+        XCTAssertTrue(defaults.bool(forKey: PhotoDeletionSafetyPolicy.persistedDestructiveDeletionKey))
+    }
+
     func testDebugSafetyPolicyDisablesDeletionByDefault() {
         let policy = PhotoDeletionSafetyPolicy.resolved(
             arguments: ["TrueKeep"],

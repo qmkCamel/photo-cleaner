@@ -1,0 +1,244 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -project iOS/TrueKeep/TrueKeep.xcodeproj -scheme TrueKeep -destination "platform=iOS Simulator,id=642F2F40-1DF5-4C73-A382-494BBE4C53AB" -derivedDataPath /tmp/truekeep-duo-20261105 -parallel-testing-enabled NO -collect-test-diagnostics never "-only-testing:TrueKeepUITests/LocalPhotoModelsUITests/testCancelAnalysisAndChangingGroupDiscardPendingResult" "-only-testing:TrueKeepUITests/TrueKeepUITests/testDuoReportRotationFailureAndRetry" -resultBundlePath /tmp/TrueKeepDuo-20261105-final-fix-check.xcresult CODE_SIGNING_ALLOWED=NO
+
+Build settings from command line:
+    CODE_SIGNING_ALLOWED = NO
+
+Resolve Package Graph
+
+
+Resolved source packages:
+  swift-collections: https://github.com/apple/swift-collections.git @ 1.7.4
+  LocalPhotoModels: /Users/edge/side/photo-cleaner/iOS/TrueKeep/Packages/LocalPhotoModels
+  yyjson: https://github.com/ibireme/yyjson.git @ 0.12.0
+  EventSource: https://github.com/mattt/EventSource.git @ 1.5.1
+  swift-transformers: https://github.com/huggingface/swift-transformers @ 1.3.0
+  swift-crypto: https://github.com/apple/swift-crypto.git @ 4.5.2
+  swift-numerics: https://github.com/apple/swift-numerics @ 1.1.1
+  swift-syntax: https://github.com/swiftlang/swift-syntax.git @ 603.0.2
+  mlx-swift: https://github.com/ml-explore/mlx-swift @ 0.32.3
+  Jinja: https://github.com/huggingface/swift-jinja.git @ 2.5.2
+  mlx-swift-lm: https://github.com/ml-explore/mlx-swift-lm @ 3.32.3
+  swift-asn1: https://github.com/apple/swift-asn1.git @ 1.7.3
+  swift-huggingface: https://github.com/huggingface/swift-huggingface.git @ 0.13.0
+
+Writing result bundle at path:
+	/tmp/TrueKeepDuo-20261105-final-fix-check.xcresult
+
+2026-11-05 17:46:51.689 xcodebuild[2965:24816277] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:46:53.027264+0800 TrueKeepUITests-Runner[3391:24818561] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-11-05 17:46:53.693.
+Test Suite 'TrueKeepUITests.xctest' started at 2026-11-05 17:46:53.693.
+Test Suite 'LocalPhotoModelsUITests' started at 2026-11-05 17:46:53.694.
+Test Case '-[TrueKeepUITests.LocalPhotoModelsUITests testCancelAnalysisAndChangingGroupDiscardPendingResult]' started.
+    t =     0.00s Start Test at 2026-11-05 17:46:53.694
+    t =     0.02s Set Up
+    t =     0.02s     Open app.truekeep.ios
+    t =     0.02s         Launch app.truekeep.ios
+2026-11-05 17:46:53.949 xcodebuild[2965:24816277] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:46:53.949 xcodebuild[2965:24816277] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:46:54.054 xcodebuild[2965:24816277] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     1.08s             Setting up automation session
+    t =     1.88s             Wait for app.truekeep.ios to idle
+    t =     3.47s     Tap "设置" Button
+    t =     3.47s         Wait for app.truekeep.ios to idle
+    t =     3.48s         Find the "设置" Button
+    t =     3.61s         Check for interrupting elements affecting "设置" Button
+    t =     3.64s         Synthesize event
+    t =     3.93s         Wait for app.truekeep.ios to idle
+    t =     5.33s Tap "首页" Button
+    t =     5.33s     Wait for app.truekeep.ios to idle
+    t =     5.33s     Find the "首页" Button
+    t =     5.40s     Check for interrupting elements affecting "house" Button
+    t =     5.44s     Synthesize event
+objc[3391]: Class UIAccessibilityLoaderWebShared is implemented in both /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x10ab54310) and /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x10a00c398). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     5.73s     Wait for app.truekeep.ios to idle
+    t =     7.26s Tap "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =     7.26s     Wait for app.truekeep.ios to idle
+    t =     7.26s     Find the "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =     7.31s     Check for interrupting elements affecting "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =     7.34s     Synthesize event
+    t =     7.64s     Wait for app.truekeep.ios to idle
+    t =     8.56s Checking existence of `"truekeep.models.analyze" Button`
+    t =     8.60s Find the "truekeep.models.analyze" Button
+    t =     8.66s Find the "truekeep.models.analyze" Button
+    t =     8.70s Find the Target Application 'app.truekeep.ios'
+    t =     8.74s Checking existence of `"truekeep.models.analyze" Button`
+    t =     8.78s Find the "truekeep.models.analyze" Button
+    t =     8.82s Swipe up Target Application 'app.truekeep.ios'
+    t =     8.82s     Wait for app.truekeep.ios to idle
+    t =     8.82s     Find the Target Application 'app.truekeep.ios'
+    t =     8.85s     Check for interrupting elements affecting "留真" Application
+    t =     8.89s     Synthesize event
+    t =     9.37s     Wait for app.truekeep.ios to idle
+    t =     9.81s Checking existence of `"truekeep.models.analyze" Button`
+    t =     9.84s Find the "truekeep.models.analyze" Button
+    t =     9.89s Find the "truekeep.models.analyze" Button
+    t =     9.93s Find the Target Application 'app.truekeep.ios'
+    t =     9.96s Tap "truekeep.models.analyze" Button
+    t =     9.96s     Wait for app.truekeep.ios to idle
+    t =     9.96s     Find the "truekeep.models.analyze" Button
+    t =    10.00s     Check for interrupting elements affecting "truekeep.models.analyze" Button
+    t =    10.03s     Synthesize event
+    t =    10.33s     Wait for app.truekeep.ios to idle
+    t =    10.33s Waiting 5.0s for "truekeep.models.cancel" Button to exist
+    t =    11.39s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.models.cancel" Button`
+    t =    11.39s         Checking existence of `"truekeep.models.cancel" Button`
+    t =    11.44s Tap "truekeep.models.cancel" Button
+    t =    11.44s     Wait for app.truekeep.ios to idle
+    t =    11.45s     Find the "truekeep.models.cancel" Button
+    t =    11.48s     Check for interrupting elements affecting "truekeep.models.cancel" Button
+    t =    11.52s     Synthesize event
+    t =    11.82s     Wait for app.truekeep.ios to idle
+    t =    11.82s Waiting 5.0s for "truekeep.models.analyze" Button to exist
+    t =    12.87s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.models.analyze" Button`
+    t =    12.87s         Checking existence of `"truekeep.models.analyze" Button`
+    t =    12.91s Checking existence of `"truekeep.models.result" Any`
+    t =    13.07s Added attachment named 'local-model-06-analysis-cancelled'
+    t =    13.07s Tap "truekeep.models.analyze" Button
+    t =    13.07s     Wait for app.truekeep.ios to idle
+    t =    13.07s     Find the "truekeep.models.analyze" Button
+    t =    13.11s     Check for interrupting elements affecting "truekeep.models.analyze" Button
+    t =    13.15s     Synthesize event
+    t =    13.45s     Wait for app.truekeep.ios to idle
+    t =    13.45s Waiting 5.0s for "truekeep.models.cancel" Button to exist
+    t =    14.51s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.models.cancel" Button`
+    t =    14.51s         Checking existence of `"truekeep.models.cancel" Button`
+    t =    14.55s Find the "review.group-position" StaticText
+    t =    14.59s Get all elements bound by index for: Descendants matching type NavigationBar
+    t =    14.62s Find the NavigationBar (Element at index 0)
+    t =    14.65s Find the "truekeep.review.next-group" Button
+    t =    14.69s Find the "truekeep.review.next-group" Button
+    t =    14.75s Find the "truekeep.review.next-group" Button
+    t =    14.78s Find the Target Application 'app.truekeep.ios'
+    t =    14.81s Swipe down Target Application 'app.truekeep.ios'
+    t =    14.81s     Wait for app.truekeep.ios to idle
+    t =    14.81s     Find the Target Application 'app.truekeep.ios'
+    t =    14.84s     Check for interrupting elements affecting "留真" Application
+    t =    14.88s     Synthesize event
+    t =    15.30s     Wait for app.truekeep.ios to idle
+    t =    15.92s Get all elements bound by index for: Descendants matching type NavigationBar
+    t =    15.95s Find the NavigationBar (Element at index 0)
+    t =    15.99s Find the "truekeep.review.next-group" Button
+    t =    16.02s Find the "truekeep.review.next-group" Button
+    t =    16.07s Find the "truekeep.review.next-group" Button
+    t =    16.10s Find the Target Application 'app.truekeep.ios'
+    t =    16.25s Added attachment named 'local-model-group-navigation-before-tap'
+    t =    16.25s Tap "truekeep.review.next-group" Button
+    t =    16.25s     Wait for app.truekeep.ios to idle
+    t =    16.25s     Find the "truekeep.review.next-group" Button
+    t =    16.29s     Check for interrupting elements affecting "truekeep.review.next-group" Button
+    t =    16.32s     Synthesize event
+    t =    16.62s     Wait for app.truekeep.ios to idle
+    t =    18.29s Find the "review.group-position" StaticText
+    t =    18.34s Waiting 5.0s for "truekeep.models.analyze" Button to exist
+    t =    19.39s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.models.analyze" Button`
+    t =    19.39s         Checking existence of `"truekeep.models.analyze" Button`
+    t =    19.43s Checking existence of `"truekeep.models.result" Any`
+    t =    19.47s Checking existence of `"truekeep.models.analysis-error" StaticText`
+    t =    19.62s Added attachment named 'local-model-07-group-change-discards-pending'
+    t =    19.62s Tear Down
+    t =    19.62s     Terminate app.truekeep.ios:3430
+2026-11-05 17:47:13.326 xcodebuild[2965:24816277] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:47:13.326 xcodebuild[2965:24816277] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+Test Case '-[TrueKeepUITests.LocalPhotoModelsUITests testCancelAnalysisAndChangingGroupDiscardPendingResult]' passed (20.773 seconds).
+Test Suite 'LocalPhotoModelsUITests' passed at 2026-11-05 17:47:14.468.
+	 Executed 1 test, with 0 failures (0 unexpected) in 20.773 (20.774) seconds
+Test Suite 'TrueKeepUITests' started at 2026-11-05 17:47:14.468.
+Test Case '-[TrueKeepUITests.TrueKeepUITests testDuoReportRotationFailureAndRetry]' started.
+    t =     0.00s Start Test at 2026-11-05 17:47:14.469
+    t =     0.01s Set Up
+    t =     0.01s     Open app.truekeep.ios
+    t =     0.01s         Launch app.truekeep.ios
+2026-11-05 17:47:14.484 xcodebuild[2965:24816277] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:47:14.484 xcodebuild[2965:24816277] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:47:14.497 xcodebuild[2965:24816277] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     0.23s             Setting up automation session
+    t =     1.12s             Wait for app.truekeep.ios to idle
+    t =     2.38s Terminate app.truekeep.ios:3567
+2026-11-05 17:47:16.857 xcodebuild[2965:24816277] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:47:16.857 xcodebuild[2965:24816277] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     3.45s Open app.truekeep.ios
+    t =     3.46s     Launch app.truekeep.ios
+2026-11-05 17:47:17.927 xcodebuild[2965:24816277] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:47:17.927 xcodebuild[2965:24816277] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:47:17.943 xcodebuild[2965:24816277] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     3.67s         Setting up automation session
+    t =     4.55s         Wait for app.truekeep.ios to idle
+    t =     6.10s Tap "scan.details" Button
+    t =     6.10s     Wait for app.truekeep.ios to idle
+    t =     6.11s     Find the "scan.details" Button
+    t =     6.22s     Check for interrupting elements affecting "scan.details" Button
+    t =     6.25s     Synthesize event
+    t =     6.54s     Wait for app.truekeep.ios to idle
+    t =     7.35s Tap "scan.export-report" Button
+    t =     7.35s     Wait for app.truekeep.ios to idle
+    t =     7.36s     Find the "scan.export-report" Button
+    t =     7.43s     Check for interrupting elements affecting "scan.export-report" Button
+    t =     7.48s     Synthesize event
+    t =     7.78s     Wait for app.truekeep.ios to idle
+    t =     9.10s Checking `Expect predicate `enabled == 0` for object "scan.export-report" Button`
+    t =     9.10s     Find the "scan.export-report" Button
+    t =     9.16s Find the Target Application 'app.truekeep.ios'
+    t =     9.20s Setting device orientation to Landscape Left
+    t =     9.20s     Device orientation changed to Landscape Left
+    t =     9.23s     Interface orientation changed to Landscape Right
+    t =     9.23s     Wait for app.truekeep.ios to idle
+    t =    11.69s Find the Target Application 'app.truekeep.ios'
+    t =    11.75s Waiting 10.0s for "报告生成失败，请重试。" StaticText to exist
+    t =    12.79s     Checking `Expect predicate `existsNoRetry == 1` for object "报告生成失败，请重试。" StaticText`
+    t =    12.80s         Checking existence of `"报告生成失败，请重试。" StaticText`
+    t =    12.88s Find the "报告生成失败，请重试。" StaticText
+    t =    12.95s Swipe up "scan.details.form" Any
+    t =    12.95s     Wait for app.truekeep.ios to idle
+    t =    12.95s     Find the "scan.details.form" Any
+    t =    13.02s     Check for interrupting elements affecting "scan.details.form" CollectionView
+    t =    13.08s     Synthesize event
+    t =    13.55s     Wait for app.truekeep.ios to idle
+    t =    14.55s Find the "报告生成失败，请重试。" StaticText
+    t =    14.65s Find the "报告生成失败，请重试。" StaticText
+    t =    14.72s Find the "报告生成失败，请重试。" StaticText
+    t =    14.89s Added attachment named 'duo-report-rotated-failure'
+    t =    14.90s Find the "报告生成失败，请重试。" StaticText
+    t =    14.97s Tap "scan.export-report" Button
+    t =    14.97s     Wait for app.truekeep.ios to idle
+    t =    14.97s     Find the "scan.export-report" Button
+    t =    15.04s     Check for interrupting elements affecting "scan.export-report" Button
+    t =    15.09s     Synthesize event
+    t =    15.39s     Wait for app.truekeep.ios to idle
+    t =    15.65s Find the Target Application 'app.truekeep.ios'
+    t =    15.70s Setting device orientation to Portrait
+    t =    15.70s     Device orientation changed to Portrait
+    t =    15.72s     Interface orientation changed to Portrait
+    t =    15.72s     Wait for app.truekeep.ios to idle
+    t =    18.26s Find the Target Application 'app.truekeep.ios'
+    t =    18.33s Waiting 10.0s for "scan.share-report" Button to exist
+    t =    19.37s     Checking `Expect predicate `existsNoRetry == 1` for object "scan.share-report" Button`
+    t =    19.37s         Checking existence of `"scan.share-report" Button`
+    t =    19.55s Added attachment named 'duo-report-retry-success'
+    t =    19.56s Tear Down
+    t =    19.56s     Setting device orientation to Portrait
+    t =    19.56s         Wait for app.truekeep.ios to idle
+    t =    19.56s     Terminate app.truekeep.ios:3587
+2026-11-05 17:47:34.041 xcodebuild[2965:24816277] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:47:34.041 xcodebuild[2965:24816277] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testDuoReportRotationFailureAndRetry]' passed (20.687 seconds).
+Test Suite 'TrueKeepUITests' passed at 2026-11-05 17:47:35.156.
+	 Executed 1 test, with 0 failures (0 unexpected) in 20.687 (20.687) seconds
+Test Suite 'TrueKeepUITests.xctest' passed at 2026-11-05 17:47:35.156.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 41.460 (41.463) seconds
+Test Suite 'Selected tests' passed at 2026-11-05 17:47:35.157.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 41.460 (41.464) seconds
+2026-11-05 17:47:35.194 xcodebuild[2965:24816277] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:47:35.194 xcodebuild[2965:24816277] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:47:35.478 xcodebuild[2965:24816277] [MT] IDETestOperationsObserverDebug: 43.895 elapsed -- Testing started completed.
+2026-11-05 17:47:35.478 xcodebuild[2965:24816277] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-11-05 17:47:35.478 xcodebuild[2965:24816277] [MT] IDETestOperationsObserverDebug: 43.895 sec, +43.895 sec -- end
+
+Test session results, code coverage, and logs:
+	/tmp/TrueKeepDuo-20261105-final-fix-check.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

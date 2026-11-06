@@ -5,6 +5,9 @@ platform: ios
 ---
 setup:
   - launchApp
+  - waitUntil: truekeep.cleanup.scan
+    timeout: 10
+  - tap: truekeep.cleanup.scan
   - waitUntil: truekeep.cleanup.date-range.selector
     timeout: 10
   - assert: 已选择：近一个月
@@ -12,7 +15,7 @@ steps:
   - tap: truekeep.cleanup.date-range.lastThreeMonths
   - waitUntil: 已选择：近三个月
     timeout: 5
-  - tap: truekeep.cleanup.scan
+  - tap: scan.setup.start
   - waitUntil: truekeep.scan.view-results
     timeout: 20
   - assert: truekeep.scan.date-range.active
@@ -23,5 +26,4 @@ assertions:
     timeout: 10
   - assert: truekeep.cleanup.date-range.completed
   - assert: 本次范围：近三个月
-  - assert: 已选择：近三个月
   - done

@@ -13,7 +13,6 @@ enum TrueKeepTheme {
     static let yellowSoft = Color(red: 1.000, green: 0.965, blue: 0.875)
     static let yellowLine = Color(red: 0.945, green: 0.867, blue: 0.698)
     static let danger = Color(red: 0.678, green: 0.204, blue: 0.290)
-    static let tabScrollBottomPadding: CGFloat = 96
 
     enum Font {
         static let brand = SwiftUI.Font.callout.weight(.bold)

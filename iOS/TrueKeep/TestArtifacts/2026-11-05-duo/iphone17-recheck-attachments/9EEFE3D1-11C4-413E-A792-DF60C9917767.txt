@@ -1,0 +1,31 @@
+Attributes: Button, 0x108738f00, {{20.0, 562.7}, {362.0, 58.0}}, identifier: 'truekeep.models.analyze', label: '分析前 3 张照片'
+Element subtree:
+ →Button, 0x108738f00, {{20.0, 562.7}, {362.0, 58.0}}, identifier: 'truekeep.models.analyze', label: '分析前 3 张照片'
+Path to element:
+ →Button, 0x108738f00, {{20.0, 562.7}, {362.0, 58.0}}, identifier: 'truekeep.models.analyze', label: '分析前 3 张照片'
+Query chain:
+ →Find: Target Application 'app.truekeep.ios'
+  Output: {
+    Application, 0x1155da440, pid: 96874, label: '留真'
+  }
+  ↪︎Find: Descendants matching type Button
+    Output: {
+      Button, 0x1155d8780, {{68.0, 795.0}, {94.0, 54.0}}, identifier: 'house', label: '首页', Selected
+      Button, 0x1155d8a00, {{154.0, 795.0}, {94.0, 54.0}}, identifier: 'trash', label: '复核箱'
+      Button, 0x1155d8c80, {{240.0, 795.0}, {94.0, 54.0}}, identifier: 'gearshape', label: '设置'
+      Button, 0x11553c8c0, {{20.0, 66.0}, {36.0, 36.0}}, identifier: 'review.return-to-tasks', label: '返回任务'
+      Button, 0x11553c3c0, {{334.0, 66.0}, {48.0, 36.0}}, identifier: 'review.more', label: '更多复核操作'
+      Button, 0x1155e9680, {{334.0, 66.0}, {48.0, 36.0}}
+      Button, 0x1155a35c0, {{322.3, 681.0}, {59.7, 44.0}}, identifier: 'truekeep.review.review-all', label: '取消全选'
+      Button, 0x1155a3700, {{20.0, 729.0}, {362.0, 52.0}}, identifier: 'truekeep.review.add-to-review-bin', label: '加入复核箱（3）'
+      Button, 0x1155e8780, {{20.0, 20.3}, {44.0, 44.0}}, identifier: 'truekeep.review.previous-group', label: '上一组'
+      Button, 0x1155e8500, {{338.0, 20.3}, {44.0, 44.0}}, identifier: 'truekeep.review.next-group', label: '下一组'
+      Button, 0x1155a1e00, {{20.0, 120.7}, {175.0, 175.0}}, identifier: 'review.preview.shot-01', label: '预览，已选择删除，截图和聊天截图，旧截图。，1.1 MB'
+      Button, 0x1155a1f40, {{151.0, 120.7}, {44.0, 44.0}}, identifier: 'truekeep.review.candidate.shot-01', label: '已选择删除，截图和聊天截图，旧截图。', Selected
+      Button, 0x1155a2080, {{207.0, 120.7}, {175.0, 175.0}}, identifier: 'review.preview.shot-02', label: '预览，已选择删除，截图和聊天截图，临时聊天截图。，1 MB'
+      Button, 0x1155a21c0, {{338.0, 120.7}, {44.0, 44.0}}, identifier: 'truekeep.review.candidate.shot-02', label: '已选择删除，截图和聊天截图，临时聊天截图。', Selected
+      Button, 0x1155a2300, {{20.0, 307.7}, {175.0, 175.0}}, identifier: 'review.preview.shot-03', label: '预览，已选择删除，截图和聊天截图，重复截图。，1.3 MB'
+      Button, 0x1155a2440, {{151.0, 307.7}, {44.0, 44.0}}, identifier: 'truekeep.review.candidate.shot-03', label: '已选择删除，截图和聊天截图，重复截图。', Selected
+      Button, 0x1155a2f80, {{338.0, 562.7}, {44.0, 44.0}}, identifier: 'truekeep.models.cancel', label: '取消模型任务'
+    }
+    ↪︎Find: Elements matching predicate '"truekeep.models.analyze" IN identifiers'

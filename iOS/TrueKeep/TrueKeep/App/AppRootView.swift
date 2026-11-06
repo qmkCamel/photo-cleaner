@@ -238,16 +238,19 @@ struct AppRootView: View {
     @State private var phase: AppPhase = .welcome
     @State private var selectedTab: AppTab = .home
     @State private var homePath: [CleanupRoute] = []
+    @State private var preferredHomeColumn: NavigationSplitViewColumn = .sidebar
+    @StateObject private var deletion = DeletionCoordinator()
     @State private var cleanupState: CleanupFlowState
     @State private var isRequestingPhotoAccess = false
     @State private var photoAccess: PhotoLibraryAccess = .notDetermined
     @State private var hasCompletedScan = false
     @State private var scanStatus: PhotoScanProgressStatus = .scanning
     @State private var scanProgress: PhotoScanProgress = .coarseAnalysis(completed: 0, total: 0)
-    @State private var selectedScanDateRange: PhotoScanDateRange = .defaultValue
+    @AppStorage("TrueKeepSelectedScanDateRange") private var selectedScanDateRange: PhotoScanDateRange = .defaultValue
     @State private var activeScanDateRange: PhotoScanDateRange = .defaultValue
     @State private var completedScanDateRange: PhotoScanDateRange?
     @State private var scanTask: Task<Void, Never>?
+    @State private var isCancellingScan = false
     @State private var activeScanID = UUID()
     @State private var isScanActive = false
     @State private var confirmedKeepAssetIDs: Set<String>
@@ -271,6 +274,11 @@ struct AppRootView: View {
         confirmedKeepStore: ConfirmedKeepStore = .init(),
         launchConfiguration: AppLaunchConfiguration = .init()
     ) {
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("-TrueKeepResetScanPreferences") {
+            UserDefaults.standard.removeObject(forKey: "TrueKeepSelectedScanDateRange")
+        }
+        #endif
         self.photoAuthorization = photoAuthorization
         self.photoScanner = photoScanner
         self.photoDeletion = photoDeletion
@@ -326,7 +334,7 @@ struct AppRootView: View {
     }
 
     var body: some View {
-        Group {
+        AdaptiveWindow {
             switch phase {
             case .welcome:
                 WelcomeView(
@@ -353,6 +361,7 @@ struct AppRootView: View {
                     scanProgress: scanProgress,
                     scanDateRange: activeScanDateRange,
                     scanLimitationWarning: photoAccess.scanLimitationWarning,
+                    isCancelling: isCancellingScan,
                     onCancel: { handleScanCancelOrBack() },
                     onContinueBrowsing: {
                         phase = .main
@@ -375,6 +384,26 @@ struct AppRootView: View {
             }
         }
         .tint(TrueKeepTheme.green)
+        .overlay(alignment: .bottomLeading) {
+            #if DEBUG
+            if ProcessInfo.processInfo.arguments.contains("-TrueKeepUITestLayoutMetrics") {
+                Text("删除请求：\(deletion.submissionCount)")
+                    .font(.caption2).accessibilityIdentifier("deletion.submissions")
+                    .allowsHitTesting(false)
+            }
+            #endif
+        }
+        .sheet(isPresented: Binding(get: { deletion.request != nil }, set: { if !$0 { deletion.dismiss() } })) {
+            DeleteConfirmationSheet(
+                count: deletion.request?.assetIDs.count ?? 0,
+                isDeleting: deletion.isDeleting,
+                message: deletion.message,
+                onCancel: { deletion.dismiss() },
+                onConfirm: { submitDeletion() }
+            )
+            .presentationDetents([.large])
+            .interactiveDismissDisabled(deletion.isDeleting)
+        }
         .task {
             guard observesPhotoLibrary else { return }
             if photoAccess.canScan { libraryObserver = PhotoLibraryObserver() }
@@ -481,7 +510,7 @@ struct AppRootView: View {
             }
             guard access.canScan else { return }
             await MainActor.run {
-                startPhotoScan(access: access, dateRange: selectedScanDateRange)
+                completeIntroAndShowHome()
             }
         }
     }
@@ -490,7 +519,7 @@ struct AppRootView: View {
         access: PhotoLibraryAccess,
         dateRange: PhotoScanDateRange
     ) {
-        guard access.canScan else { return }
+        guard access.canScan, !isScanActive else { return }
 
         scanTask?.cancel()
         let scanID = UUID()
@@ -499,6 +528,7 @@ struct AppRootView: View {
         scanStatus = .scanning
         scanProgress = .coarseAnalysis(completed: 0, total: 0)
         isScanActive = true
+        isCancellingScan = false
         phase = .scan
 
         let photoScanner = photoScanner
@@ -508,7 +538,7 @@ struct AppRootView: View {
                 dateRange: dateRange,
                 onProgress: { progress in
                     await MainActor.run {
-                        guard activeScanID == scanID else { return }
+                        guard activeScanID == scanID, !isCancellingScan else { return }
                         scanProgress = progress
                     }
                 }
@@ -518,17 +548,20 @@ struct AppRootView: View {
             await MainActor.run {
                 guard activeScanID == scanID else { return }
 
-                if wasCancelled {
+                if wasCancelled || isCancellingScan {
                     scanStatus = .interrupted(message: "用户已取消")
                 } else if let error = scannedState.scanErrorMessage {
                     scanStatus = .interrupted(message: error)
                 } else {
+                    deletion.resetCompletedResults()
                     cleanupState.mergeScanResult(scannedState, confirmedKeepAssetIDs: confirmedKeepAssetIDs)
+                    cleanupState.scanReport?.completedAt = Date()
                     hasCompletedScan = true
                     completedScanDateRange = dateRange
                     scanStatus = .completed(candidateCount: cleanupState.tasks.map(\.candidateCount).reduce(0, +))
                 }
                 isScanActive = false
+                isCancellingScan = false
                 scanTask = nil
                 if usesPersistentSession { refreshPhotoLibrary() }
                 saveSession()
@@ -539,11 +572,14 @@ struct AppRootView: View {
     private func handleScanCancelOrBack() {
         switch scanStatus {
         case .scanning:
+            guard !isCancellingScan else { return }
+            guard scanTask != nil else {
+                scanStatus = .interrupted(message: "用户已取消")
+                isScanActive = false
+                return
+            }
+            isCancellingScan = true
             scanTask?.cancel()
-            scanTask = nil
-            activeScanID = UUID()
-            scanStatus = .interrupted(message: "用户已取消")
-            isScanActive = false
         case .completed, .interrupted:
             completeIntroAndShowHome()
         }
@@ -562,7 +598,7 @@ struct AppRootView: View {
 
     private var mainTabs: some View {
         TabView(selection: $selectedTab) {
-            NavigationStack(path: $homePath) {
+            AdaptiveHomeNavigation(preferredColumn: $preferredHomeColumn) {
                 CleanupResultsView(
                     state: cleanupState,
                     scanLimitationWarning: photoAccess.scanLimitationWarning,
@@ -580,10 +616,10 @@ struct AppRootView: View {
                     onManagePhotoAccess: { openAppSettings() },
                     onRequestPhotoAccess: { requestPhotoAccess() },
                     onSelectScanDateRange: { selectedScanDateRange = $0 },
-                    onScan: {
+                    onScan: { range in
                         startPhotoScan(
                             access: photoAccess,
-                            dateRange: selectedScanDateRange
+                            dateRange: range
                         )
                     },
                     onViewScanProgress: {
@@ -591,22 +627,34 @@ struct AppRootView: View {
                         phase = .scan
                     },
                     onReviewTask: { task in
+                        guard !deletion.isDeleting else { return }
+                        localModels.invalidateAnalysis()
                         guard cleanupState.selectReviewGroup(id: task.id) else { return }
-                        homePath.append(.reviewGroup(task.id))
+                        homePath = [.reviewGroup(task.id)]
+                        preferredHomeColumn = .detail
                     }
                 )
-                .navigationDestination(for: CleanupRoute.self) { route in
-                    switch route {
-                    case .reviewGroup(let id):
+            } detail: {
+                NavigationStack {
+                    if case .reviewGroup(let id) = homePath.last {
                         ReviewGroupView(
                             state: $cleanupState,
                             groupID: id,
-                            onNavigate: { homePath = [.reviewGroup($0)] },
+                            onNavigate: {
+                                localModels.invalidateAnalysis()
+                                homePath = [.reviewGroup($0)]
+                            },
+                            onReturnToTasks: {
+                                localModels.invalidateAnalysis()
+                                preferredHomeColumn = .sidebar
+                                homePath.removeAll()
+                            },
                             localModels: localModels,
-                            photoDeletion: photoDeletion,
+                            deletion: deletion,
                             onAddedToReviewBin: {
                                 selectedTab = .reviewBin
                                 homePath.removeAll()
+                                preferredHomeColumn = .sidebar
                             },
                             onSetConfirmedKeep: { assetID, isConfirmed in
                                 setConfirmedKeep(assetID, isConfirmed: isConfirmed)
@@ -618,6 +666,10 @@ struct AppRootView: View {
                                 cleanupState.applyConfirmedKeepAssetIDs(updated)
                             }
                         )
+                        .id(id)
+                    } else {
+                        ContentUnavailableView("选择一个任务开始复核", systemImage: "photo.on.rectangle",
+                                               description: Text("这里只提供整理建议，不会自动删除照片。"))
                     }
                 }
             }
@@ -627,7 +679,7 @@ struct AppRootView: View {
             .tag(AppTab.home)
             .accessibilityIdentifier(TrueKeepAccessibility.Control.homeTab.id)
 
-            ReviewBinView(state: $cleanupState, photoDeletion: photoDeletion)
+            ReviewBinView(state: $cleanupState, deletion: deletion)
                 .tabItem {
                     Label("复核箱", systemImage: "trash")
                 }
@@ -641,7 +693,13 @@ struct AppRootView: View {
                     onRemoveConfirmedKeep: { assetID in
                         setConfirmedKeep(assetID, isConfirmed: false)
                     },
-                    onResetConfirmedKeeps: { resetConfirmedKeeps() }
+                    onResetConfirmedKeeps: { resetConfirmedKeeps() },
+                    onRestoreConfirmedKeeps: { ids in
+                        let restored = confirmedKeepAssetIDs.union(ids)
+                        confirmedKeepStore.saveAssetIDs(restored)
+                        confirmedKeepAssetIDs = restored
+                        cleanupState.applyConfirmedKeepAssetIDs(restored)
+                    }
                 )
             }
             .tabItem {
@@ -652,6 +710,33 @@ struct AppRootView: View {
         }
         .toolbarBackground(TrueKeepTheme.page, for: .tabBar)
         .toolbarBackground(.visible, for: .tabBar)
+        .modifier(AdaptiveNativeToolbar())
+    }
+
+    private func submitDeletion() {
+        guard let request = deletion.request else { return }
+        // Re-check access and confirmed keeps immediately before the side effect.
+        // Fixture sessions intentionally do not consult the device's private library.
+        if observesPhotoLibrary { refreshPhotoLibrary() }
+        let validIDs: [String]
+        let group: CleanupGroup?
+        switch request.source {
+        case .group(let id):
+            group = cleanupState.reviewGroups.first { $0.id == id }
+            validIDs = group?.candidates.filter { !$0.confirmedKeep }.map(\.id) ?? []
+        case .reviewBin:
+            group = nil
+            validIDs = cleanupState.reviewBinItems.filter { !$0.candidate.confirmedKeep }.map(\.id)
+        }
+        deletion.submit(validIDs: validIDs, service: photoDeletion) { request, result in
+            deletion.record(result, group: group)
+            switch request.source {
+            case .group: cleanupState.applyDirectDeletionResult(result)
+            case .reviewBin: cleanupState.applyDeletionResult(result)
+            }
+            UIAccessibility.post(notification: .announcement,
+                                 argument: deletion.resultMessage ?? "删除未完成，请查看失败原因并复核。")
+        }
     }
 
     private func setConfirmedKeep(_ assetID: String, isConfirmed: Bool) {

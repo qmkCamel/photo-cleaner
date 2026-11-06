@@ -1,0 +1,825 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test -project iOS/TrueKeep/TrueKeep.xcodeproj -scheme TrueKeep -destination "platform=iOS Simulator,id=642F2F40-1DF5-4C73-A382-494BBE4C53AB" -derivedDataPath /tmp/truekeep-merge-cached-20261102 -disableAutomaticPackageResolution -parallel-testing-enabled NO -collect-test-diagnostics never "-only-testing:TrueKeepUITests/TrueKeepUITests/testCriticalScreensPassAccessibilityAudit" "-only-testing:TrueKeepUITests/TrueKeepUITests/testRedesignBinFailureAndMoveOut" "-only-testing:TrueKeepUITests/TrueKeepUITests/testRedesignReviewAndConfirmationAtMaximumTextSize" -resultBundlePath /tmp/TrueKeepUX-20261105-safety-layout.xcresult
+
+Resolve Package Graph
+
+
+Resolved source packages:
+  swift-syntax: https://github.com/swiftlang/swift-syntax.git @ 603.0.2
+  swift-transformers: https://github.com/huggingface/swift-transformers @ 1.3.0
+  Jinja: https://github.com/huggingface/swift-jinja.git @ 2.5.2
+  EventSource: https://github.com/mattt/EventSource.git @ 1.5.1
+  swift-huggingface: https://github.com/huggingface/swift-huggingface.git @ 0.13.0
+  LocalPhotoModels: /Users/edge/side/photo-cleaner/iOS/TrueKeep/Packages/LocalPhotoModels
+  mlx-swift: https://github.com/ml-explore/mlx-swift @ 0.32.3
+  swift-collections: https://github.com/apple/swift-collections.git @ 1.7.4
+  swift-numerics: https://github.com/apple/swift-numerics @ 1.1.1
+  swift-asn1: https://github.com/apple/swift-asn1.git @ 1.7.3
+  yyjson: https://github.com/ibireme/yyjson.git @ 0.12.0
+  mlx-swift-lm: https://github.com/ml-explore/mlx-swift-lm @ 3.32.3
+  swift-crypto: https://github.com/apple/swift-crypto.git @ 4.5.2
+
+Writing result bundle at path:
+	/tmp/TrueKeepUX-20261105-safety-layout.xcresult
+
+Build Preparation
+Build task concurrency set to 4 via user default IDEBuildOperationMaxNumberOfConcurrentCompileTasks
+
+ComputePackagePrebuildTargetDependencyGraph
+
+Prepare packages
+
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (43 targets)
+    Target 'TrueKeepUITests' in project 'TrueKeep'
+        ➜ Explicit dependency on target 'TrueKeep' in project 'TrueKeep'
+    Target 'TrueKeepTests' in project 'TrueKeep'
+        ➜ Explicit dependency on target 'TrueKeep' in project 'TrueKeep'
+    Target 'TrueKeep' in project 'TrueKeep'
+        ➜ Explicit dependency on target 'LocalPhotoModels-product' in project 'LocalPhotoModels'
+    Target 'LocalPhotoModels-product' in project 'LocalPhotoModels'
+        ➜ Explicit dependency on target 'LocalPhotoModels' in project 'LocalPhotoModels'
+        ➜ Explicit dependency on target 'PhotoModelContracts' in project 'LocalPhotoModels'
+        ➜ Explicit dependency on target 'MLX-product' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'MLXVLM-product' in project 'mlx-swift-lm'
+        ➜ Explicit dependency on target 'MLXLMCommon-product' in project 'mlx-swift-lm'
+        ➜ Explicit dependency on target 'Tokenizers-product' in project 'swift-transformers'
+    Target 'LocalPhotoModels' in project 'LocalPhotoModels'
+        ➜ Explicit dependency on target 'PhotoModelContracts' in project 'LocalPhotoModels'
+        ➜ Explicit dependency on target 'MLX-product' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'MLXVLM-product' in project 'mlx-swift-lm'
+        ➜ Explicit dependency on target 'MLXLMCommon-product' in project 'mlx-swift-lm'
+        ➜ Explicit dependency on target 'Tokenizers-product' in project 'swift-transformers'
+    Target 'Tokenizers-product' in project 'swift-transformers'
+        ➜ Explicit dependency on target 'Tokenizers' in project 'swift-transformers'
+        ➜ Explicit dependency on target 'Hub' in project 'swift-transformers'
+        ➜ Explicit dependency on target 'Jinja-product' in project 'Jinja'
+        ➜ Explicit dependency on target 'HuggingFace-product' in project 'swift-huggingface'
+        ➜ Explicit dependency on target 'OrderedCollections-product' in project 'swift-collections'
+        ➜ Explicit dependency on target 'Crypto-product' in project 'swift-crypto'
+        ➜ Explicit dependency on target 'yyjson-product' in project 'yyjson'
+    Target 'Tokenizers' in project 'swift-transformers'
+        ➜ Explicit dependency on target 'Hub' in project 'swift-transformers'
+        ➜ Explicit dependency on target 'Jinja-product' in project 'Jinja'
+        ➜ Explicit dependency on target 'HuggingFace-product' in project 'swift-huggingface'
+        ➜ Explicit dependency on target 'OrderedCollections-product' in project 'swift-collections'
+        ➜ Explicit dependency on target 'Crypto-product' in project 'swift-crypto'
+        ➜ Explicit dependency on target 'yyjson-product' in project 'yyjson'
+    Target 'Hub' in project 'swift-transformers'
+        ➜ Explicit dependency on target 'swift-transformers_Hub' in project 'swift-transformers'
+        ➜ Explicit dependency on target 'Jinja-product' in project 'Jinja'
+        ➜ Explicit dependency on target 'HuggingFace-product' in project 'swift-huggingface'
+        ➜ Explicit dependency on target 'OrderedCollections-product' in project 'swift-collections'
+        ➜ Explicit dependency on target 'Crypto-product' in project 'swift-crypto'
+        ➜ Explicit dependency on target 'yyjson-product' in project 'yyjson'
+    Target 'yyjson-product' in project 'yyjson'
+        ➜ Explicit dependency on target 'yyjson' in project 'yyjson'
+    Target 'yyjson' in project 'yyjson' (no dependencies)
+    Target 'HuggingFace-product' in project 'swift-huggingface'
+        ➜ Explicit dependency on target 'HuggingFace' in project 'swift-huggingface'
+        ➜ Explicit dependency on target 'EventSource-product' in project 'EventSource'
+        ➜ Explicit dependency on target 'Crypto-product' in project 'swift-crypto'
+    Target 'HuggingFace' in project 'swift-huggingface'
+        ➜ Explicit dependency on target 'EventSource-product' in project 'EventSource'
+        ➜ Explicit dependency on target 'Crypto-product' in project 'swift-crypto'
+    Target 'Crypto-product' in project 'swift-crypto'
+        ➜ Explicit dependency on target 'Crypto' in project 'swift-crypto'
+        ➜ Explicit dependency on target 'swift-crypto_Crypto' in project 'swift-crypto'
+    Target 'Crypto' in project 'swift-crypto'
+        ➜ Explicit dependency on target 'swift-crypto_Crypto' in project 'swift-crypto'
+    Target 'swift-crypto_Crypto' in project 'swift-crypto' (no dependencies)
+    Target 'EventSource-product' in project 'EventSource'
+        ➜ Explicit dependency on target 'EventSource' in project 'EventSource'
+    Target 'EventSource' in project 'EventSource' (no dependencies)
+    Target 'Jinja-product' in project 'Jinja'
+        ➜ Explicit dependency on target 'Jinja' in project 'Jinja'
+        ➜ Explicit dependency on target 'OrderedCollections-product' in project 'swift-collections'
+    Target 'Jinja' in project 'Jinja'
+        ➜ Explicit dependency on target 'OrderedCollections-product' in project 'swift-collections'
+    Target 'OrderedCollections-product' in project 'swift-collections'
+        ➜ Explicit dependency on target 'OrderedCollections' in project 'swift-collections'
+        ➜ Explicit dependency on target 'InternalCollectionsUtilities' in project 'swift-collections'
+    Target 'OrderedCollections' in project 'swift-collections'
+        ➜ Explicit dependency on target 'InternalCollectionsUtilities' in project 'swift-collections'
+    Target 'InternalCollectionsUtilities' in project 'swift-collections' (no dependencies)
+    Target 'swift-transformers_Hub' in project 'swift-transformers' (no dependencies)
+    Target 'MLXLMCommon-product' in project 'mlx-swift-lm'
+        ➜ Explicit dependency on target 'MLXLMCommon' in project 'mlx-swift-lm'
+        ➜ Explicit dependency on target 'MLX-product' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'MLXNN-product' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'MLXOptimizers-product' in project 'mlx-swift'
+    Target 'MLXVLM-product' in project 'mlx-swift-lm'
+        ➜ Explicit dependency on target 'MLXVLM' in project 'mlx-swift-lm'
+        ➜ Explicit dependency on target 'MLXLMCommon' in project 'mlx-swift-lm'
+        ➜ Explicit dependency on target 'MLX-product' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'MLXNN-product' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'MLXOptimizers-product' in project 'mlx-swift'
+    Target 'MLXVLM' in project 'mlx-swift-lm'
+        ➜ Explicit dependency on target 'MLXLMCommon' in project 'mlx-swift-lm'
+        ➜ Explicit dependency on target 'MLX-product' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'MLXNN-product' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'MLXOptimizers-product' in project 'mlx-swift'
+    Target 'MLXLMCommon' in project 'mlx-swift-lm'
+        ➜ Explicit dependency on target 'MLX-product' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'MLXNN-product' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'MLXOptimizers-product' in project 'mlx-swift'
+    Target 'MLXOptimizers-product' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'MLXOptimizers' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'Cmlx' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'cLogSupport' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'MLX' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'MLXNN' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'Numerics-product' in project 'swift-numerics'
+    Target 'MLXOptimizers' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'Cmlx' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'cLogSupport' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'MLX' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'MLXNN' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'Numerics-product' in project 'swift-numerics'
+    Target 'MLXNN-product' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'MLXNN' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'Cmlx' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'cLogSupport' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'MLX' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'Numerics-product' in project 'swift-numerics'
+    Target 'MLXNN' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'Cmlx' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'cLogSupport' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'MLX' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'Numerics-product' in project 'swift-numerics'
+    Target 'MLX-product' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'MLX' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'Cmlx' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'cLogSupport' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'Numerics-product' in project 'swift-numerics'
+    Target 'MLX' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'Cmlx' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'cLogSupport' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'Numerics-product' in project 'swift-numerics'
+    Target 'Numerics-product' in project 'swift-numerics'
+        ➜ Explicit dependency on target 'Numerics' in project 'swift-numerics'
+        ➜ Explicit dependency on target '_NumericsShims' in project 'swift-numerics'
+        ➜ Explicit dependency on target 'RealModule' in project 'swift-numerics'
+        ➜ Explicit dependency on target 'ComplexModule' in project 'swift-numerics'
+    Target 'Numerics' in project 'swift-numerics'
+        ➜ Explicit dependency on target '_NumericsShims' in project 'swift-numerics'
+        ➜ Explicit dependency on target 'RealModule' in project 'swift-numerics'
+        ➜ Explicit dependency on target 'ComplexModule' in project 'swift-numerics'
+    Target 'ComplexModule' in project 'swift-numerics'
+        ➜ Explicit dependency on target '_NumericsShims' in project 'swift-numerics'
+        ➜ Explicit dependency on target 'RealModule' in project 'swift-numerics'
+    Target 'RealModule' in project 'swift-numerics'
+        ➜ Explicit dependency on target '_NumericsShims' in project 'swift-numerics'
+    Target '_NumericsShims' in project 'swift-numerics' (no dependencies)
+    Target 'cLogSupport' in project 'mlx-swift' (no dependencies)
+    Target 'Cmlx' in project 'mlx-swift'
+        ➜ Explicit dependency on target 'mlx-swift_Cmlx' in project 'mlx-swift'
+    Target 'mlx-swift_Cmlx' in project 'mlx-swift' (no dependencies)
+    Target 'PhotoModelContracts' in project 'LocalPhotoModels'
+        ➜ Explicit dependency on target 'LocalPhotoModels_PhotoModelContracts' in project 'LocalPhotoModels'
+    Target 'LocalPhotoModels_PhotoModelContracts' in project 'LocalPhotoModels' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc --version
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -x c -c /dev/null
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -x objective-c -c /dev/null
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/actool --print-asset-tag-combinations --output-format xml1 /Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeep/Resources/Assets.xcassets
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -x c -c /dev/null
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -x c++ -c /dev/null
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
+
+ReadFileContents /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/docc/features.json
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/actool --version --output-format xml1
+
+Build description signature: 6c562986e77ee2b902456f2bcd80df49
+Build description path: /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/XCBuildData/6c562986e77ee2b902456f2bcd80df49.xcbuilddata
+ProcessInfoPlistFile /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/mlx-swift_Cmlx.bundle/Info.plist /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/mlx-swift.build/Debug-iphonesimulator/mlx-swift_Cmlx-b.build/empty-mlx-swift_Cmlx.plist (in target 'mlx-swift_Cmlx' from project 'mlx-swift')
+    cd /tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/mlx-swift
+    builtin-infoPlistUtility /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/mlx-swift.build/Debug-iphonesimulator/mlx-swift_Cmlx-b.build/empty-mlx-swift_Cmlx.plist -producttype com.apple.product-type.bundle -expandbuildsettings -format binary -platform iphonesimulator -o /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/mlx-swift_Cmlx.bundle/Info.plist
+
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk /tmp/truekeep-merge-cached-20261102/SDKStatCaches.noindex/iphonesimulator27.1-24A94232-e829b21a6f8c9b70876ba0858053c04435d3147121984ba087c28d913653d626.sdkstatcache
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeep.xcodeproj
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -o /tmp/truekeep-merge-cached-20261102/SDKStatCaches.noindex/iphonesimulator27.1-24A94232-e829b21a6f8c9b70876ba0858053c04435d3147121984ba087c28d913653d626.sdkstatcache
+
+ProcessInfoPlistFile /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/swift-transformers_Hub.bundle/Info.plist /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/swift-transformers.build/Debug-iphonesimulator/swift-transformers_Hub-b.build/empty-swift-transformers_Hub.plist (in target 'swift-transformers_Hub' from project 'swift-transformers')
+    cd /tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/swift-transformers
+    builtin-infoPlistUtility /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/swift-transformers.build/Debug-iphonesimulator/swift-transformers_Hub-b.build/empty-swift-transformers_Hub.plist -producttype com.apple.product-type.bundle -expandbuildsettings -format binary -platform iphonesimulator -o /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/swift-transformers_Hub.bundle/Info.plist
+
+ProcessInfoPlistFile /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/swift-crypto_Crypto.bundle/Info.plist /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/swift-crypto.build/Debug-iphonesimulator/swift-crypto_Crypto-b.build/empty-swift-crypto_Crypto.plist (in target 'swift-crypto_Crypto' from project 'swift-crypto')
+    cd /tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/swift-crypto
+    builtin-infoPlistUtility /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/swift-crypto.build/Debug-iphonesimulator/swift-crypto_Crypto-b.build/empty-swift-crypto_Crypto.plist -producttype com.apple.product-type.bundle -expandbuildsettings -format binary -platform iphonesimulator -o /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/swift-crypto_Crypto.bundle/Info.plist
+
+ProcessInfoPlistFile /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/LocalPhotoModels_PhotoModelContracts.bundle/Info.plist /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/LocalPhotoModels.build/Debug-iphonesimulator/LocalPhotoModels_PhotoModelContracts-b.build/empty-LocalPhotoModels_PhotoModelContracts.plist (in target 'LocalPhotoModels_PhotoModelContracts' from project 'LocalPhotoModels')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep/Packages/LocalPhotoModels
+    builtin-infoPlistUtility /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/LocalPhotoModels.build/Debug-iphonesimulator/LocalPhotoModels_PhotoModelContracts-b.build/empty-LocalPhotoModels_PhotoModelContracts.plist -producttype com.apple.product-type.bundle -expandbuildsettings -format binary -platform iphonesimulator -o /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/LocalPhotoModels_PhotoModelContracts.bundle/Info.plist
+
+SwiftDriver TrueKeep normal arm64 com.apple.xcode.tools.swift.compiler (in target 'TrueKeep' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name TrueKeep -Onone @/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep.SwiftFileList -DDEBUG -Xcc -fmodule-map-file\=/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/swift-numerics/Sources/_NumericsShims/include/module.modulemap -Xcc -fmodule-map-file\=/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/GeneratedModuleMaps-iphonesimulator/cLogSupport.modulemap -Xcc -fmodule-map-file\=/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/mlx-swift/Source/Cmlx/include/module.modulemap -Xcc -fmodule-map-file\=/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/GeneratedModuleMaps-iphonesimulator/yyjson.modulemap -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -target arm64-apple-ios18.0-simulator -g -module-cache-path /tmp/truekeep-merge-cached-20261102/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/truekeep-merge-cached-20261102/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 6 -I /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator -F /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/PackageFrameworks -F /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator -c -j12 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/truekeep-merge-cached-20261102/SDKStatCaches.noindex/iphonesimulator27.1-24A94232-e829b21a6f8c9b70876ba0858053c04435d3147121984ba087c28d913653d626.sdkstatcache -output-file-map /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/truekeep-merge-cached-20261102/ModuleCache.noindex -sdk-module-cache-path /tmp/truekeep-merge-cached-20261102/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/truekeep-merge-cached-20261102/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/TrueKeep-generated-files.hmap -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/TrueKeep-own-target-headers.hmap -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/TrueKeep-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep-02eba3249349fe9e8ff9bd4515bec124-VFS-iphonesimulator/all-product-headers.yaml -Xcc -iquote -Xcc /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/TrueKeep-project-headers.hmap -Xcc -I/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/swift-numerics/Sources/_NumericsShims/include -Xcc -I/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/mlx-swift/Source/cLogSupport/include -Xcc -I/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/mlx-swift/Source/Cmlx/include -Xcc -I/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/yyjson/src -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/include -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/DerivedSources-normal/arm64 -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/DerivedSources/arm64 -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep-Swift.h -working-directory /Users/edge/side/photo-cleaner/iOS/TrueKeep -experimental-emit-module-separately -disable-cmo
+
+ProcessInfoPlistFile /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/Info.plist /Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeep/Resources/Info.plist (in target 'TrueKeep' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    builtin-infoPlistUtility /Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeep/Resources/Info.plist -producttype com.apple.product-type.application -genpkginfo /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/PkgInfo -expandbuildsettings -format binary -platform iphonesimulator -additionalcontentfile /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/assetcatalog_generated_info.plist -scanforprivacyfile /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/LocalPhotoModels_PhotoModelContracts.bundle -scanforprivacyfile /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/mlx-swift_Cmlx.bundle -scanforprivacyfile /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/swift-crypto_Crypto.bundle -scanforprivacyfile /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/swift-transformers_Hub.bundle -o /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/Info.plist
+
+SwiftCompile normal arm64 Compiling\ ReviewBinView.swift /Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeep/Screens/ReviewBinView.swift (in target 'TrueKeep' from project 'TrueKeep')
+
+SwiftCompile normal arm64 /Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeep/Screens/ReviewBinView.swift (in target 'TrueKeep' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    builtin-SwiftPerFileCompile ReviewBinView.swift
+
+SwiftEmitModule normal arm64 Emitting\ module\ for\ TrueKeep (in target 'TrueKeep' from project 'TrueKeep')
+
+SwiftCompile normal arm64 (in target 'TrueKeep' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+
+
+SwiftDriverJobDiscovery normal arm64 Emitting module for TrueKeep (in target 'TrueKeep' from project 'TrueKeep')
+
+SwiftDriver\ Compilation\ Requirements TrueKeep normal arm64 com.apple.xcode.tools.swift.compiler (in target 'TrueKeep' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    builtin-Swift-Compilation-Requirements -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name TrueKeep -Onone @/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep.SwiftFileList -DDEBUG -Xcc -fmodule-map-file\=/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/swift-numerics/Sources/_NumericsShims/include/module.modulemap -Xcc -fmodule-map-file\=/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/GeneratedModuleMaps-iphonesimulator/cLogSupport.modulemap -Xcc -fmodule-map-file\=/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/mlx-swift/Source/Cmlx/include/module.modulemap -Xcc -fmodule-map-file\=/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/GeneratedModuleMaps-iphonesimulator/yyjson.modulemap -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -target arm64-apple-ios18.0-simulator -g -module-cache-path /tmp/truekeep-merge-cached-20261102/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/truekeep-merge-cached-20261102/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 6 -I /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator -F /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/PackageFrameworks -F /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator -c -j12 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/truekeep-merge-cached-20261102/SDKStatCaches.noindex/iphonesimulator27.1-24A94232-e829b21a6f8c9b70876ba0858053c04435d3147121984ba087c28d913653d626.sdkstatcache -output-file-map /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/truekeep-merge-cached-20261102/ModuleCache.noindex -sdk-module-cache-path /tmp/truekeep-merge-cached-20261102/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/truekeep-merge-cached-20261102/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/TrueKeep-generated-files.hmap -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/TrueKeep-own-target-headers.hmap -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/TrueKeep-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep-02eba3249349fe9e8ff9bd4515bec124-VFS-iphonesimulator/all-product-headers.yaml -Xcc -iquote -Xcc /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/TrueKeep-project-headers.hmap -Xcc -I/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/swift-numerics/Sources/_NumericsShims/include -Xcc -I/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/mlx-swift/Source/cLogSupport/include -Xcc -I/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/mlx-swift/Source/Cmlx/include -Xcc -I/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/yyjson/src -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/include -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/DerivedSources-normal/arm64 -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/DerivedSources/arm64 -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep-Swift.h -working-directory /Users/edge/side/photo-cleaner/iOS/TrueKeep -experimental-emit-module-separately -disable-cmo
+
+Copy /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep.swiftsourceinfo (in target 'TrueKeep' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep.swiftsourceinfo /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo
+
+Copy /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.swiftmodule/arm64-apple-ios-simulator.swiftmodule /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep.swiftmodule (in target 'TrueKeep' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep.swiftmodule /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.swiftmodule/arm64-apple-ios-simulator.swiftmodule
+
+Copy /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.swiftmodule/arm64-apple-ios-simulator.abi.json /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep.abi.json (in target 'TrueKeep' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep.abi.json /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.swiftmodule/arm64-apple-ios-simulator.abi.json
+
+SwiftDriver TrueKeepTests normal arm64 com.apple.xcode.tools.swift.compiler (in target 'TrueKeepTests' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name TrueKeepTests -Onone @/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/Objects-normal/arm64/TrueKeepTests.SwiftFileList -DDEBUG -Xcc -fmodule-map-file\=/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/swift-numerics/Sources/_NumericsShims/include/module.modulemap -Xcc -fmodule-map-file\=/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/GeneratedModuleMaps-iphonesimulator/cLogSupport.modulemap -Xcc -fmodule-map-file\=/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/mlx-swift/Source/Cmlx/include/module.modulemap -Xcc -fmodule-map-file\=/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/GeneratedModuleMaps-iphonesimulator/yyjson.modulemap -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -target arm64-apple-ios18.0-simulator -g -module-cache-path /tmp/truekeep-merge-cached-20261102/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/truekeep-merge-cached-20261102/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 6 -I /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib -F /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/PackageFrameworks -F /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk/Developer/Library/Frameworks -c -j12 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/truekeep-merge-cached-20261102/SDKStatCaches.noindex/iphonesimulator27.1-24A94232-e829b21a6f8c9b70876ba0858053c04435d3147121984ba087c28d913653d626.sdkstatcache -output-file-map /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/Objects-normal/arm64/TrueKeepTests-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/truekeep-merge-cached-20261102/ModuleCache.noindex -sdk-module-cache-path /tmp/truekeep-merge-cached-20261102/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/Objects-normal/arm64/TrueKeepTests.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/Objects-normal/arm64/TrueKeepTests-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/truekeep-merge-cached-20261102/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/Objects-normal/arm64/TrueKeepTests_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/TrueKeepTests-generated-files.hmap -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/TrueKeepTests-own-target-headers.hmap -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/TrueKeepTests-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep-02eba3249349fe9e8ff9bd4515bec124-VFS-iphonesimulator/all-product-headers.yaml -Xcc -iquote -Xcc /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/TrueKeepTests-project-headers.hmap -Xcc -I/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/swift-numerics/Sources/_NumericsShims/include -Xcc -I/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/mlx-swift/Source/cLogSupport/include -Xcc -I/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/mlx-swift/Source/Cmlx/include -Xcc -I/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/yyjson/src -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/include -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/DerivedSources-normal/arm64 -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/DerivedSources/arm64 -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/Objects-normal/arm64/TrueKeepTests-Swift.h -working-directory /Users/edge/side/photo-cleaner/iOS/TrueKeep -experimental-emit-module-separately -disable-cmo
+
+SwiftDriverJobDiscovery normal arm64 Compiling ReviewBinView.swift (in target 'TrueKeep' from project 'TrueKeep')
+
+SwiftCompile normal arm64 Compiling\ ScanProgressView.swift /Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeep/Screens/ScanProgressView.swift (in target 'TrueKeep' from project 'TrueKeep')
+
+SwiftCompile normal arm64 /Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeep/Screens/ScanProgressView.swift (in target 'TrueKeep' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    builtin-SwiftPerFileCompile ScanProgressView.swift
+
+SwiftCompile normal arm64 Compiling\ CleanupResultsView.swift /Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeep/Screens/CleanupResultsView.swift (in target 'TrueKeep' from project 'TrueKeep')
+
+SwiftCompile normal arm64 /Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeep/Screens/CleanupResultsView.swift (in target 'TrueKeep' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    builtin-SwiftPerFileCompile CleanupResultsView.swift
+
+SwiftCompile normal arm64 Compiling\ PermissionIntroView.swift /Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeep/Screens/PermissionIntroView.swift (in target 'TrueKeep' from project 'TrueKeep')
+
+SwiftCompile normal arm64 /Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeep/Screens/PermissionIntroView.swift (in target 'TrueKeep' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    builtin-SwiftPerFileCompile PermissionIntroView.swift
+
+SwiftCompile normal arm64 Compiling\ WelcomeView.swift /Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeep/Screens/WelcomeView.swift (in target 'TrueKeep' from project 'TrueKeep')
+
+SwiftCompile normal arm64 /Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeep/Screens/WelcomeView.swift (in target 'TrueKeep' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    builtin-SwiftPerFileCompile WelcomeView.swift
+
+SwiftEmitModule normal arm64 Emitting\ module\ for\ TrueKeepTests (in target 'TrueKeepTests' from project 'TrueKeep')
+
+SwiftCompile normal arm64 (in target 'TrueKeepTests' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+
+
+SwiftDriverJobDiscovery normal arm64 Compiling PermissionIntroView.swift (in target 'TrueKeep' from project 'TrueKeep')
+
+SwiftDriverJobDiscovery normal arm64 Compiling ScanProgressView.swift (in target 'TrueKeep' from project 'TrueKeep')
+
+SwiftDriver\ Compilation TrueKeepTests normal arm64 com.apple.xcode.tools.swift.compiler (in target 'TrueKeepTests' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    builtin-Swift-Compilation -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name TrueKeepTests -Onone @/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/Objects-normal/arm64/TrueKeepTests.SwiftFileList -DDEBUG -Xcc -fmodule-map-file\=/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/swift-numerics/Sources/_NumericsShims/include/module.modulemap -Xcc -fmodule-map-file\=/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/GeneratedModuleMaps-iphonesimulator/cLogSupport.modulemap -Xcc -fmodule-map-file\=/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/mlx-swift/Source/Cmlx/include/module.modulemap -Xcc -fmodule-map-file\=/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/GeneratedModuleMaps-iphonesimulator/yyjson.modulemap -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -target arm64-apple-ios18.0-simulator -g -module-cache-path /tmp/truekeep-merge-cached-20261102/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/truekeep-merge-cached-20261102/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 6 -I /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib -F /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/PackageFrameworks -F /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk/Developer/Library/Frameworks -c -j12 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/truekeep-merge-cached-20261102/SDKStatCaches.noindex/iphonesimulator27.1-24A94232-e829b21a6f8c9b70876ba0858053c04435d3147121984ba087c28d913653d626.sdkstatcache -output-file-map /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/Objects-normal/arm64/TrueKeepTests-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/truekeep-merge-cached-20261102/ModuleCache.noindex -sdk-module-cache-path /tmp/truekeep-merge-cached-20261102/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/Objects-normal/arm64/TrueKeepTests.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/Objects-normal/arm64/TrueKeepTests-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/truekeep-merge-cached-20261102/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/Objects-normal/arm64/TrueKeepTests_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/TrueKeepTests-generated-files.hmap -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/TrueKeepTests-own-target-headers.hmap -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/TrueKeepTests-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep-02eba3249349fe9e8ff9bd4515bec124-VFS-iphonesimulator/all-product-headers.yaml -Xcc -iquote -Xcc /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/TrueKeepTests-project-headers.hmap -Xcc -I/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/swift-numerics/Sources/_NumericsShims/include -Xcc -I/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/mlx-swift/Source/cLogSupport/include -Xcc -I/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/mlx-swift/Source/Cmlx/include -Xcc -I/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/yyjson/src -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/include -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/DerivedSources-normal/arm64 -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/DerivedSources/arm64 -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/Objects-normal/arm64/TrueKeepTests-Swift.h -working-directory /Users/edge/side/photo-cleaner/iOS/TrueKeep -experimental-emit-module-separately -disable-cmo
+
+SwiftCompile normal arm64 Compiling\ PermissionIssueView.swift /Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeep/Screens/PermissionIssueView.swift (in target 'TrueKeep' from project 'TrueKeep')
+
+SwiftCompile normal arm64 /Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeep/Screens/PermissionIssueView.swift (in target 'TrueKeep' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    builtin-SwiftPerFileCompile PermissionIssueView.swift
+
+SwiftCompile normal arm64 Compiling\ PrivacySafetyView.swift /Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeep/Screens/PrivacySafetyView.swift (in target 'TrueKeep' from project 'TrueKeep')
+
+SwiftCompile normal arm64 /Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeep/Screens/PrivacySafetyView.swift (in target 'TrueKeep' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    builtin-SwiftPerFileCompile PrivacySafetyView.swift
+
+SwiftDriverJobDiscovery normal arm64 Emitting module for TrueKeepTests (in target 'TrueKeepTests' from project 'TrueKeep')
+
+SwiftDriver\ Compilation\ Requirements TrueKeepTests normal arm64 com.apple.xcode.tools.swift.compiler (in target 'TrueKeepTests' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    builtin-Swift-Compilation-Requirements -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name TrueKeepTests -Onone @/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/Objects-normal/arm64/TrueKeepTests.SwiftFileList -DDEBUG -Xcc -fmodule-map-file\=/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/swift-numerics/Sources/_NumericsShims/include/module.modulemap -Xcc -fmodule-map-file\=/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/GeneratedModuleMaps-iphonesimulator/cLogSupport.modulemap -Xcc -fmodule-map-file\=/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/mlx-swift/Source/Cmlx/include/module.modulemap -Xcc -fmodule-map-file\=/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/GeneratedModuleMaps-iphonesimulator/yyjson.modulemap -plugin-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -target arm64-apple-ios18.0-simulator -g -module-cache-path /tmp/truekeep-merge-cached-20261102/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/truekeep-merge-cached-20261102/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 6 -I /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib -F /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/PackageFrameworks -F /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks -F /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk/Developer/Library/Frameworks -c -j12 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/truekeep-merge-cached-20261102/SDKStatCaches.noindex/iphonesimulator27.1-24A94232-e829b21a6f8c9b70876ba0858053c04435d3147121984ba087c28d913653d626.sdkstatcache -output-file-map /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/Objects-normal/arm64/TrueKeepTests-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/truekeep-merge-cached-20261102/ModuleCache.noindex -sdk-module-cache-path /tmp/truekeep-merge-cached-20261102/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/Objects-normal/arm64/TrueKeepTests.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/Objects-normal/arm64/TrueKeepTests-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/truekeep-merge-cached-20261102/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/Objects-normal/arm64/TrueKeepTests_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/TrueKeepTests-generated-files.hmap -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/TrueKeepTests-own-target-headers.hmap -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/TrueKeepTests-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep-02eba3249349fe9e8ff9bd4515bec124-VFS-iphonesimulator/all-product-headers.yaml -Xcc -iquote -Xcc /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/TrueKeepTests-project-headers.hmap -Xcc -I/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/swift-numerics/Sources/_NumericsShims/include -Xcc -I/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/mlx-swift/Source/cLogSupport/include -Xcc -I/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/mlx-swift/Source/Cmlx/include -Xcc -I/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/yyjson/src -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/include -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/DerivedSources-normal/arm64 -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/DerivedSources/arm64 -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/Objects-normal/arm64/TrueKeepTests-Swift.h -working-directory /Users/edge/side/photo-cleaner/iOS/TrueKeep -experimental-emit-module-separately -disable-cmo
+
+SwiftDriverJobDiscovery normal arm64 Compiling WelcomeView.swift (in target 'TrueKeep' from project 'TrueKeep')
+
+SwiftCompile normal arm64 Compiling\ ReviewGroupView.swift /Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeep/Screens/ReviewGroupView.swift (in target 'TrueKeep' from project 'TrueKeep')
+
+SwiftCompile normal arm64 /Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeep/Screens/ReviewGroupView.swift (in target 'TrueKeep' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    builtin-SwiftPerFileCompile ReviewGroupView.swift
+
+Copy /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeepTests.swiftmodule/arm64-apple-ios-simulator.abi.json /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/Objects-normal/arm64/TrueKeepTests.abi.json (in target 'TrueKeepTests' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/Objects-normal/arm64/TrueKeepTests.abi.json /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeepTests.swiftmodule/arm64-apple-ios-simulator.abi.json
+
+SwiftDriverJobDiscovery normal arm64 Compiling PermissionIssueView.swift (in target 'TrueKeep' from project 'TrueKeep')
+
+SwiftCompile normal arm64 Compiling\ AppRootView.swift /Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeep/App/AppRootView.swift (in target 'TrueKeep' from project 'TrueKeep')
+
+SwiftCompile normal arm64 /Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeep/App/AppRootView.swift (in target 'TrueKeep' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    builtin-SwiftPerFileCompile AppRootView.swift
+
+SwiftDriverJobDiscovery normal arm64 Compiling CleanupResultsView.swift (in target 'TrueKeep' from project 'TrueKeep')
+
+SwiftDriverJobDiscovery normal arm64 Compiling ReviewGroupView.swift (in target 'TrueKeep' from project 'TrueKeep')
+
+SwiftDriverJobDiscovery normal arm64 Compiling AppRootView.swift (in target 'TrueKeep' from project 'TrueKeep')
+
+SwiftDriverJobDiscovery normal arm64 Compiling PrivacySafetyView.swift (in target 'TrueKeep' from project 'TrueKeep')
+
+SwiftDriver\ Compilation TrueKeep normal arm64 com.apple.xcode.tools.swift.compiler (in target 'TrueKeep' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    builtin-Swift-Compilation -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name TrueKeep -Onone @/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep.SwiftFileList -DDEBUG -Xcc -fmodule-map-file\=/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/swift-numerics/Sources/_NumericsShims/include/module.modulemap -Xcc -fmodule-map-file\=/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/GeneratedModuleMaps-iphonesimulator/cLogSupport.modulemap -Xcc -fmodule-map-file\=/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/mlx-swift/Source/Cmlx/include/module.modulemap -Xcc -fmodule-map-file\=/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/GeneratedModuleMaps-iphonesimulator/yyjson.modulemap -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -target arm64-apple-ios18.0-simulator -g -module-cache-path /tmp/truekeep-merge-cached-20261102/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/truekeep-merge-cached-20261102/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 6 -I /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator -F /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/PackageFrameworks -F /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator -c -j12 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/truekeep-merge-cached-20261102/SDKStatCaches.noindex/iphonesimulator27.1-24A94232-e829b21a6f8c9b70876ba0858053c04435d3147121984ba087c28d913653d626.sdkstatcache -output-file-map /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/truekeep-merge-cached-20261102/ModuleCache.noindex -sdk-module-cache-path /tmp/truekeep-merge-cached-20261102/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/truekeep-merge-cached-20261102/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/TrueKeep-generated-files.hmap -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/TrueKeep-own-target-headers.hmap -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/TrueKeep-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep-02eba3249349fe9e8ff9bd4515bec124-VFS-iphonesimulator/all-product-headers.yaml -Xcc -iquote -Xcc /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/TrueKeep-project-headers.hmap -Xcc -I/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/swift-numerics/Sources/_NumericsShims/include -Xcc -I/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/mlx-swift/Source/cLogSupport/include -Xcc -I/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/mlx-swift/Source/Cmlx/include -Xcc -I/tmp/truekeep-merge-cached-20261102/SourcePackages/checkouts/yyjson/src -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/include -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/DerivedSources-normal/arm64 -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/DerivedSources/arm64 -Xcc -I/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep-Swift.h -working-directory /Users/edge/side/photo-cleaner/iOS/TrueKeep -experimental-emit-module-separately -disable-cmo
+
+Ld /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/TrueKeep.debug.dylib normal (in target 'TrueKeep' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios18.0-simulator -dynamiclib -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -O0 -Xlinker -no_warn_duplicate_libraries -L/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator -L/tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator -F/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator -F/tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/PackageFrameworks -F/tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator -filelist /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep.LinkFileList -install_name @rpath/TrueKeep.debug.dylib -Xlinker -rpath -Xlinker /usr/lib/swift -Xlinker -rpath -Xlinker @loader_path -Xlinker -rpath -Xlinker /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/PackageFrameworks -Xlinker -rpath -Xlinker @executable_path/Frameworks -Xlinker -dead_strip -Xlinker -object_path_lto -Xlinker /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep_lto.o -rdynamic -Xlinker -no_deduplicate -Xlinker -objc_abi_version -Xlinker 2 -Xlinker -dependency_info -Xlinker /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep_dependency_info.dat -fobjc-link-runtime -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep.swiftmodule -lc++ -framework Foundation -framework Metal -framework Accelerate -Xlinker -alias -Xlinker _main -Xlinker ___debug_main_executable_dylib_entry_point -Xlinker -no_adhoc_codesign -o /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/TrueKeep.debug.dylib
+
+ConstructStubExecutorLinkFileList /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/TrueKeep-ExecutorLinkFileList-normal-arm64.txt (in target 'TrueKeep' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    construct-stub-executor-link-file-list /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/TrueKeep.debug.dylib /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib/libPreviewsJITStubExecutor_no_swift_entry_point.a /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib/libPreviewsJITStubExecutor.a --output /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/TrueKeep-ExecutorLinkFileList-normal-arm64.txt
+note: Using stub executor library with Swift entry point. (in target 'TrueKeep' from project 'TrueKeep')
+
+Ld /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/TrueKeep normal (in target 'TrueKeep' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios18.0-simulator -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -O0 -Xlinker -no_warn_duplicate_libraries -L/tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator -F/tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/PackageFrameworks -F/tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator -Xlinker -rpath -Xlinker @executable_path -Xlinker -rpath -Xlinker @loader_path -Xlinker -rpath -Xlinker /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/PackageFrameworks -Xlinker -rpath -Xlinker @executable_path/Frameworks -rdynamic -Xlinker -no_deduplicate -Xlinker -objc_abi_version -Xlinker 2 -e ___debug_blank_executor_main -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_dylib -Xlinker /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/TrueKeep-DebugDylibPath-normal-arm64.txt -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_instlnm -Xlinker /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/TrueKeep-DebugDylibInstallName-normal-arm64.txt -Xlinker -filelist -Xlinker /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/TrueKeep-ExecutorLinkFileList-normal-arm64.txt -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __entitlements -Xlinker /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/TrueKeep.app-Simulated.xcent -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __ents_der -Xlinker /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/TrueKeep.app-Simulated.xcent.der /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/TrueKeep.debug.dylib -Xlinker -no_adhoc_codesign -o /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/TrueKeep
+
+CopySwiftLibs /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app (in target 'TrueKeep' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    builtin-swiftStdLibTool --copy --verbose --sign - --scan-executable /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/TrueKeep.debug.dylib --scan-folder /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/Frameworks --scan-folder /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/PlugIns --scan-folder /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/SystemExtensions --scan-folder /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/Extensions --platform iphonesimulator --toolchain /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v27.1.266.1.3yvLkT/Metal.xctoolchain --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/Frameworks --strip-bitcode --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os
+
+ExtractAppIntentsMetadata (in target 'TrueKeep' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v27.1.266.1.3yvLkT/Metal.xctoolchain --module-name TrueKeep --sdk-root /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk --xcode-version 27A9275 --platform-family iOS --deployment-target 18.0 --bundle-identifier app.truekeep.ios --output /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app --target-triple arm64-apple-ios18.0-simulator --binary-file /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/TrueKeep --dependency-file /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep_dependency_info.dat --stringsdata-file /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep.SwiftFileList --metadata-file-list /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/TrueKeep.DependencyMetadataFileList --static-metadata-file-list /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/TrueKeep.DependencyStaticMetadataFileList --swift-const-vals-list /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeep.build/Objects-normal/arm64/TrueKeep.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --no-app-shortcuts-localization
+2026-11-05 15:20:06.918 appintentsmetadataprocessor[93610:24364627] Starting appintentsmetadataprocessor export
+2026-11-05 15:20:06.924 appintentsmetadataprocessor[93610:24364627] warning: Metadata extraction skipped, no AppIntents.framework dependency found
+
+ProcessInfoPlistFile /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/PlugIns/TrueKeepTests.xctest/Info.plist /Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeepTests/Info.plist (in target 'TrueKeepTests' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    builtin-infoPlistUtility /Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeepTests/Info.plist -producttype com.apple.product-type.bundle.unit-test -expandbuildsettings -format binary -platform iphonesimulator -scanforprivacyfile /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/PlugIns/TrueKeepTests.xctest/LocalPhotoModels_PhotoModelContracts.bundle -scanforprivacyfile /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/PlugIns/TrueKeepTests.xctest/mlx-swift_Cmlx.bundle -scanforprivacyfile /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/PlugIns/TrueKeepTests.xctest/swift-crypto_Crypto.bundle -scanforprivacyfile /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/PlugIns/TrueKeepTests.xctest/swift-transformers_Hub.bundle -o /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/PlugIns/TrueKeepTests.xctest/Info.plist
+
+Ld /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/PlugIns/TrueKeepTests.xctest/TrueKeepTests normal (in target 'TrueKeepTests' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios18.0-simulator -bundle -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -O0 -Xlinker -no_warn_duplicate_libraries -L/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator -L/tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator -L/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib -F/tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator -F/tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/PackageFrameworks -F/tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator -iframework /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks -iframework /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk/Developer/Library/Frameworks -filelist /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/Objects-normal/arm64/TrueKeepTests.LinkFileList -Xlinker -rpath -Xlinker /usr/lib/swift -Xlinker -rpath -Xlinker @loader_path -Xlinker -rpath -Xlinker /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/PackageFrameworks -Xlinker -rpath -Xlinker @loader_path/Frameworks -Xlinker -rpath -Xlinker @executable_path/Frameworks -Xlinker -dead_strip -bundle_loader /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/TrueKeep -Xlinker -object_path_lto -Xlinker /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/Objects-normal/arm64/TrueKeepTests_lto.o -rdynamic -Xlinker -no_deduplicate -Xlinker -objc_abi_version -Xlinker 2 -Xlinker -dependency_info -Xlinker /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/Objects-normal/arm64/TrueKeepTests_dependency_info.dat -fobjc-link-runtime -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/Objects-normal/arm64/TrueKeepTests.swiftmodule -lc++ -framework Foundation -framework Metal -framework Accelerate -Xlinker -needed_framework -Xlinker XCTest -framework XCTest -Xlinker -needed-lXCTestSwiftSupport -lXCTestSwiftSupport /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/TrueKeep.debug.dylib -Xlinker -no_adhoc_codesign -o /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/PlugIns/TrueKeepTests.xctest/TrueKeepTests
+
+CopySwiftLibs /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/PlugIns/TrueKeepTests.xctest (in target 'TrueKeepTests' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    builtin-swiftStdLibTool --copy --verbose --sign - --scan-executable /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/PlugIns/TrueKeepTests.xctest/TrueKeepTests --scan-folder /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/PlugIns/TrueKeepTests.xctest/Frameworks --scan-folder /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/PlugIns/TrueKeepTests.xctest/PlugIns --scan-folder /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/PlugIns/TrueKeepTests.xctest/SystemExtensions --scan-folder /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/PlugIns/TrueKeepTests.xctest/Extensions --platform iphonesimulator --toolchain /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v27.1.266.1.3yvLkT/Metal.xctoolchain --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/PlugIns/TrueKeepTests.xctest/Frameworks --strip-bitcode --scan-executable /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib/libXCTestSwiftSupport.dylib --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os
+
+ExtractAppIntentsMetadata (in target 'TrueKeepTests' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v27.1.266.1.3yvLkT/Metal.xctoolchain --module-name TrueKeepTests --sdk-root /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk --xcode-version 27A9275 --platform-family iOS --deployment-target 18.0 --bundle-identifier app.truekeep.ios.tests --output /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/PlugIns/TrueKeepTests.xctest --target-triple arm64-apple-ios18.0-simulator --binary-file /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/PlugIns/TrueKeepTests.xctest/TrueKeepTests --dependency-file /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/Objects-normal/arm64/TrueKeepTests_dependency_info.dat --stringsdata-file /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/Objects-normal/arm64/TrueKeepTests.SwiftFileList --metadata-file-list /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/TrueKeepTests.DependencyMetadataFileList --static-metadata-file-list /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/TrueKeepTests.DependencyStaticMetadataFileList --swift-const-vals-list /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepTests.build/Objects-normal/arm64/TrueKeepTests.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --no-app-shortcuts-localization
+2026-11-05 15:20:07.198 appintentsmetadataprocessor[93615:24364645] Starting appintentsmetadataprocessor export
+2026-11-05 15:20:07.200 appintentsmetadataprocessor[93615:24364645] warning: Metadata extraction skipped, no AppIntents.framework dependency found
+
+CodeSign /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/PlugIns/TrueKeepTests.xctest (in target 'TrueKeepTests' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+
+    Signing Identity:     "Sign to Run Locally"
+
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/PlugIns/TrueKeepTests.xctest
+
+CodeSign /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/TrueKeep.debug.dylib (in target 'TrueKeep' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+
+    Signing Identity:     "Sign to Run Locally"
+
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/TrueKeep.debug.dylib
+
+CodeSign /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/__preview.dylib (in target 'TrueKeep' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+
+    Signing Identity:     "Sign to Run Locally"
+
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/__preview.dylib
+/tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app/__preview.dylib: replacing existing signature
+
+CodeSign /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app (in target 'TrueKeep' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+
+    Signing Identity:     "Sign to Run Locally"
+
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app
+
+Validate /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app (in target 'TrueKeep' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    builtin-validationUtility /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeep.app -shallow-bundle -infoplist-subpath Info.plist
+
+ProcessInfoPlistFile /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeepUITests-Runner.app/PlugIns/TrueKeepUITests.xctest/Info.plist /Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeepUITests/Info.plist (in target 'TrueKeepUITests' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    builtin-infoPlistUtility /Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeepUITests/Info.plist -producttype com.apple.product-type.bundle.ui-testing -expandbuildsettings -format binary -platform iphonesimulator -additionalcontentfile /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepUITests.build/ProductTypeInfoPlistAdditions.plist -o /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeepUITests-Runner.app/PlugIns/TrueKeepUITests.xctest/Info.plist
+
+CopySwiftLibs /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeepUITests-Runner.app/PlugIns/TrueKeepUITests.xctest (in target 'TrueKeepUITests' from project 'TrueKeep')
+    cd /Users/edge/side/photo-cleaner/iOS/TrueKeep
+    builtin-swiftStdLibTool --copy --verbose --sign - --scan-executable /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeepUITests-Runner.app/PlugIns/TrueKeepUITests.xctest/TrueKeepUITests --scan-folder /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeepUITests-Runner.app/PlugIns/TrueKeepUITests.xctest/Frameworks --scan-folder /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeepUITests-Runner.app/PlugIns/TrueKeepUITests.xctest/PlugIns --scan-folder /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeepUITests-Runner.app/PlugIns/TrueKeepUITests.xctest/SystemExtensions --scan-folder /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeepUITests-Runner.app/PlugIns/TrueKeepUITests.xctest/Extensions --platform iphonesimulator --toolchain /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v27.1.266.1.3yvLkT/Metal.xctoolchain --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /tmp/truekeep-merge-cached-20261102/Build/Products/Debug-iphonesimulator/TrueKeepUITests-Runner.app/PlugIns/TrueKeepUITests.xctest/Frameworks --strip-bitcode --scan-executable /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib/libXCTestSwiftSupport.dylib --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/TrueKeep.build/Debug-iphonesimulator/TrueKeepUITests.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os
+
+PruneExplicitPrecompiledModules /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /tmp/truekeep-merge-cached-20261102/SDKExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /tmp/truekeep-merge-cached-20261102/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+2026-11-05 15:20:07.760 xcodebuild[93198:24362821] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 15:20:08.656438+0800 TrueKeepUITests-Runner[93633:24365142] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-11-05 15:20:09.776.
+Test Suite 'TrueKeepUITests.xctest' started at 2026-11-05 15:20:09.776.
+Test Suite 'TrueKeepUITests' started at 2026-11-05 15:20:09.776.
+Test Case '-[TrueKeepUITests.TrueKeepUITests testCriticalScreensPassAccessibilityAudit]' started.
+    t =     0.00s Start Test at 2026-11-05 15:20:09.777
+    t =     0.02s Set Up
+    t =     0.02s     Open app.truekeep.ios
+    t =     0.02s         Launch app.truekeep.ios
+2026-11-05 15:20:09.862 xcodebuild[93198:24362821] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 15:20:09.862 xcodebuild[93198:24362821] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 15:20:09.887 xcodebuild[93198:24362821] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     0.70s             Setting up automation session
+    t =     1.56s             Wait for app.truekeep.ios to idle
+    t =     2.83s Terminate app.truekeep.ios:93671
+2026-11-05 15:20:12.620 xcodebuild[93198:24362821] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 15:20:12.620 xcodebuild[93198:24362821] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+objc[93633]: Class UIAccessibilityLoaderWebShared is implemented in both /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x106eb4310) and /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x106774398). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     3.85s Open app.truekeep.ios
+    t =     3.85s     Launch app.truekeep.ios
+2026-11-05 15:20:13.630 xcodebuild[93198:24362821] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 15:20:13.630 xcodebuild[93198:24362821] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 15:20:13.656 xcodebuild[93198:24362821] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     4.06s         Setting up automation session
+    t =     5.00s         Wait for app.truekeep.ios to idle
+    t =     8.30s Added attachment named 'accessibility-passed-welcome'
+    t =     8.30s Tap "truekeep.permission.not-now" Button
+    t =     8.30s     Wait for app.truekeep.ios to idle
+    t =     8.30s     Find the "truekeep.permission.not-now" Button
+    t =     8.33s     Check for interrupting elements affecting "truekeep.permission.not-now" Button
+    t =     8.35s     Synthesize event
+    t =     8.64s     Wait for app.truekeep.ios to idle
+    t =     8.64s Waiting 5.0s for "truekeep.cleanup.results" ScrollView to exist
+    t =     9.66s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.cleanup.results" ScrollView`
+    t =     9.66s         Checking existence of `"truekeep.cleanup.results" ScrollView`
+    t =    11.62s Added attachment named 'accessibility-passed-home-photo-access-prompt'
+    t =    11.62s Terminate app.truekeep.ios:93698
+2026-11-05 15:20:21.407 xcodebuild[93198:24362821] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 15:20:21.407 xcodebuild[93198:24362821] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =    12.67s Open app.truekeep.ios
+    t =    12.67s     Launch app.truekeep.ios
+2026-11-05 15:20:22.453 xcodebuild[93198:24362821] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 15:20:22.453 xcodebuild[93198:24362821] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 15:20:22.474 xcodebuild[93198:24362821] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =    12.88s         Setting up automation session
+    t =    13.75s         Wait for app.truekeep.ios to idle
+    t =    15.00s Tap "truekeep.welcome.learn-more" Button
+    t =    15.00s     Wait for app.truekeep.ios to idle
+    t =    15.01s     Find the "truekeep.welcome.learn-more" Button
+    t =    15.08s     Check for interrupting elements affecting "truekeep.welcome.learn-more" Button
+    t =    15.10s     Synthesize event
+    t =    15.39s     Wait for app.truekeep.ios to idle
+    t =    15.41s Waiting 5.0s for "truekeep.settings.topic.how-it-works" Button to exist
+    t =    16.43s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.settings.topic.how-it-works" Button`
+    t =    16.43s         Checking existence of `"truekeep.settings.topic.how-it-works" Button`
+    t =    18.68s Added attachment named 'accessibility-passed-settings'
+    t =    18.68s Terminate app.truekeep.ios:93900
+2026-11-05 15:20:28.466 xcodebuild[93198:24362821] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 15:20:28.467 xcodebuild[93198:24362821] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =    19.73s Open app.truekeep.ios
+    t =    19.73s     Launch app.truekeep.ios
+2026-11-05 15:20:29.511 xcodebuild[93198:24362821] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 15:20:29.511 xcodebuild[93198:24362821] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 15:20:29.543 xcodebuild[93198:24362821] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =    19.94s         Setting up automation session
+    t =    20.84s         Wait for app.truekeep.ios to idle
+    t =    22.29s Waiting 5.0s for "truekeep.cleanup.results" ScrollView to exist
+    t =    23.32s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.cleanup.results" ScrollView`
+    t =    23.32s         Checking existence of `"truekeep.cleanup.results" ScrollView`
+    t =    23.48s Waiting 5.0s for "truekeep.cleanup.task.screenshots-chat-03" Button to exist
+    t =    24.49s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.cleanup.task.screenshots-chat-03" Button`
+    t =    24.49s         Checking existence of `"truekeep.cleanup.task.screenshots-chat-03" Button`
+    t =    24.54s Find the "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =    27.05s Added attachment named 'accessibility-passed-home-review-queue'
+    t =    27.05s Waiting 5.0s for "truekeep.cleanup.task.screenshots-chat-03" Button to exist
+    t =    28.08s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.cleanup.task.screenshots-chat-03" Button`
+    t =    28.08s         Checking existence of `"truekeep.cleanup.task.screenshots-chat-03" Button`
+    t =    28.14s Find the "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =    28.21s Tap "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =    28.21s     Wait for app.truekeep.ios to idle
+    t =    28.21s     Find the "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =    28.26s     Check for interrupting elements affecting "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =    28.29s     Synthesize event
+    t =    28.58s     Wait for app.truekeep.ios to idle
+    t =    29.45s Waiting 5.0s for "截图复核" StaticText to exist
+    t =    30.46s     Checking `Expect predicate `existsNoRetry == 1` for object "截图复核" StaticText`
+    t =    30.46s         Checking existence of `"截图复核" StaticText`
+    t =    32.76s Added attachment named 'accessibility-passed-screenshot-review'
+    t =    32.76s Waiting 5.0s for "truekeep.review.add-to-review-bin" Button to exist
+    t =    33.79s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.review.add-to-review-bin" Button`
+    t =    33.80s         Checking existence of `"truekeep.review.add-to-review-bin" Button`
+    t =    33.84s Tap "truekeep.review.add-to-review-bin" Button
+    t =    33.84s     Wait for app.truekeep.ios to idle
+    t =    33.84s     Find the "truekeep.review.add-to-review-bin" Button
+    t =    33.88s     Check for interrupting elements affecting "truekeep.review.add-to-review-bin" Button
+    t =    33.91s     Synthesize event
+    t =    34.20s     Wait for app.truekeep.ios to idle
+    t =    34.81s Waiting 5.0s for "truekeep.review-bin.delete-selection" Button to exist
+    t =    35.83s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.review-bin.delete-selection" Button`
+    t =    35.83s         Checking existence of `"truekeep.review-bin.delete-selection" Button`
+    t =    37.94s Added attachment named 'accessibility-passed-review-bin'
+    t =    37.94s Tap "truekeep.review-bin.delete-selection" Button
+    t =    37.94s     Wait for app.truekeep.ios to idle
+    t =    37.94s     Find the "truekeep.review-bin.delete-selection" Button
+    t =    37.96s     Check for interrupting elements affecting "truekeep.review-bin.delete-selection" Button
+    t =    37.98s     Synthesize event
+    t =    38.28s     Wait for app.truekeep.ios to idle
+    t =    38.63s Waiting 5.0s for "truekeep.delete.confirm" Button to exist
+    t =    39.64s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.delete.confirm" Button`
+    t =    39.64s         Checking existence of `"truekeep.delete.confirm" Button`
+    t =    41.78s Find the Any (Descendant with identity binding to AX element pid: 93948, elementOrHash.elementID: 4425337472.250)
+    t =    41.80s Requesting snapshot of accessibility hierarchy for app with pid 93948
+    t =    41.84s Find: Descendant with identity binding to AX element pid: 93948, elementOrHash.elementID: 4425337472.250
+    t =    41.87s Requesting snapshot of accessibility hierarchy for app with pid 93948
+    t =    41.91s Find: Descendant with identity binding to AX element pid: 93948, elementOrHash.elementID: 4425337472.250
+    t =    41.91s Requesting snapshot of accessibility hierarchy for app with pid 93948
+delete-confirmation: Text clipped
+Text of this SwiftUI.AccessibilityNode may be clipped at larger Dynamic Type sizes.
+Attributes: StaticText, 0x11098ef80, {{39.7, 551.4}, {111.4, 18.6}}, label: 'iCloud 照片同步'
+Element subtree:
+ →StaticText, 0x11098ef80, {{39.7, 551.4}, {111.4, 18.6}}, label: 'iCloud 照片同步'
+Path to element:
+ →Application, 0x110868500, pid: 93948, label: '留真'
+  ↳Window (Main), 0x110868640, {{0.0, 0.0}, {402.0, 874.0}}
+   ↳Other, 0x11098e1c0, {{0.0, 0.0}, {402.0, 874.0}}
+    ↳Other, 0x11098e440, {{8.0, 415.0}, {386.0, 451.0}}
+     ↳Other, 0x11098e580, {{8.0, 415.0}, {386.0, 451.0}}
+      ↳Other, 0x11098e6c0, {{8.0, 415.0}, {386.0, 451.0}}
+       ↳Other, 0x11098e800, {{8.0, 415.0}, {386.0, 451.0}}
+        ↳Other, 0x11098e940, {{8.0, 415.0}, {386.0, 451.0}}
+         ↳ScrollView, 0x11098ea80, {{8.0, 415.0}, {386.0, 451.0}}
+          ↳Other, 0x11098ebc0, {{8.0, 415.0}, {386.0, 344.4}}
+           ↳StaticText, 0x11098ef80, {{39.7, 551.4}, {111.4, 18.6}}, label: 'iCloud 照片同步'
+Query chain:
+ →Find: Target Application 'app.truekeep.ios'
+  Output: {
+    Application, 0x110aab480, pid: 93948, label: '留真'
+  }
+  ↪︎Find: Descendant with identity binding to AX element pid: 93948, elementOrHash.elementID: 4425337472.250
+    Output: {
+      StaticText, 0x110aaa080, {{39.7, 551.4}, {111.4, 18.6}}, label: 'iCloud 照片同步'
+    }
+
+    t =    41.95s Added attachment named 'accessibility-issue-delete-confirmation'
+    t =    41.95s Find the Any (Descendant with identity binding to AX element pid: 93948, elementOrHash.elementID: 4425337472.250)
+    t =    41.97s Checking existence of `"iCloud 照片同步" StaticText`
+    t =    41.99s Find the "iCloud 照片同步" StaticText
+/Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeepUITests/TrueKeepUITests.swift:1138: error: -[TrueKeepUITests.TrueKeepUITests testCriticalScreensPassAccessibilityAudit] : Text clipped
+    t =    42.10s Tear Down
+    t =    42.10s     Terminate app.truekeep.ios:93948
+2026-11-05 15:20:51.891 xcodebuild[93198:24362821] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 15:20:51.891 xcodebuild[93198:24362821] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testCriticalScreensPassAccessibilityAudit]' failed (43.243 seconds).
+2026-11-05 15:20:53.021720+0800 TrueKeepUITests-Runner[93633:24365142] [Default] Flushing outgoing messages to the IDE with timeout 600.00s
+2026-11-05 15:20:53.022139+0800 TrueKeepUITests-Runner[93633:24367055] [Default] Received confirmation that IDE processed remaining outgoing messages
+2026-11-05 15:20:53.040 xcodebuild[93198:24362821] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 15:20:53.040 xcodebuild[93198:24362821] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 15:20:53.307 xcodebuild[93198:24362821] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 15:20:53.723213+0800 TrueKeepUITests-Runner[94218:24367952] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+
+Restarting after unexpected exit, crash, or test timeout; summary will include totals from previous launches.
+
+Test Suite 'Selected tests' started at 2026-11-05 15:20:54.307.
+Test Suite 'TrueKeepUITests.xctest' started at 2026-11-05 15:20:54.308.
+Test Suite 'TrueKeepUITests' started at 2026-11-05 15:20:54.308.
+Test Case '-[TrueKeepUITests.TrueKeepUITests testRedesignBinFailureAndMoveOut]' started.
+    t =     0.00s Start Test at 2026-11-05 15:20:54.308
+    t =     0.02s Set Up
+    t =     0.02s     Open app.truekeep.ios
+    t =     0.02s         Launch app.truekeep.ios
+2026-11-05 15:20:54.331 xcodebuild[93198:24362821] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 15:20:54.332 xcodebuild[93198:24362821] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 15:20:54.349 xcodebuild[93198:24362821] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     0.23s             Setting up automation session
+    t =     1.08s             Wait for app.truekeep.ios to idle
+    t =     2.33s Tap "truekeep.welcome.learn-more" Button
+    t =     2.33s     Wait for app.truekeep.ios to idle
+    t =     2.33s     Find the "truekeep.welcome.learn-more" Button
+    t =     2.37s     Check for interrupting elements affecting "truekeep.welcome.learn-more" Button
+    t =     2.38s     Synthesize event
+objc[94218]: Class UIAccessibilityLoaderWebShared is implemented in both /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x10afac310) and /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x10a6b0398). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     2.68s     Wait for app.truekeep.ios to idle
+    t =     2.68s Waiting 5.0s for "truekeep.settings.topic.how-it-works" Button to exist
+    t =     3.69s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.settings.topic.how-it-works" Button`
+    t =     3.69s         Checking existence of `"truekeep.settings.topic.how-it-works" Button`
+    t =     3.75s Tap "首页" Button
+    t =     3.75s     Wait for app.truekeep.ios to idle
+    t =     3.76s     Find the "首页" Button
+    t =     3.79s     Check for interrupting elements affecting "house" Button
+    t =     3.82s     Synthesize event
+    t =     4.11s     Wait for app.truekeep.ios to idle
+    t =     5.65s Waiting 5.0s for "truekeep.cleanup.results" ScrollView to exist
+    t =     6.68s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.cleanup.results" ScrollView`
+    t =     6.68s         Checking existence of `"truekeep.cleanup.results" ScrollView`
+    t =     6.77s Waiting 5.0s for "truekeep.cleanup.task.similar-family-12" Button to exist
+    t =     7.80s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.cleanup.task.similar-family-12" Button`
+    t =     7.80s         Checking existence of `"truekeep.cleanup.task.similar-family-12" Button`
+    t =     7.87s Find the "truekeep.cleanup.task.similar-family-12" Button
+    t =     7.93s Tap "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =     7.93s     Wait for app.truekeep.ios to idle
+    t =     7.93s     Find the "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =     7.97s     Check for interrupting elements affecting "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =     8.00s     Synthesize event
+    t =     8.29s     Wait for app.truekeep.ios to idle
+    t =     9.13s Tap "truekeep.review.add-to-review-bin" Button
+    t =     9.13s     Wait for app.truekeep.ios to idle
+    t =     9.13s     Find the "truekeep.review.add-to-review-bin" Button
+    t =     9.19s     Check for interrupting elements affecting "truekeep.review.add-to-review-bin" Button
+    t =     9.23s     Synthesize event
+    t =     9.52s     Wait for app.truekeep.ios to idle
+    t =    10.11s Waiting 5.0s for "truekeep.review-bin.restore-selection" Button to exist
+    t =    11.13s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.review-bin.restore-selection" Button`
+    t =    11.13s         Checking existence of `"truekeep.review-bin.restore-selection" Button`
+    t =    11.17s Find the "truekeep.review-bin.restore-selection" Button
+    t =    11.30s Added attachment named 'redesign-bin-pending'
+    t =    11.30s Tap "truekeep.review-bin.delete-selection" Button
+    t =    11.30s     Wait for app.truekeep.ios to idle
+    t =    11.30s     Find the "truekeep.review-bin.delete-selection" Button
+    t =    11.32s     Check for interrupting elements affecting "truekeep.review-bin.delete-selection" Button
+    t =    11.34s     Synthesize event
+    t =    11.63s     Wait for app.truekeep.ios to idle
+    t =    12.00s Tap "truekeep.delete.confirm" Button
+    t =    12.00s     Wait for app.truekeep.ios to idle
+    t =    12.01s     Find the "truekeep.delete.confirm" Button
+    t =    12.05s     Check for interrupting elements affecting "truekeep.delete.confirm" Button
+    t =    12.08s     Synthesize event
+    t =    12.38s     Wait for app.truekeep.ios to idle
+    t =    12.78s Waiting 5.0s for "删除未完成" StaticText to exist
+    t =    13.80s     Checking `Expect predicate `existsNoRetry == 1` for object "删除未完成" StaticText`
+    t =    13.80s         Checking existence of `"删除未完成" StaticText`
+    t =    13.85s Find the "truekeep.review-bin.delete-selection" Button
+    t =    13.99s Added attachment named 'redesign-bin-delete-failure'
+    t =    13.99s Tap "truekeep.review-bin.restore-selection" Button
+    t =    13.99s     Wait for app.truekeep.ios to idle
+    t =    13.99s     Find the "truekeep.review-bin.restore-selection" Button
+    t =    14.02s     Check for interrupting elements affecting "truekeep.review-bin.restore-selection" Button
+    t =    14.04s     Synthesize event
+    t =    14.33s     Wait for app.truekeep.ios to idle
+    t =    14.85s Waiting 5.0s for "复核箱为空" StaticText to exist
+    t =    15.88s     Checking `Expect predicate `existsNoRetry == 1` for object "复核箱为空" StaticText`
+    t =    15.88s         Checking existence of `"复核箱为空" StaticText`
+    t =    16.00s Added attachment named 'redesign-bin-moved-out'
+    t =    16.00s Tear Down
+    t =    16.00s     Terminate app.truekeep.ios:94222
+2026-11-05 15:21:10.321 xcodebuild[93198:24362821] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 15:21:10.322 xcodebuild[93198:24362821] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testRedesignBinFailureAndMoveOut]' passed (17.106 seconds).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testRedesignReviewAndConfirmationAtMaximumTextSize]' started.
+    t =     0.00s Start Test at 2026-11-05 15:21:11.416
+    t =     0.02s Set Up
+    t =     0.02s     Open app.truekeep.ios
+    t =     0.02s         Launch app.truekeep.ios
+2026-11-05 15:21:11.438 xcodebuild[93198:24362821] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 15:21:11.438 xcodebuild[93198:24362821] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 15:21:11.454 xcodebuild[93198:24362821] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     0.23s             Setting up automation session
+    t =     1.09s             Wait for app.truekeep.ios to idle
+    t =     2.35s Terminate app.truekeep.ios:94324
+2026-11-05 15:21:13.772 xcodebuild[93198:24362821] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 15:21:13.772 xcodebuild[93198:24362821] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     3.39s Open app.truekeep.ios
+    t =     3.39s     Launch app.truekeep.ios
+2026-11-05 15:21:14.813 xcodebuild[93198:24362821] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 15:21:14.814 xcodebuild[93198:24362821] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 15:21:14.834 xcodebuild[93198:24362821] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     3.61s         Setting up automation session
+    t =     4.97s         Wait for app.truekeep.ios to idle
+    t =     6.42s Checking existence of `"truekeep.cleanup.task.screenshots-chat-03" Button`
+    t =     6.54s Find the "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =     6.59s Checking existence of `"truekeep.cleanup.task.screenshots-chat-03" Button`
+    t =     6.62s Find the "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =     6.66s Find the Target Application 'app.truekeep.ios'
+    t =     6.68s Swipe up Target Application 'app.truekeep.ios'
+    t =     6.68s     Wait for app.truekeep.ios to idle
+    t =     6.68s     Find the Target Application 'app.truekeep.ios'
+    t =     6.71s     Check for interrupting elements affecting "留真" Application
+    t =     6.74s     Synthesize event
+    t =     7.22s     Wait for app.truekeep.ios to idle
+    t =     9.45s Checking existence of `"truekeep.cleanup.task.screenshots-chat-03" Button`
+    t =     9.52s Find the "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =     9.58s Checking existence of `"truekeep.cleanup.task.screenshots-chat-03" Button`
+    t =     9.62s Find the "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =     9.67s Tap "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =     9.67s     Wait for app.truekeep.ios to idle
+    t =     9.67s     Find the "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =     9.71s     Check for interrupting elements affecting "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =     9.75s     Synthesize event
+    t =    10.04s     Wait for app.truekeep.ios to idle
+    t =    10.91s Waiting 5.0s for "truekeep.review.add-to-review-bin" Button to exist
+    t =    11.93s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.review.add-to-review-bin" Button`
+    t =    11.93s         Checking existence of `"truekeep.review.add-to-review-bin" Button`
+    t =    11.98s Find the "truekeep.review.add-to-review-bin" Button
+    t =    12.13s Added attachment named 'redesign-review-maximum-text'
+    t =    12.13s Tap "truekeep.review.add-to-review-bin" Button
+    t =    12.13s     Wait for app.truekeep.ios to idle
+    t =    12.13s     Find the "truekeep.review.add-to-review-bin" Button
+    t =    12.16s     Check for interrupting elements affecting "truekeep.review.add-to-review-bin" Button
+    t =    12.20s     Synthesize event
+    t =    12.49s     Wait for app.truekeep.ios to idle
+    t =    13.07s Waiting 5.0s for "truekeep.review-bin.delete-selection" Button to exist
+    t =    14.08s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.review-bin.delete-selection" Button`
+    t =    14.08s         Checking existence of `"truekeep.review-bin.delete-selection" Button`
+    t =    14.20s Added attachment named 'redesign-bin-maximum-text'
+    t =    14.20s Tap "truekeep.review-bin.delete-selection" Button
+    t =    14.20s     Wait for app.truekeep.ios to idle
+    t =    14.21s     Find the "truekeep.review-bin.delete-selection" Button
+    t =    14.23s     Check for interrupting elements affecting "truekeep.review-bin.delete-selection" Button
+    t =    14.25s     Synthesize event
+    t =    14.54s     Wait for app.truekeep.ios to idle
+    t =    14.90s Checking existence of `"truekeep.delete.cancel" Button`
+    t =    14.94s Find the "truekeep.delete.cancel" Button
+    t =    14.98s Checking existence of `"truekeep.delete.cancel" Button`
+    t =    15.01s Find the "truekeep.delete.cancel" Button
+    t =    15.03s Find the Target Application 'app.truekeep.ios'
+    t =    15.05s Swipe up Target Application 'app.truekeep.ios'
+    t =    15.05s     Wait for app.truekeep.ios to idle
+    t =    15.05s     Find the Target Application 'app.truekeep.ios'
+    t =    15.07s     Check for interrupting elements affecting "留真" Application
+    t =    15.09s     Synthesize event
+    t =    15.58s     Wait for app.truekeep.ios to idle
+    t =    16.24s Checking existence of `"truekeep.delete.cancel" Button`
+    t =    16.28s Find the "truekeep.delete.cancel" Button
+    t =    16.31s Checking existence of `"truekeep.delete.cancel" Button`
+    t =    16.34s Find the "truekeep.delete.cancel" Button
+    t =    16.37s Find the Target Application 'app.truekeep.ios'
+    t =    16.39s Swipe up Target Application 'app.truekeep.ios'
+    t =    16.39s     Wait for app.truekeep.ios to idle
+    t =    16.39s     Find the Target Application 'app.truekeep.ios'
+    t =    16.41s     Check for interrupting elements affecting "留真" Application
+    t =    16.43s     Synthesize event
+    t =    16.92s     Wait for app.truekeep.ios to idle
+    t =    17.58s Checking existence of `"truekeep.delete.cancel" Button`
+    t =    17.61s Find the "truekeep.delete.cancel" Button
+    t =    17.64s Checking existence of `"truekeep.delete.cancel" Button`
+    t =    17.67s Find the "truekeep.delete.cancel" Button
+    t =    17.70s Find the "truekeep.delete.cancel" Button
+    t =    17.81s Added attachment named 'redesign-delete-confirm-maximum-text'
+    t =    17.81s Tap "truekeep.delete.cancel" Button
+    t =    17.81s     Wait for app.truekeep.ios to idle
+    t =    17.82s     Find the "truekeep.delete.cancel" Button
+    t =    17.84s     Check for interrupting elements affecting "truekeep.delete.cancel" Button
+    t =    17.86s     Synthesize event
+    t =    18.16s     Wait for app.truekeep.ios to idle
+    t =    18.52s Find the "truekeep.review-bin.delete-selection" Button
+    t =    18.55s Tear Down
+    t =    18.55s     Terminate app.truekeep.ios:94351
+2026-11-05 15:21:29.987 xcodebuild[93198:24362821] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 15:21:29.987 xcodebuild[93198:24362821] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testRedesignReviewAndConfirmationAtMaximumTextSize]' passed (19.693 seconds).
+Test Suite 'TrueKeepUITests' passed at 2026-11-05 15:21:31.109.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 36.799 (36.801) seconds
+Test Suite 'TrueKeepUITests.xctest' passed at 2026-11-05 15:21:31.110.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 36.799 (36.802) seconds
+Test Suite 'Selected tests' passed at 2026-11-05 15:21:31.111.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 36.799 (36.803) seconds
+2026-11-05 15:21:31.146 xcodebuild[93198:24362821] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 15:21:31.146 xcodebuild[93198:24362821] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 15:21:31.431 xcodebuild[93198:24362821] [MT] IDETestOperationsObserverDebug: 83.753 elapsed -- Testing started completed.
+2026-11-05 15:21:31.431 xcodebuild[93198:24362821] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-11-05 15:21:31.431 xcodebuild[93198:24362821] [MT] IDETestOperationsObserverDebug: 83.753 sec, +83.753 sec -- end
+
+Test session results, code coverage, and logs:
+	/tmp/TrueKeepUX-20261105-safety-layout.xcresult
+
+Failing tests:
+	TrueKeepUITests.testCriticalScreensPassAccessibilityAudit()
+
+** TEST FAILED **
+
+Testing started

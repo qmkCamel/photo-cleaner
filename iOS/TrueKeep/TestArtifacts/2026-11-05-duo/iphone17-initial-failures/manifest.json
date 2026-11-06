@@ -1,0 +1,98 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "642F2F40-1DF5-4C73-A382-494BBE4C53AB",
+        "deviceName" : "iPhone 17 Pro",
+        "exportedFileName" : "0794F035-7714-4162-BDF1-C48D51A2B15F.txt",
+        "isAssociatedWithFailure" : true,
+        "suggestedHumanReadableName" : "Complete Issue Description.txt"
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "642F2F40-1DF5-4C73-A382-494BBE4C53AB",
+        "deviceName" : "iPhone 17 Pro",
+        "exportedFileName" : "1A9976CA-A85A-4D3B-BDE3-2DA85A0EC614.png",
+        "isAssociatedWithFailure" : true,
+        "suggestedHumanReadableName" : "App Screenshot_0_10BE1883-ECA1-4B8D-AB47-011E12EBA533.png",
+        "timestamp" : 1793870400.572
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "642F2F40-1DF5-4C73-A382-494BBE4C53AB",
+        "deviceName" : "iPhone 17 Pro",
+        "exportedFileName" : "0D006384-8C8F-486D-A298-B7A0E9665B06.png",
+        "isAssociatedWithFailure" : true,
+        "suggestedHumanReadableName" : "Element Screenshot_1_72F768CA-5DE5-48E6-97F4-DDFB3BAFD333.png",
+        "timestamp" : 1793870400.572
+      }
+    ],
+    "testIdentifier" : "TrueKeepUITests/testCriticalScreensPassAccessibilityAudit()",
+    "testIdentifierURL" : "test://com.apple.xcode/TrueKeep/TrueKeepUITests/TrueKeepUITests/testCriticalScreensPassAccessibilityAudit"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "642F2F40-1DF5-4C73-A382-494BBE4C53AB",
+        "deviceName" : "iPhone 17 Pro",
+        "exportedFileName" : "18111A44-3A17-4402-95DD-ED83FD5E4DA2.txt",
+        "isAssociatedWithFailure" : true,
+        "suggestedHumanReadableName" : "Complete Issue Description.txt"
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "642F2F40-1DF5-4C73-A382-494BBE4C53AB",
+        "deviceName" : "iPhone 17 Pro",
+        "exportedFileName" : "2AD5FCA8-B7FF-4F21-B5D8-845B2D822D51.png",
+        "isAssociatedWithFailure" : true,
+        "suggestedHumanReadableName" : "App Screenshot_0_F3F3774A-9ACA-47E0-BC8F-B0810BF256EB.png",
+        "timestamp" : 1793870539.595
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "642F2F40-1DF5-4C73-A382-494BBE4C53AB",
+        "deviceName" : "iPhone 17 Pro",
+        "exportedFileName" : "C5D8346B-69FD-4443-8A65-4C747088C155.png",
+        "isAssociatedWithFailure" : true,
+        "suggestedHumanReadableName" : "Element Screenshot_1_BB1EFEF7-1105-406A-AA05-96CC22CC76C9.png",
+        "timestamp" : 1793870539.595
+      }
+    ],
+    "testIdentifier" : "TrueKeepUITests/testDuoDeletionSafetyTextAccessibility()",
+    "testIdentifierURL" : "test://com.apple.xcode/TrueKeep/TrueKeepUITests/TrueKeepUITests/testDuoDeletionSafetyTextAccessibility"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "642F2F40-1DF5-4C73-A382-494BBE4C53AB",
+        "deviceName" : "iPhone 17 Pro",
+        "exportedFileName" : "83595A75-3788-4DAA-8B90-DB52565E8161.txt",
+        "isAssociatedWithFailure" : true,
+        "suggestedHumanReadableName" : "Complete Issue Description.txt"
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "642F2F40-1DF5-4C73-A382-494BBE4C53AB",
+        "deviceName" : "iPhone 17 Pro",
+        "exportedFileName" : "53703568-8741-4945-B928-392EC2B44F2D.txt",
+        "isAssociatedWithFailure" : true,
+        "suggestedHumanReadableName" : "App UI hierarchy for app.truekeep_0_EA73319A-BE8C-4CB2-AEC9-AF778FB86AD4.ios",
+        "timestamp" : 1793870934.131
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "642F2F40-1DF5-4C73-A382-494BBE4C53AB",
+        "deviceName" : "iPhone 17 Pro",
+        "exportedFileName" : "F384DC58-BD94-4B48-B44F-C6B1BB94BA4B",
+        "isAssociatedWithFailure" : true,
+        "suggestedHumanReadableName" : "UI Snapshot 2026-11-05 at 05.28.54 下午",
+        "timestamp" : 1793870934.131
+      }
+    ],
+    "testIdentifier" : "TrueKeepUITests/testRedesignMenuDeletionShowsBusyAndSuccess()",
+    "testIdentifierURL" : "test://com.apple.xcode/TrueKeep/TrueKeepUITests/TrueKeepUITests/testRedesignMenuDeletionShowsBusyAndSuccess"
+  }
+]

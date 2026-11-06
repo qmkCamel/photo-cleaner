@@ -1,0 +1,1252 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -project iOS/TrueKeep/TrueKeep.xcodeproj -scheme TrueKeep -destination "platform=iOS Simulator,id=642F2F40-1DF5-4C73-A382-494BBE4C53AB" -derivedDataPath /tmp/truekeep-duo-20261105 -parallel-testing-enabled NO -collect-test-diagnostics never "-only-testing:TrueKeepTests" "-only-testing:TrueKeepUITests/LocalPhotoModelsUITests/testCancelAnalysisAndChangingGroupDiscardPendingResult" "-only-testing:TrueKeepUITests/TrueKeepUITests/testCriticalScreensPassAccessibilityAudit" "-only-testing:TrueKeepUITests/TrueKeepUITests/testDirectDeleteShowsBusyStateAndRefreshesHomeTaskAfterSuccess" "-only-testing:TrueKeepUITests/TrueKeepUITests/testDuoDeletionSafetyTextAccessibility" "-only-testing:TrueKeepUITests/TrueKeepUITests/testDuoReportRotationFailureAndRetry" "-only-testing:TrueKeepUITests/TrueKeepUITests/testRedesignMenuDeletionShowsBusyAndSuccess" "-only-testing:TrueKeepUITests/TrueKeepUITests/testRedesignReviewAndConfirmationAtMaximumTextSize" -resultBundlePath /tmp/TrueKeepDuo-20261105-iphone17-recheck.xcresult CODE_SIGNING_ALLOWED=NO
+
+Build settings from command line:
+    CODE_SIGNING_ALLOWED = NO
+
+Resolve Package Graph
+
+
+Resolved source packages:
+  Jinja: https://github.com/huggingface/swift-jinja.git @ 2.5.2
+  yyjson: https://github.com/ibireme/yyjson.git @ 0.12.0
+  swift-collections: https://github.com/apple/swift-collections.git @ 1.7.4
+  swift-numerics: https://github.com/apple/swift-numerics @ 1.1.1
+  mlx-swift: https://github.com/ml-explore/mlx-swift @ 0.32.3
+  LocalPhotoModels: /Users/edge/side/photo-cleaner/iOS/TrueKeep/Packages/LocalPhotoModels
+  mlx-swift-lm: https://github.com/ml-explore/mlx-swift-lm @ 3.32.3
+  swift-asn1: https://github.com/apple/swift-asn1.git @ 1.7.3
+  swift-syntax: https://github.com/swiftlang/swift-syntax.git @ 603.0.2
+  swift-crypto: https://github.com/apple/swift-crypto.git @ 4.5.2
+  swift-huggingface: https://github.com/huggingface/swift-huggingface.git @ 0.13.0
+  EventSource: https://github.com/mattt/EventSource.git @ 1.5.1
+  swift-transformers: https://github.com/huggingface/swift-transformers @ 1.3.0
+
+Writing result bundle at path:
+	/tmp/TrueKeepDuo-20261105-iphone17-recheck.xcresult
+
+2026-11-05 17:37:57.946 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+Test Suite 'All tests' started at 2026-11-05 17:38:00.060.
+Test Suite 'TrueKeepTests.xctest' started at 2026-11-05 17:38:00.060.
+Test Suite 'AdaptiveLayoutTests' started at 2026-11-05 17:38:00.060.
+Test Case '-[TrueKeepTests.AdaptiveLayoutTests testGridBoundariesAndAccessibility]' started.
+Test Case '-[TrueKeepTests.AdaptiveLayoutTests testGridBoundariesAndAccessibility]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.AdaptiveLayoutTests testHorizontalFoldUsesUnobstructedPane]' started.
+Test Case '-[TrueKeepTests.AdaptiveLayoutTests testHorizontalFoldUsesUnobstructedPane]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.AdaptiveLayoutTests testPhysicalAsymmetryDoesNotMirrorWithLanguage]' started.
+Test Case '-[TrueKeepTests.AdaptiveLayoutTests testPhysicalAsymmetryDoesNotMirrorWithLanguage]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.AdaptiveLayoutTests testSafeBoundsAreNotDeductedTwice]' started.
+Test Case '-[TrueKeepTests.AdaptiveLayoutTests testSafeBoundsAreNotDeductedTwice]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.AdaptiveLayoutTests testShortWindowMovesActionsIntoScrollContent]' started.
+Test Case '-[TrueKeepTests.AdaptiveLayoutTests testShortWindowMovesActionsIntoScrollContent]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.AdaptiveLayoutTests testSplitRequiresEveryConstraint]' started.
+Test Case '-[TrueKeepTests.AdaptiveLayoutTests testSplitRequiresEveryConstraint]' passed (0.000 seconds).
+Test Suite 'AdaptiveLayoutTests' passed at 2026-11-05 17:38:00.066.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.004 (0.006) seconds
+Test Suite 'CleanupFlowStateTests' started at 2026-11-05 17:38:00.067.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testCancellingConfirmedKeepRestoresEligibilityWithoutSelectingForDeletion]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testCancellingConfirmedKeepRestoresEligibilityWithoutSelectingForDeletion]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testConfirmedKeepRemovesCandidateFromDeletionPathsAndTaskMetrics]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testConfirmedKeepRemovesCandidateFromDeletionPathsAndTaskMetrics]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testDeletingEarlierGroupPreservesCurrentReviewGroupByIdentity]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testDeletingEarlierGroupPreservesCurrentReviewGroupByIdentity]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testDeletingOtherCandidateKeepsInternalRecommendationAvailableForReview]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testDeletingOtherCandidateKeepsInternalRecommendationAvailableForReview]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testDeletionSummaryAccumulatesUniqueAssetsAcrossBatches]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testDeletionSummaryAccumulatesUniqueAssetsAcrossBatches]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testDirectDeletionOfInternallyRankedCandidateRebuildsTaskWithoutRecommendationCopy]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testDirectDeletionOfInternallyRankedCandidateRebuildsTaskWithoutRecommendationCopy]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testDirectDeletionOnlyRemovesMatchingGroupWhenCategoriesRepeat]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testDirectDeletionOnlyRemovesMatchingGroupWhenCategoriesRepeat]' passed (0.009 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testDirectDeletionRemovesCandidatesAndSynchronizesHomeTaskAndReviewBin]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testDirectDeletionRemovesCandidatesAndSynchronizesHomeTaskAndReviewBin]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testDisabledRecommendationCountsRawRecommendationInTaskMetrics]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testDisabledRecommendationCountsRawRecommendationInTaskMetrics]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testFailedDirectDeletionPreservesCandidatesAndSelection]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testFailedDirectDeletionPreservesCandidatesAndSelection]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testFailedPhotoDeletionKeepsItemsAndShowsError]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testFailedPhotoDeletionKeepsItemsAndShowsError]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testHidingProtectedNonSimilarCandidatesKeepsSimilarReferenceOnly]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testHidingProtectedNonSimilarCandidatesKeepsSimilarReferenceOnly]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testMovingOutOfBinOnlyRemovesBufferRecords]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testMovingOutOfBinOnlyRemovesBufferRecords]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testNewScanStateDoesNotCarryDeletionSummary]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testNewScanStateDoesNotCarryDeletionSummary]' passed (0.002 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testPartialDirectDeletionRemovesSuccessAndKeepsFailuresSelected]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testPartialDirectDeletionRemovesSuccessAndKeepsFailuresSelected]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testPartialPhotoDeletionRemovesOnlySuccessesAndRebuildsRemainingTask]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testPartialPhotoDeletionRemovesOnlySuccessesAndRebuildsRemainingTask]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testRecommendedKeepCapabilityIsSuppressedAndCandidateCanBeToggledNormally]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testRecommendedKeepCapabilityIsSuppressedAndCandidateCanBeToggledNormally]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testReportExportContainsReferencesAndStatisticsNotPhotoContent]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testReportExportContainsReferencesAndStatisticsNotPhotoContent]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testReviewGroupNavigationMovesBetweenGroupsAndRefreshesSelection]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testReviewGroupNavigationMovesBetweenGroupsAndRefreshesSelection]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testReviewGroupNavigationSkipsGroupsWithOnlyConfirmedKeeps]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testReviewGroupNavigationSkipsGroupsWithOnlyConfirmedKeeps]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testReviewSelectionMovesIntoReviewBinBeforeDeletion]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testReviewSelectionMovesIntoReviewBinBeforeDeletion]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSampleTasksEachOpenAReviewGroup]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSampleTasksEachOpenAReviewGroup]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSelectedReviewBinAssetIDsOnlyIncludesSelectedItems]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSelectedReviewBinAssetIDsOnlyIncludesSelectedItems]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSelectingMissingReviewGroupIDPreservesCurrentState]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSelectingMissingReviewGroupIDPreservesCurrentState]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSelectingReviewGroupByIDRefreshesDefaultSelection]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSelectingReviewGroupByIDRefreshesDefaultSelection]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSelectingSimilarReviewGroupByIDClearsDefaultSelectionWhenRecommendationIsDisabled]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSelectingSimilarReviewGroupByIDClearsDefaultSelectionWhenRecommendationIsDisabled]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSelectionCountAndBytesDeduplicateResourceIDs]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSelectionCountAndBytesDeduplicateResourceIDs]' passed (0.004 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSelectionSummaryUsesOnlySelectedResourcesAndReportsUnknownSize]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSelectionSummaryUsesOnlySelectedResourcesAndReportsUnknownSize]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSuccessfulDeletionClearsAllDerivedResultsAndExposesStructuredSummary]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSuccessfulDeletionClearsAllDerivedResultsAndExposesStructuredSummary]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSuccessfulRescanResetsSummaryWithoutRevivingDeletedOrKeptItems]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSuccessfulRescanResetsSummaryWithoutRevivingDeletedOrKeptItems]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testTogglingAllReviewCandidatesIncludesInternalRecommendationWhenCapabilityIsDisabled]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testTogglingAllReviewCandidatesIncludesInternalRecommendationWhenCapabilityIsDisabled]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testTogglingFullySelectedReviewGroupClearsAllCurrentCandidates]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testTogglingFullySelectedReviewGroupClearsAllCurrentCandidates]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testZeroStorageFormattingUsesNumericValue]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testZeroStorageFormattingUsesNumericValue]' passed (0.001 seconds).
+Test Suite 'CleanupFlowStateTests' passed at 2026-11-05 17:38:00.109.
+	 Executed 33 tests, with 0 failures (0 unexpected) in 0.034 (0.042) seconds
+Test Suite 'DeletionCoordinatorTests' started at 2026-11-05 17:38:00.109.
+Test Case '-[TrueKeepTests.DeletionCoordinatorTests testAllInvalidCannotSubmitAndCancelHasExplicitFeedback]' started.
+Test Case '-[TrueKeepTests.DeletionCoordinatorTests testAllInvalidCannotSubmitAndCancelHasExplicitFeedback]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.DeletionCoordinatorTests testChangedSnapshotNeedsAnotherExplicitConfirmation]' started.
+Test Case '-[TrueKeepTests.DeletionCoordinatorTests testChangedSnapshotNeedsAnotherExplicitConfirmation]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.DeletionCoordinatorTests testDuplicateSubmissionAndDismissWhileRunning]' started.
+Test Case '-[TrueKeepTests.DeletionCoordinatorTests testDuplicateSubmissionAndDismissWhileRunning]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.DeletionCoordinatorTests testFailureReleasesLockWithoutAutomaticRetry]' started.
+Test Case '-[TrueKeepTests.DeletionCoordinatorTests testFailureReleasesLockWithoutAutomaticRetry]' passed (0.001 seconds).
+Test Suite 'DeletionCoordinatorTests' passed at 2026-11-05 17:38:00.114.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.004 (0.005) seconds
+Test Suite 'LocalPhotoModelControllerTests' started at 2026-11-05 17:38:00.114.
+Test Case '-[TrueKeepTests.LocalPhotoModelControllerTests testAnalysisFailurePreservesReportAndSwitchClearsIt]' started.
+Test Case '-[TrueKeepTests.LocalPhotoModelControllerTests testAnalysisFailurePreservesReportAndSwitchClearsIt]' passed (0.022 seconds).
+Test Case '-[TrueKeepTests.LocalPhotoModelControllerTests testCancellationBlocksStaleResultsAndDuplicateSubmission]' started.
+Test Case '-[TrueKeepTests.LocalPhotoModelControllerTests testCancellationBlocksStaleResultsAndDuplicateSubmission]' passed (0.012 seconds).
+Test Case '-[TrueKeepTests.LocalPhotoModelControllerTests testDefaultIsDisabledAndModelSelectionPersists]' started.
+Test Case '-[TrueKeepTests.LocalPhotoModelControllerTests testDefaultIsDisabledAndModelSelectionPersists]' passed (0.005 seconds).
+Test Case '-[TrueKeepTests.LocalPhotoModelControllerTests testFixtureRequiresDeletionSafetyFlag]' started.
+Test Case '-[TrueKeepTests.LocalPhotoModelControllerTests testFixtureRequiresDeletionSafetyFlag]' passed (0.002 seconds).
+Test Case '-[TrueKeepTests.LocalPhotoModelControllerTests testMissingModelFailsWithoutStartingTask]' started.
+Test Case '-[TrueKeepTests.LocalPhotoModelControllerTests testMissingModelFailsWithoutStartingTask]' passed (0.003 seconds).
+Test Suite 'LocalPhotoModelControllerTests' passed at 2026-11-05 17:38:00.160.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.045 (0.046) seconds
+Test Suite 'PhotoDeletionResultTests' started at 2026-11-05 17:38:00.160.
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testDebugOptInPersistsAcrossDefaultsInstances]' started.
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testDebugOptInPersistsAcrossDefaultsInstances]' passed (0.008 seconds).
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testDebugSafetyPolicyDisablesDeletionByDefault]' started.
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testDebugSafetyPolicyDisablesDeletionByDefault]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testDebugSafetyPolicyRequiresExplicitDestructiveDeletionOptIn]' started.
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testDebugSafetyPolicyRequiresExplicitDestructiveDeletionOptIn]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testDeletionServiceHonorsDebugSafetyLockBeforeTouchingPhotos]' started.
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testDeletionServiceHonorsDebugSafetyLockBeforeTouchingPhotos]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testExplicitDeletionDisableWinsOverDestructiveDeletionOptIn]' started.
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testExplicitDeletionDisableWinsOverDestructiveDeletionOptIn]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testExplicitDisableRevokesSavedOptInEvenWithEnableArgument]' started.
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testExplicitDisableRevokesSavedOptInEvenWithEnableArgument]' passed (0.009 seconds).
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testReleaseDoesNotReadOrModifyDebugOptIn]' started.
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testReleaseDoesNotReadOrModifyDebugOptIn]' passed (0.005 seconds).
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testReleaseSafetyPolicyAllowsDeletionUnlessExplicitlyDisabled]' started.
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testReleaseSafetyPolicyAllowsDeletionUnlessExplicitlyDisabled]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testResolvedDeletionResultFailsWhenNothingDeleted]' started.
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testResolvedDeletionResultFailsWhenNothingDeleted]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testResolvedDeletionResultReportsPartialMissingAssets]' started.
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testResolvedDeletionResultReportsPartialMissingAssets]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testResolvedDeletionResultSucceedsWhenEveryRequestedAssetDeleted]' started.
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testResolvedDeletionResultSucceedsWhenEveryRequestedAssetDeleted]' passed (0.000 seconds).
+Test Suite 'PhotoDeletionResultTests' passed at 2026-11-05 17:38:00.189.
+	 Executed 11 tests, with 0 failures (0 unexpected) in 0.026 (0.028) seconds
+Test Suite 'PhotoLibraryAuthorizationTests' started at 2026-11-05 17:38:00.189.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testAllRangeHasNoDateBoundsAndRecentRangesExcludeUnknownDates]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testAllRangeHasNoDateBoundsAndRecentRangesExcludeUnknownDates]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testAuthorizedHomeScenarioStartsWithoutCompletedScan]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testAuthorizedHomeScenarioStartsWithoutCompletedScan]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testConfirmedKeepStorePersistsUniqueSortedIDsAndResets]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testConfirmedKeepStorePersistsUniqueSortedIDsAndResets]' passed (0.005 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testDeniedAndRestrictedAccessRequireSettings]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testDeniedAndRestrictedAccessRequireSettings]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testFullAndLimitedAccessCanScan]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testFullAndLimitedAccessCanScan]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testLaunchConfigurationRecognizesConfirmedKeepResetArgument]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testLaunchConfigurationRecognizesConfirmedKeepResetArgument]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testLimitedAccessExposesIncompleteResultsWarning]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testLimitedAccessExposesIncompleteResultsWarning]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testPermissionDecisionRoutesDeniedAndRestrictedToPermissionIssue]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testPermissionDecisionRoutesDeniedAndRestrictedToPermissionIssue]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testPermissionDecisionRoutesFullAndLimitedAccessToScan]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testPermissionDecisionRoutesFullAndLimitedAccessToScan]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testPermissionDecisionRoutesNotDeterminedToMainAfterIntroAction]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testPermissionDecisionRoutesNotDeterminedToMainAfterIntroAction]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testPhotoPermissionCopyDescribesOnDeviceVisualCandidatesWithSafetyLimits]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testPhotoPermissionCopyDescribesOnDeviceVisualCandidatesWithSafetyLimits]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testPhotoScanDateRangeDefaultsToLastMonth]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testPhotoScanDateRangeDefaultsToLastMonth]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testPostDeletionSuccessScenarioStartsOnLimitedHomeWithReconciledResults]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testPostDeletionSuccessScenarioStartsOnLimitedHomeWithReconciledResults]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testRecentPhotoScanDateRangesUseRollingCalendarMonthsAndClosedBounds]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testRecentPhotoScanDateRangesUseRollingCalendarMonthsAndClosedBounds]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testSampleCleanupDataRepresentsCompletedScanResults]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testSampleCleanupDataRepresentsCompletedScanResults]' passed (0.000 seconds).
+Test Suite 'PhotoLibraryAuthorizationTests' passed at 2026-11-05 17:38:00.205.
+	 Executed 15 tests, with 0 failures (0 unexpected) in 0.012 (0.016) seconds
+Test Suite 'PhotoLibraryScanPolicyTests' started at 2026-11-05 17:38:00.205.
+Test Case '-[TrueKeepTests.PhotoLibraryScanPolicyTests testBatchCollectStopsBeforeReadingWhenCancelled]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryScanPolicyTests testBatchCollectStopsBeforeReadingWhenCancelled]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryScanPolicyTests testBatchRangesCoverAllItemsWithoutOvershooting]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryScanPolicyTests testBatchRangesCoverAllItemsWithoutOvershooting]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryScanPolicyTests testUsesSmallerBatchSizeInLowPowerMode]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryScanPolicyTests testUsesSmallerBatchSizeInLowPowerMode]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryScanPolicyTests testUsesSmallerVisualBatchesWithoutTruncatingTheLibrary]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryScanPolicyTests testUsesSmallerVisualBatchesWithoutTruncatingTheLibrary]' passed (0.001 seconds).
+Test Suite 'PhotoLibraryScanPolicyTests' passed at 2026-11-05 17:38:00.208.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.002 (0.003) seconds
+Test Suite 'PhotoScanResultBuilderTests' started at 2026-11-05 17:38:00.208.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testAspectPreservingRasterDimensionsKeepLandscapePortraitAndPanoramaComposition]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testAspectPreservingRasterDimensionsKeepLandscapePortraitAndPanoramaComposition]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testBuildsScreenshotAndLargeVideoTasksFromAssetSnapshots]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testBuildsScreenshotAndLargeVideoTasksFromAssetSnapshots]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testBuildsVisualClassifierTasksFromClassifiedPhotoSnapshots]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testBuildsVisualClassifierTasksFromClassifiedPhotoSnapshots]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testConfirmedKeepIsFilteredFromNonSimilarScanTasks]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testConfirmedKeepIsFilteredFromNonSimilarScanTasks]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testConfirmedKeepRemainsProtectedReferenceInSimilarGroup]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testConfirmedKeepRemainsProtectedReferenceInSimilarGroup]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testCoreMLQualityScorerParsesNamedModelOutputs]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testCoreMLQualityScorerParsesNamedModelOutputs]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testExactDuplicateGrouperSeparatesStillLiveAndIncompleteResources]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testExactDuplicateGrouperSeparatesStillLiveAndIncompleteResources]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testExactDuplicateGroupUsesDistinctUserFacingCopy]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testExactDuplicateGroupUsesDistinctUserFacingCopy]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testExactDuplicateRequiresCompletedRefinementForEveryMarkedMember]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testExactDuplicateRequiresCompletedRefinementForEveryMarkedMember]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testFixtureCandidatesDoNotClaimPhotoAssetThumbnails]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testFixtureCandidatesDoNotClaimPhotoAssetThumbnails]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testHashFallbackRejectsMateriallyDifferentAspectRatios]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testHashFallbackRejectsMateriallyDifferentAspectRatios]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testInternalRecommendationStillCreatesReviewTaskWhenCapabilityIsDisabled]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testInternalRecommendationStillCreatesReviewTaskWhenCapabilityIsDisabled]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testOrientationNormalizerAppliesRightRotationBeforeAnalysis]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testOrientationNormalizerAppliesRightRotationBeforeAnalysis]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testPhotoImageRequestOptionsStayLocalForBothDeliveryModes]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testPhotoImageRequestOptionsStayLocalForBothDeliveryModes]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testPhotoImageRequestStrategyFallsBackToHighQualityImage]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testPhotoImageRequestStrategyFallsBackToHighQualityImage]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testPhotoImageRequestStrategyReturnsNilAfterBothLocalRequestsFail]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testPhotoImageRequestStrategyReturnsNilAfterBothLocalRequestsFail]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testPhotoImageRequestStrategyStopsAfterFastImageIsAvailable]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testPhotoImageRequestStrategyStopsAfterFastImageIsAvailable]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testRealScanCandidatesKeepPhotoAssetIdentifierForThumbnails]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testRealScanCandidatesKeepPhotoAssetIdentifierForThumbnails]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testRefinedFeaturePrintCanSplitCoarseSimilarGroup]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testRefinedFeaturePrintCanSplitCoarseSimilarGroup]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testRefinedQualityCanChangeRecommendedKeep]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testRefinedQualityCanChangeRecommendedKeep]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testRefinementCanRemoveCoarseBlurAndAccidentalFindings]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testRefinementCanRemoveCoarseBlurAndAccidentalFindings]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testRefinementSelectionIncludesAllSimilarMembersAndRiskBoundaryCandidates]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testRefinementSelectionIncludesAllSimilarMembersAndRiskBoundaryCandidates]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testResourceDigestAccumulatorHashesIncrementalChunks]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testResourceDigestAccumulatorHashesIncrementalChunks]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testResourceDigestOptionsNeverAllowNetworkAccess]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testResourceDigestOptionsNeverAllowNetworkAccess]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testResourceRequestCancellationHandlesCancellationBeforeRequestIDArrives]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testResourceRequestCancellationHandlesCancellationBeforeRequestIDArrives]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testSimilarVisualGroupKeepsInternalRankingButStartsWithNoDeletionSelection]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testSimilarVisualGroupKeepsInternalRankingButStartsWithNoDeletionSelection]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testUnavailableRefinementKeepsCandidateLowConfidenceAndUnselected]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testUnavailableRefinementKeepsCandidateLowConfidenceAndUnselected]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testUnclassifiedSnapshotsDoNotCreateVisualReviewTasks]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testUnclassifiedSnapshotsDoNotCreateVisualReviewTasks]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisionQualityScorerDoesNotTreatUtilityAsAccidental]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisionQualityScorerDoesNotTreatUtilityAsAccidental]' passed (0.010 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisionQualityScorerNormalizesAestheticsAndAveragesFaceQuality]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisionQualityScorerNormalizesAestheticsAndAveragesFaceQuality]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisionQualityScorerUsesOnlyExtremelyLowNonUtilityScoreAsAccidentalRisk]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisionQualityScorerUsesOnlyExtremelyLowNonUtilityScoreAsAccidentalRisk]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualAnalyzerFallsBackToHeuristicsWhenVisionScoringFails]' started.
+2026-11-05 17:38:00.326581+0800 TrueKeep[96846:24788551] [default] CSU exception: Failed to create espresso context.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualAnalyzerFallsBackToHeuristicsWhenVisionScoringFails]' passed (0.085 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualAnalyzerRetainsSourceAspectRatioAtBothStages]' started.
+2026-11-05 17:38:00.333648+0800 TrueKeep[96846:24788551] [default] CSU exception: Failed to create espresso context.
+2026-11-05 17:38:00.339744+0800 TrueKeep[96846:24788551] [default] CSU exception: Failed to create espresso context.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualAnalyzerRetainsSourceAspectRatioAtBothStages]' passed (0.012 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierDoesNotGroupNearHashesOutsideTimeWindow]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierDoesNotGroupNearHashesOutsideTimeWindow]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierDoesNotUseHashFallbackWhenFeaturePrintsAreComparableAndDistant]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierDoesNotUseHashFallbackWhenFeaturePrintsAreComparableAndDistant]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierFallsBackToPerceptualHashWhenFeaturePrintIsMissing]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierFallsBackToPerceptualHashWhenFeaturePrintIsMissing]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierGroupsNearHashesAndKeepsSharpestInput]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierGroupsNearHashesAndKeepsSharpestInput]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierMarksAccidentalAndBlurrySingles]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierMarksAccidentalAndBlurrySingles]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierPrefersFeaturePrintSimilarityOverPerceptualHash]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierPrefersFeaturePrintSimilarityOverPerceptualHash]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierUsesFaceCaptureQualityAsRecommendedKeepSupport]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierUsesFaceCaptureQualityAsRecommendedKeepSupport]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierUsesQualityAssessmentForBlurrySingles]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierUsesQualityAssessmentForBlurrySingles]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierUsesQualityScoreForRecommendedKeep]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierUsesQualityScoreForRecommendedKeep]' passed (0.001 seconds).
+Test Suite 'PhotoScanResultBuilderTests' passed at 2026-11-05 17:38:00.349.
+	 Executed 42 tests, with 0 failures (0 unexpected) in 0.131 (0.140) seconds
+Test Suite 'PhotoThumbnailRequestKeyTests' started at 2026-11-05 17:38:00.349.
+Test Case '-[TrueKeepTests.PhotoThumbnailRequestKeyTests testBuildsStablePixelCacheKeyFromAssetAndScaledSize]' started.
+Test Case '-[TrueKeepTests.PhotoThumbnailRequestKeyTests testBuildsStablePixelCacheKeyFromAssetAndScaledSize]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoThumbnailRequestKeyTests testClampsEmptyTargetSizeToSinglePixel]' started.
+Test Case '-[TrueKeepTests.PhotoThumbnailRequestKeyTests testClampsEmptyTargetSizeToSinglePixel]' passed (0.001 seconds).
+Test Suite 'PhotoThumbnailRequestKeyTests' passed at 2026-11-05 17:38:00.351.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.001 (0.002) seconds
+Test Suite 'PrivacyManifestTests' started at 2026-11-05 17:38:00.351.
+Test Case '-[TrueKeepTests.PrivacyManifestTests testPrivacyManifestDeclaresAppLocalUserDefaultsUsage]' started.
+Test Case '-[TrueKeepTests.PrivacyManifestTests testPrivacyManifestDeclaresAppLocalUserDefaultsUsage]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PrivacyManifestTests testPrivacyManifestDeclaresNoCollectionOrTracking]' started.
+Test Case '-[TrueKeepTests.PrivacyManifestTests testPrivacyManifestDeclaresNoCollectionOrTracking]' passed (0.001 seconds).
+Test Suite 'PrivacyManifestTests' passed at 2026-11-05 17:38:00.354.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.002 (0.003) seconds
+Test Suite 'PrivacySafetyTopicTests' started at 2026-11-05 17:38:00.354.
+Test Case '-[TrueKeepTests.PrivacySafetyTopicTests testSettingsTopicsHaveStableAccessibilityIdentifiers]' started.
+Test Case '-[TrueKeepTests.PrivacySafetyTopicTests testSettingsTopicsHaveStableAccessibilityIdentifiers]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PrivacySafetyTopicTests testSettingsTopicsHaveTappableDestinations]' started.
+Test Case '-[TrueKeepTests.PrivacySafetyTopicTests testSettingsTopicsHaveTappableDestinations]' passed (0.000 seconds).
+Test Suite 'PrivacySafetyTopicTests' passed at 2026-11-05 17:38:00.356.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.001 (0.002) seconds
+Test Suite 'PublicScanCapabilityCopyTests' started at 2026-11-05 17:38:00.356.
+Test Case '-[TrueKeepTests.PublicScanCapabilityCopyTests testPhotoPermissionCopyClaimsOnlyOnDeviceReviewCandidatesWithSafetyLimits]' started.
+Test Case '-[TrueKeepTests.PublicScanCapabilityCopyTests testPhotoPermissionCopyClaimsOnlyOnDeviceReviewCandidatesWithSafetyLimits]' passed (0.001 seconds).
+Test Suite 'PublicScanCapabilityCopyTests' passed at 2026-11-05 17:38:00.357.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'ReviewIterationTests' started at 2026-11-05 17:38:00.357.
+Test Case '-[TrueKeepTests.ReviewIterationTests testBatchRangesCoverBeyondBothFormerGlobalLimits]' started.
+Test Case '-[TrueKeepTests.ReviewIterationTests testBatchRangesCoverBeyondBothFormerGlobalLimits]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.ReviewIterationTests testCacheInvalidatesModifiedAssetsAndKeepsBoundedSize]' started.
+Test Case '-[TrueKeepTests.ReviewIterationTests testCacheInvalidatesModifiedAssetsAndKeepsBoundedSize]' passed (0.018 seconds).
+Test Case '-[TrueKeepTests.ReviewIterationTests testConfirmedKeepClearsBinAndRememberedSelectionWithoutEnablingRecommendation]' started.
+Test Case '-[TrueKeepTests.ReviewIterationTests testConfirmedKeepClearsBinAndRememberedSelectionWithoutEnablingRecommendation]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.ReviewIterationTests testConfirmedSimilarReferenceSurvivesPermissionReconciliation]' started.
+Test Case '-[TrueKeepTests.ReviewIterationTests testConfirmedSimilarReferenceSurvivesPermissionReconciliation]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.ReviewIterationTests testCorruptSessionThrowsAndRemainsUntouched]' started.
+Test Case '-[TrueKeepTests.ReviewIterationTests testCorruptSessionThrowsAndRemainsUntouched]' passed (0.004 seconds).
+Test Case '-[TrueKeepTests.ReviewIterationTests testCrossTimeDuplicatesNeedResourceEvidenceBeforeExactClassification]' started.
+Test Case '-[TrueKeepTests.ReviewIterationTests testCrossTimeDuplicatesNeedResourceEvidenceBeforeExactClassification]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.ReviewIterationTests testLatestConfirmedKeepStoreOverridesRestoredSnapshot]' started.
+Test Case '-[TrueKeepTests.ReviewIterationTests testLatestConfirmedKeepStoreOverridesRestoredSnapshot]' passed (0.014 seconds).
+Test Case '-[TrueKeepTests.ReviewIterationTests testPartialSelectionSurvivesGroupNavigation]' started.
+Test Case '-[TrueKeepTests.ReviewIterationTests testPartialSelectionSurvivesGroupNavigation]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.ReviewIterationTests testPermissionShrinkAndEmptyGroupAreSafeWithoutDeletionSummary]' started.
+Test Case '-[TrueKeepTests.ReviewIterationTests testPermissionShrinkAndEmptyGroupAreSafeWithoutDeletionSummary]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.ReviewIterationTests testRebuildKeepsCorruptFileBackup]' started.
+Test Case '-[TrueKeepTests.ReviewIterationTests testRebuildKeepsCorruptFileBackup]' passed (0.013 seconds).
+Test Case '-[TrueKeepTests.ReviewIterationTests testRescanMergeRetainsBinAndAppliesConfirmedKeeps]' started.
+Test Case '-[TrueKeepTests.ReviewIterationTests testRescanMergeRetainsBinAndAppliesConfirmedKeeps]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.ReviewIterationTests testSessionRoundTripAndExpirationNeverDeletePhotos]' started.
+Test Case '-[TrueKeepTests.ReviewIterationTests testSessionRoundTripAndExpirationNeverDeletePhotos]' passed (0.007 seconds).
+Test Case '-[TrueKeepTests.ReviewIterationTests testSuccessfulRescanResetsDeletionSummaryAndDoesNotResurrectDeletedItems]' started.
+Test Case '-[TrueKeepTests.ReviewIterationTests testSuccessfulRescanResetsDeletionSummaryAndDoesNotResurrectDeletedItems]' passed (0.001 seconds).
+Test Suite 'ReviewIterationTests' passed at 2026-11-05 17:38:00.422.
+	 Executed 13 tests, with 0 failures (0 unexpected) in 0.062 (0.065) seconds
+Test Suite 'TrueKeepAccessibilityTests' started at 2026-11-05 17:38:00.422.
+Test Case '-[TrueKeepTests.TrueKeepAccessibilityTests testAppSourcesDoNotUseFixedSizeTextFonts]' started.
+Test Case '-[TrueKeepTests.TrueKeepAccessibilityTests testAppSourcesDoNotUseFixedSizeTextFonts]' passed (0.029 seconds).
+Test Case '-[TrueKeepTests.TrueKeepAccessibilityTests testDynamicIdentifiersRemainStableForAutomation]' started.
+Test Case '-[TrueKeepTests.TrueKeepAccessibilityTests testDynamicIdentifiersRemainStableForAutomation]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.TrueKeepAccessibilityTests testPrimaryControlIdentifiersAreUniqueAndAutomationSafe]' started.
+Test Case '-[TrueKeepTests.TrueKeepAccessibilityTests testPrimaryControlIdentifiersAreUniqueAndAutomationSafe]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.TrueKeepAccessibilityTests testPrimaryControlIdentifiersCoverCriticalFlowActions]' started.
+Test Case '-[TrueKeepTests.TrueKeepAccessibilityTests testPrimaryControlIdentifiersCoverCriticalFlowActions]' passed (0.000 seconds).
+Test Suite 'TrueKeepAccessibilityTests' passed at 2026-11-05 17:38:00.454.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.031 (0.032) seconds
+Test Suite 'TrueKeepTests.xctest' passed at 2026-11-05 17:38:00.455.
+	 Executed 144 tests, with 0 failures (0 unexpected) in 0.356 (0.395) seconds
+Test Suite 'All tests' passed at 2026-11-05 17:38:00.455.
+	 Executed 144 tests, with 0 failures (0 unexpected) in 0.356 (0.395) seconds
+2026-11-05 17:38:00.469 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:00.469 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:00.742 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:01.422471+0800 TrueKeepUITests-Runner[96861:24788681] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-11-05 17:38:02.082.
+Test Suite 'TrueKeepUITests.xctest' started at 2026-11-05 17:38:02.082.
+Test Suite 'LocalPhotoModelsUITests' started at 2026-11-05 17:38:02.083.
+Test Case '-[TrueKeepUITests.LocalPhotoModelsUITests testCancelAnalysisAndChangingGroupDiscardPendingResult]' started.
+    t =     0.00s Start Test at 2026-11-05 17:38:02.084
+    t =     0.02s Set Up
+    t =     0.03s     Open app.truekeep.ios
+    t =     0.03s         Launch app.truekeep.ios
+2026-11-05 17:38:02.331 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:38:02.332 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:38:02.400 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     0.46s             Setting up automation session
+    t =     1.44s             Wait for app.truekeep.ios to idle
+    t =     2.98s     Tap "设置" Button
+    t =     2.98s         Wait for app.truekeep.ios to idle
+    t =     2.98s         Find the "设置" Button
+    t =     3.10s         Check for interrupting elements affecting "设置" Button
+    t =     3.14s         Synthesize event
+    t =     3.43s         Wait for app.truekeep.ios to idle
+    t =     4.97s Tap "首页" Button
+    t =     4.97s     Wait for app.truekeep.ios to idle
+    t =     4.98s     Find the "首页" Button
+    t =     5.04s     Check for interrupting elements affecting "house" Button
+    t =     5.07s     Synthesize event
+objc[96861]: Class UIAccessibilityLoaderWebShared is implemented in both /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x1093e8310) and /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x10880c398). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     5.36s     Wait for app.truekeep.ios to idle
+    t =     6.86s Tap "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =     6.86s     Wait for app.truekeep.ios to idle
+    t =     6.86s     Find the "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =     6.90s     Check for interrupting elements affecting "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =     6.94s     Synthesize event
+    t =     7.23s     Wait for app.truekeep.ios to idle
+    t =     8.16s Checking existence of `"truekeep.models.analyze" Button`
+    t =     8.21s Find the "truekeep.models.analyze" Button
+    t =     8.26s Find the "truekeep.models.analyze" Button
+    t =     8.30s Find the Target Application 'app.truekeep.ios'
+    t =     8.33s Checking existence of `"truekeep.models.analyze" Button`
+    t =     8.37s Find the "truekeep.models.analyze" Button
+    t =     8.41s Swipe up Target Application 'app.truekeep.ios'
+    t =     8.41s     Wait for app.truekeep.ios to idle
+    t =     8.42s     Find the Target Application 'app.truekeep.ios'
+    t =     8.45s     Check for interrupting elements affecting "留真" Application
+    t =     8.48s     Synthesize event
+    t =     8.97s     Wait for app.truekeep.ios to idle
+    t =     9.39s Checking existence of `"truekeep.models.analyze" Button`
+    t =     9.42s Find the "truekeep.models.analyze" Button
+    t =     9.47s Find the "truekeep.models.analyze" Button
+    t =     9.51s Find the Target Application 'app.truekeep.ios'
+    t =     9.54s Tap "truekeep.models.analyze" Button
+    t =     9.54s     Wait for app.truekeep.ios to idle
+    t =     9.54s     Find the "truekeep.models.analyze" Button
+    t =     9.57s     Check for interrupting elements affecting "truekeep.models.analyze" Button
+    t =     9.61s     Synthesize event
+    t =     9.90s     Wait for app.truekeep.ios to idle
+    t =     9.91s Waiting 5.0s for "truekeep.models.cancel" Button to exist
+    t =    10.93s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.models.cancel" Button`
+    t =    10.93s         Checking existence of `"truekeep.models.cancel" Button`
+    t =    10.98s Tap "truekeep.models.cancel" Button
+    t =    10.98s     Wait for app.truekeep.ios to idle
+    t =    10.99s     Find the "truekeep.models.cancel" Button
+    t =    11.03s     Check for interrupting elements affecting "truekeep.models.cancel" Button
+    t =    11.08s     Synthesize event
+    t =    11.38s     Wait for app.truekeep.ios to idle
+    t =    11.38s Waiting 5.0s for "truekeep.models.analyze" Button to exist
+    t =    12.41s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.models.analyze" Button`
+    t =    12.41s         Checking existence of `"truekeep.models.analyze" Button`
+    t =    12.46s Checking existence of `"truekeep.models.result" Any`
+    t =    12.62s Added attachment named 'local-model-06-analysis-cancelled'
+    t =    12.63s Tap "truekeep.models.analyze" Button
+    t =    12.63s     Wait for app.truekeep.ios to idle
+    t =    12.63s     Find the "truekeep.models.analyze" Button
+    t =    12.67s     Check for interrupting elements affecting "truekeep.models.analyze" Button
+    t =    12.71s     Synthesize event
+    t =    13.00s     Wait for app.truekeep.ios to idle
+    t =    13.01s Waiting 5.0s for "truekeep.models.cancel" Button to exist
+    t =    14.04s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.models.cancel" Button`
+    t =    14.04s         Checking existence of `"truekeep.models.cancel" Button`
+    t =    14.09s Find the "truekeep.review.next-group" Button
+    t =    14.14s Tap "truekeep.review.next-group" Button
+    t =    14.14s     Wait for app.truekeep.ios to idle
+    t =    14.14s     Find the "truekeep.review.next-group" Button
+    t =    14.18s     Check for interrupting elements affecting "truekeep.review.next-group" Button
+    t =    14.21s     Synthesize event
+    t =    14.52s     Wait for app.truekeep.ios to idle
+    t =    14.53s Waiting 5.0s for "truekeep.models.analyze" Button to exist
+    t =    15.55s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.models.analyze" Button`
+    t =    15.55s         Checking existence of `"truekeep.models.analyze" Button`
+    t =    15.59s         Capturing element debug description
+    t =    15.59s             Requesting snapshot of accessibility hierarchy for app with pid 96874
+    t =    15.65s             Find: Descendants matching type Button
+    t =    15.65s             Find: Elements matching predicate '"truekeep.models.analyze" IN identifiers'
+    t =    15.65s             Requesting snapshot of accessibility hierarchy for app with pid 96874
+    t =    15.70s             Find: Descendants matching type Button
+    t =    15.70s             Requesting snapshot of accessibility hierarchy for app with pid 96874
+    t =    16.53s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.models.analyze" Button`
+    t =    16.53s         Checking existence of `"truekeep.models.analyze" Button`
+    t =    16.57s         Capturing element debug description
+    t =    16.57s             Requesting snapshot of accessibility hierarchy for app with pid 96874
+    t =    16.62s             Find: Descendants matching type Button
+    t =    16.62s             Find: Elements matching predicate '"truekeep.models.analyze" IN identifiers'
+    t =    16.63s             Requesting snapshot of accessibility hierarchy for app with pid 96874
+    t =    16.68s             Find: Descendants matching type Button
+    t =    16.68s             Requesting snapshot of accessibility hierarchy for app with pid 96874
+    t =    17.61s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.models.analyze" Button`
+    t =    17.62s         Checking existence of `"truekeep.models.analyze" Button`
+    t =    17.66s         Capturing element debug description
+    t =    17.66s             Requesting snapshot of accessibility hierarchy for app with pid 96874
+    t =    17.71s             Find: Descendants matching type Button
+    t =    17.71s             Find: Elements matching predicate '"truekeep.models.analyze" IN identifiers'
+    t =    17.71s             Requesting snapshot of accessibility hierarchy for app with pid 96874
+    t =    17.77s             Find: Descendants matching type Button
+    t =    17.77s             Requesting snapshot of accessibility hierarchy for app with pid 96874
+    t =    18.54s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.models.analyze" Button`
+    t =    18.54s         Checking existence of `"truekeep.models.analyze" Button`
+    t =    18.60s Checking existence of `"truekeep.models.result" Any`
+    t =    18.66s Checking existence of `"truekeep.models.analysis-error" StaticText`
+/Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeepUITests/LocalPhotoModelsUITests.swift:100: error: -[TrueKeepUITests.LocalPhotoModelsUITests testCancelAnalysisAndChangingGroupDiscardPendingResult] : XCTAssertFalse failed
+    t =    18.77s Tear Down
+    t =    18.77s     Terminate app.truekeep.ios:96874
+2026-11-05 17:38:20.865 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:20.866 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+Test Case '-[TrueKeepUITests.LocalPhotoModelsUITests testCancelAnalysisAndChangingGroupDiscardPendingResult]' failed (19.862 seconds).
+2026-11-05 17:38:21.948984+0800 TrueKeepUITests-Runner[96861:24788681] [Default] Flushing outgoing messages to the IDE with timeout 600.00s
+2026-11-05 17:38:21.949385+0800 TrueKeepUITests-Runner[96861:24788715] [Default] Received confirmation that IDE processed remaining outgoing messages
+2026-11-05 17:38:21.969 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:21.969 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:22.236 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:22.671302+0800 TrueKeepUITests-Runner[97137:24790534] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+
+Restarting after unexpected exit, crash, or test timeout; summary will include totals from previous launches.
+
+Test Suite 'Selected tests' started at 2026-11-05 17:38:23.291.
+Test Suite 'TrueKeepUITests.xctest' started at 2026-11-05 17:38:23.291.
+Test Suite 'TrueKeepUITests' started at 2026-11-05 17:38:23.291.
+Test Case '-[TrueKeepUITests.TrueKeepUITests testCriticalScreensPassAccessibilityAudit]' started.
+    t =     0.00s Start Test at 2026-11-05 17:38:23.292
+    t =     0.02s Set Up
+    t =     0.03s     Open app.truekeep.ios
+    t =     0.03s         Launch app.truekeep.ios
+2026-11-05 17:38:23.319 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:38:23.319 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:38:23.336 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     0.24s             Setting up automation session
+    t =     1.22s             Wait for app.truekeep.ios to idle
+    t =     2.52s Terminate app.truekeep.ios:97145
+2026-11-05 17:38:25.833 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:25.834 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+objc[97137]: Class UIAccessibilityLoaderWebShared is implemented in both /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x106d70310) and /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x106170398). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     3.55s Open app.truekeep.ios
+    t =     3.55s     Launch app.truekeep.ios
+2026-11-05 17:38:26.841 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:38:26.841 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:38:26.859 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     3.76s         Setting up automation session
+    t =     4.65s         Wait for app.truekeep.ios to idle
+    t =     7.92s Added attachment named 'accessibility-passed-welcome'
+    t =     7.92s Tap "truekeep.permission.not-now" Button
+    t =     7.92s     Wait for app.truekeep.ios to idle
+    t =     7.93s     Find the "truekeep.permission.not-now" Button
+    t =     7.94s     Check for interrupting elements affecting "truekeep.permission.not-now" Button
+    t =     7.96s     Synthesize event
+    t =     8.25s     Wait for app.truekeep.ios to idle
+    t =     8.25s Waiting 5.0s for "truekeep.cleanup.results" ScrollView to exist
+    t =     9.28s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.cleanup.results" ScrollView`
+    t =     9.28s         Checking existence of `"truekeep.cleanup.results" ScrollView`
+    t =    11.24s Added attachment named 'accessibility-passed-home-photo-access-prompt'
+    t =    11.24s Terminate app.truekeep.ios:97164
+2026-11-05 17:38:34.551 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:34.551 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =    12.31s Open app.truekeep.ios
+    t =    12.31s     Launch app.truekeep.ios
+2026-11-05 17:38:35.607 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:38:35.607 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:38:35.624 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =    12.53s         Setting up automation session
+    t =    13.52s         Wait for app.truekeep.ios to idle
+    t =    14.77s Tap "truekeep.welcome.learn-more" Button
+    t =    14.77s     Wait for app.truekeep.ios to idle
+    t =    14.78s     Find the "truekeep.welcome.learn-more" Button
+    t =    14.85s     Check for interrupting elements affecting "truekeep.welcome.learn-more" Button
+    t =    14.86s     Synthesize event
+    t =    15.15s     Wait for app.truekeep.ios to idle
+    t =    15.19s Waiting 5.0s for "truekeep.settings.topic.how-it-works" Button to exist
+    t =    16.21s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.settings.topic.how-it-works" Button`
+    t =    16.21s         Checking existence of `"truekeep.settings.topic.how-it-works" Button`
+    t =    18.41s Added attachment named 'accessibility-passed-settings'
+    t =    18.41s Terminate app.truekeep.ios:97227
+2026-11-05 17:38:41.714 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:38:41.714 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =    19.45s Open app.truekeep.ios
+    t =    19.45s     Launch app.truekeep.ios
+2026-11-05 17:38:42.745 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:38:42.745 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:38:42.763 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =    19.66s         Setting up automation session
+    t =    20.52s         Wait for app.truekeep.ios to idle
+    t =    22.11s Waiting 5.0s for "truekeep.cleanup.results" ScrollView to exist
+    t =    23.14s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.cleanup.results" ScrollView`
+    t =    23.14s         Checking existence of `"truekeep.cleanup.results" ScrollView`
+    t =    23.26s Waiting 5.0s for "truekeep.cleanup.task.screenshots-chat-03" Button to exist
+    t =    24.27s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.cleanup.task.screenshots-chat-03" Button`
+    t =    24.28s         Checking existence of `"truekeep.cleanup.task.screenshots-chat-03" Button`
+    t =    24.33s Find the "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =    26.93s Added attachment named 'accessibility-passed-home-review-queue'
+    t =    26.93s Waiting 5.0s for "truekeep.cleanup.task.screenshots-chat-03" Button to exist
+    t =    27.95s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.cleanup.task.screenshots-chat-03" Button`
+    t =    27.96s         Checking existence of `"truekeep.cleanup.task.screenshots-chat-03" Button`
+    t =    28.01s Find the "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =    28.07s Tap "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =    28.07s     Wait for app.truekeep.ios to idle
+    t =    28.07s     Find the "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =    28.13s     Check for interrupting elements affecting "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =    28.16s     Synthesize event
+    t =    28.45s     Wait for app.truekeep.ios to idle
+    t =    29.33s Waiting 5.0s for "截图复核" StaticText to exist
+    t =    30.36s     Checking `Expect predicate `existsNoRetry == 1` for object "截图复核" StaticText`
+    t =    30.36s         Checking existence of `"截图复核" StaticText`
+    t =    32.67s Added attachment named 'accessibility-passed-screenshot-review'
+    t =    32.67s Waiting 5.0s for "truekeep.review.add-to-review-bin" Button to exist
+    t =    33.70s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.review.add-to-review-bin" Button`
+    t =    33.70s         Checking existence of `"truekeep.review.add-to-review-bin" Button`
+    t =    33.75s Tap "truekeep.review.add-to-review-bin" Button
+    t =    33.75s     Wait for app.truekeep.ios to idle
+    t =    33.75s     Find the "truekeep.review.add-to-review-bin" Button
+    t =    33.78s     Check for interrupting elements affecting "truekeep.review.add-to-review-bin" Button
+    t =    33.81s     Synthesize event
+    t =    34.11s     Wait for app.truekeep.ios to idle
+    t =    34.72s Waiting 5.0s for "truekeep.review-bin.delete-selection" Button to exist
+    t =    35.75s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.review-bin.delete-selection" Button`
+    t =    35.75s         Checking existence of `"truekeep.review-bin.delete-selection" Button`
+    t =    37.87s Added attachment named 'accessibility-passed-review-bin'
+    t =    37.88s Tap "truekeep.review-bin.delete-selection" Button
+    t =    37.88s     Wait for app.truekeep.ios to idle
+    t =    38.40s     Find the "truekeep.review-bin.delete-selection" Button
+    t =    38.43s     Check for interrupting elements affecting "truekeep.review-bin.delete-selection" Button
+    t =    38.45s     Synthesize event
+    t =    38.74s     Wait for app.truekeep.ios to idle
+    t =    39.16s Waiting 5.0s for "truekeep.delete.confirm" Button to exist
+    t =    40.18s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.delete.confirm" Button`
+    t =    40.18s         Checking existence of `"truekeep.delete.confirm" Button`
+    t =    42.25s Added attachment named 'accessibility-passed-delete-confirmation'
+    t =    42.25s Tear Down
+    t =    42.25s     Setting device orientation to Portrait
+    t =    42.26s         Wait for app.truekeep.ios to idle
+    t =    42.55s     Terminate app.truekeep.ios:97261
+2026-11-05 17:39:05.857 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:39:05.857 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testCriticalScreensPassAccessibilityAudit]' passed (43.690 seconds).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testDirectDeleteShowsBusyStateAndRefreshesHomeTaskAfterSuccess]' started.
+    t =     0.00s Start Test at 2026-11-05 17:39:06.982
+    t =     0.01s Set Up
+    t =     0.01s     Open app.truekeep.ios
+    t =     0.02s         Launch app.truekeep.ios
+2026-11-05 17:39:07.001 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:39:07.001 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:39:07.014 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     0.23s             Setting up automation session
+    t =     1.18s             Wait for app.truekeep.ios to idle
+    t =     2.47s Terminate app.truekeep.ios:97553
+2026-11-05 17:39:09.462 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:39:09.462 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     3.51s Open app.truekeep.ios
+    t =     3.52s     Launch app.truekeep.ios
+2026-11-05 17:39:10.502 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:39:10.502 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:39:10.519 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     3.73s         Setting up automation session
+    t =     4.58s         Wait for app.truekeep.ios to idle
+    t =     5.81s Tap "truekeep.welcome.learn-more" Button
+    t =     5.81s     Wait for app.truekeep.ios to idle
+    t =     5.82s     Find the "truekeep.welcome.learn-more" Button
+    t =     5.88s     Check for interrupting elements affecting "truekeep.welcome.learn-more" Button
+    t =     5.90s     Synthesize event
+    t =     6.18s     Wait for app.truekeep.ios to idle
+    t =     6.21s Waiting 5.0s for "truekeep.settings.topic.how-it-works" Button to exist
+    t =     7.24s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.settings.topic.how-it-works" Button`
+    t =     7.24s         Checking existence of `"truekeep.settings.topic.how-it-works" Button`
+    t =     7.31s Tap "首页" Button
+    t =     7.31s     Wait for app.truekeep.ios to idle
+    t =     7.31s     Find the "首页" Button
+    t =     7.34s     Check for interrupting elements affecting "house" Button
+    t =     7.38s     Synthesize event
+    t =     7.67s     Wait for app.truekeep.ios to idle
+    t =     9.23s Waiting 5.0s for "truekeep.cleanup.results" ScrollView to exist
+    t =    10.26s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.cleanup.results" ScrollView`
+    t =    10.26s         Checking existence of `"truekeep.cleanup.results" ScrollView`
+    t =    10.33s Waiting 5.0s for "truekeep.cleanup.task.similar-family-12" Button to exist
+    t =    11.35s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.cleanup.task.similar-family-12" Button`
+    t =    11.35s         Checking existence of `"truekeep.cleanup.task.similar-family-12" Button`
+    t =    11.40s Find the "truekeep.cleanup.task.similar-family-12" Button
+    t =    11.45s Tap "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =    11.45s     Wait for app.truekeep.ios to idle
+    t =    11.46s     Find the "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =    11.50s     Check for interrupting elements affecting "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =    11.54s     Synthesize event
+    t =    11.83s     Wait for app.truekeep.ios to idle
+    t =    12.66s Waiting 5.0s for "截图复核" StaticText to exist
+    t =    13.69s     Checking `Expect predicate `existsNoRetry == 1` for object "截图复核" StaticText`
+    t =    13.69s         Checking existence of `"截图复核" StaticText`
+    t =    13.74s Tap "review.more" Button
+    t =    13.74s     Wait for app.truekeep.ios to idle
+    t =    13.74s     Find the "review.more" Button
+    t =    13.77s     Check for interrupting elements affecting "review.more" Button
+    t =    13.80s     Synthesize event
+    t =    14.10s     Wait for app.truekeep.ios to idle
+    t =    15.00s Waiting 5.0s for "truekeep.review.direct-delete-selection" Button to exist
+    t =    16.03s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.review.direct-delete-selection" Button`
+    t =    16.03s         Checking existence of `"truekeep.review.direct-delete-selection" Button`
+    t =    16.07s Find the "truekeep.review.direct-delete-selection" Button
+    t =    16.23s Added attachment named 'direct-delete-01-review-actions'
+    t =    16.23s Waiting 5.0s for "truekeep.review.direct-delete-selection" Button to exist
+    t =    17.25s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.review.direct-delete-selection" Button`
+    t =    17.25s         Checking existence of `"truekeep.review.direct-delete-selection" Button`
+    t =    17.29s Tap "truekeep.review.direct-delete-selection" Button[0.94, 0.50]
+    t =    17.29s     Wait for app.truekeep.ios to idle
+    t =    17.30s     Find the "truekeep.review.direct-delete-selection" Button
+    t =    17.33s     Check for interrupting elements affecting "truekeep.review.direct-delete-selection" Button
+    t =    17.37s     Synthesize event
+    t =    17.37s         Find the "truekeep.review.direct-delete-selection" Button
+    t =    17.41s         Find the "truekeep.review.direct-delete-selection" Button
+    t =    17.45s         Find the "truekeep.review.direct-delete-selection" Button
+    t =    17.76s     Wait for app.truekeep.ios to idle
+    t =    18.82s Waiting 5.0s for "truekeep.delete.confirm" Button to exist
+    t =    19.85s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.delete.confirm" Button`
+    t =    19.85s         Checking existence of `"truekeep.delete.confirm" Button`
+    t =    19.91s Checking existence of `"iCloud 照片同步" StaticText`
+    t =    20.04s Added attachment named 'direct-delete-02-confirmation'
+    t =    20.05s Tap "truekeep.delete.confirm" Button
+    t =    20.05s     Wait for app.truekeep.ios to idle
+    t =    20.05s     Find the "truekeep.delete.confirm" Button
+    t =    20.10s     Check for interrupting elements affecting "truekeep.delete.confirm" Button
+    t =    20.14s     Synthesize event
+    t =    20.43s     Wait for app.truekeep.ios to idle
+    t =    21.46s Checking `Expect predicate `label CONTAINS "正在请求系统删除"` for object "truekeep.delete.confirm" Button`
+    t =    21.46s     Find the "truekeep.delete.confirm" Button
+    t =    22.54s Checking `Expect predicate `enabled == 0` for object "truekeep.delete.confirm" Button`
+    t =    22.54s     Find the "truekeep.delete.confirm" Button
+    t =    23.62s Checking `Expect predicate `enabled == 0` for object "truekeep.delete.cancel" Button`
+    t =    23.62s     Find the "truekeep.delete.cancel" Button
+    t =    23.76s Added attachment named 'direct-delete-03-loading'
+    t =    23.76s Swipe up Target Application 'app.truekeep.ios'
+    t =    23.76s     Wait for app.truekeep.ios to idle
+    t =    23.77s     Find the Target Application 'app.truekeep.ios'
+    t =    23.80s     Check for interrupting elements affecting "留真" Application
+    t =    23.84s     Synthesize event
+    t =    24.33s     Wait for app.truekeep.ios to idle
+    t =    24.42s Waiting 5.0s for "删除已完成" StaticText to exist
+    t =    25.43s     Checking `Expect predicate `existsNoRetry == 1` for object "删除已完成" StaticText`
+    t =    25.43s         Checking existence of `"删除已完成" StaticText`
+    t =    25.47s Checking existence of `"3 项已移至照片 App 的“最近删除”，仍可恢复，空间可能尚未立即释放。" StaticText`
+    t =    25.50s Checking existence of `"本组预计可清理 0 KB" StaticText`
+    t =    25.53s Checking existence of `"truekeep.review.candidate.shot-01" Button`
+    t =    25.56s Checking existence of `"truekeep.review.review-all" Button`
+    t =    25.69s Added attachment named 'direct-delete-04-success'
+    t =    25.69s Waiting 5.0s for Button (Element at index 0) to exist
+    t =    26.70s     Checking `Expect predicate `existsNoRetry == 1` for object Button (Element at index 0)`
+    t =    26.70s         Checking existence of `Button (Element at index 0)`
+    t =    26.73s Tap Button (Element at index 0)
+    t =    26.73s     Wait for app.truekeep.ios to idle
+    t =    26.73s     Find the Button (Element at index 0)
+    t =    26.76s     Check for interrupting elements affecting "review.return-to-tasks" Button
+    t =    26.79s     Synthesize event
+    t =    27.09s     Wait for app.truekeep.ios to idle
+    t =    27.79s Waiting 5.0s for "truekeep.cleanup.results" ScrollView to exist
+    t =    28.82s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.cleanup.results" ScrollView`
+    t =    28.82s         Checking existence of `"truekeep.cleanup.results" ScrollView`
+    t =    28.87s Checking existence of `"truekeep.cleanup.task.screenshots-chat-03" Button`
+    t =    28.91s Checking existence of `"truekeep.cleanup.task.similar-family-12" Button`
+    t =    29.05s Added attachment named 'direct-delete-05-home-synced'
+    t =    29.06s Tear Down
+    t =    29.06s     Setting device orientation to Portrait
+    t =    29.06s         Wait for app.truekeep.ios to idle
+    t =    29.06s     Terminate app.truekeep.ios:97582
+2026-11-05 17:39:36.057 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:39:36.057 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testDirectDeleteShowsBusyStateAndRefreshesHomeTaskAfterSuccess]' passed (30.192 seconds).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testDuoDeletionSafetyTextAccessibility]' started.
+    t =     0.00s Start Test at 2026-11-05 17:39:37.175
+    t =     0.02s Set Up
+    t =     0.02s     Open app.truekeep.ios
+    t =     0.02s         Launch app.truekeep.ios
+2026-11-05 17:39:37.196 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:39:37.196 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:39:37.223 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     0.23s             Setting up automation session
+    t =     1.20s             Wait for app.truekeep.ios to idle
+    t =     2.48s Terminate app.truekeep.ios:97871
+2026-11-05 17:39:39.681 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:39:39.681 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     3.54s Open app.truekeep.ios
+    t =     3.54s     Launch app.truekeep.ios
+2026-11-05 17:39:40.718 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:39:40.718 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:39:40.737 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     3.75s         Setting up automation session
+    t =     4.73s         Wait for app.truekeep.ios to idle
+    t =     6.23s Tap "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =     6.23s     Wait for app.truekeep.ios to idle
+    t =     6.23s     Find the "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =     6.35s     Check for interrupting elements affecting "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =     6.38s     Synthesize event
+    t =     6.67s     Wait for app.truekeep.ios to idle
+    t =     7.55s Tap "review.more" Button
+    t =     7.55s     Wait for app.truekeep.ios to idle
+    t =     7.56s     Find the "review.more" Button
+    t =     7.62s     Check for interrupting elements affecting "review.more" Button
+    t =     7.66s     Synthesize event
+    t =     7.96s     Wait for app.truekeep.ios to idle
+    t =     8.89s Tap "truekeep.review.direct-delete-selection" Button
+    t =     8.89s     Wait for app.truekeep.ios to idle
+    t =     8.90s     Find the "truekeep.review.direct-delete-selection" Button
+    t =     8.96s     Check for interrupting elements affecting "truekeep.review.direct-delete-selection" Button
+    t =     9.00s     Synthesize event
+    t =     9.29s     Wait for app.truekeep.ios to idle
+    t =    10.38s Waiting 5.0s for "truekeep.delete.confirm" Button to exist
+    t =    11.41s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.delete.confirm" Button`
+    t =    11.42s         Checking existence of `"truekeep.delete.confirm" Button`
+    t =    13.49s Added attachment named 'accessibility-passed-duo-delete-confirmation'
+    t =    13.59s Added attachment named 'duo-delete-safe-text-all-visible'
+    t =    13.59s Tear Down
+    t =    13.59s     Setting device orientation to Portrait
+    t =    13.60s         Wait for app.truekeep.ios to idle
+    t =    13.95s     Terminate app.truekeep.ios:97895
+2026-11-05 17:39:51.140 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:39:51.140 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testDuoDeletionSafetyTextAccessibility]' passed (15.010 seconds).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testDuoReportRotationFailureAndRetry]' started.
+    t =     0.00s Start Test at 2026-11-05 17:39:52.186
+    t =     0.02s Set Up
+    t =     0.02s     Open app.truekeep.ios
+    t =     0.02s         Launch app.truekeep.ios
+2026-11-05 17:39:52.206 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:39:52.206 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:39:52.221 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     0.23s             Setting up automation session
+    t =     1.13s             Wait for app.truekeep.ios to idle
+    t =     2.39s Terminate app.truekeep.ios:98126
+2026-11-05 17:39:54.586 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:39:54.586 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     3.44s Open app.truekeep.ios
+    t =     3.44s     Launch app.truekeep.ios
+2026-11-05 17:39:55.631 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:39:55.631 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:39:55.647 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     3.65s         Setting up automation session
+    t =     4.52s         Wait for app.truekeep.ios to idle
+    t =     6.08s Tap "scan.details" Button
+    t =     6.08s     Wait for app.truekeep.ios to idle
+    t =     6.09s     Find the "scan.details" Button
+    t =     6.20s     Check for interrupting elements affecting "scan.details" Button
+    t =     6.23s     Synthesize event
+    t =     6.53s     Wait for app.truekeep.ios to idle
+    t =     7.39s Tap "scan.export-report" Button
+    t =     7.39s     Wait for app.truekeep.ios to idle
+    t =     7.40s     Find the "scan.export-report" Button
+    t =     7.49s     Check for interrupting elements affecting "scan.export-report" Button
+    t =     7.54s     Synthesize event
+    t =     7.83s     Wait for app.truekeep.ios to idle
+    t =     9.12s Checking `Expect predicate `enabled == 0` for object "scan.export-report" Button`
+    t =     9.12s     Find the "scan.export-report" Button
+    t =     9.21s Find the Target Application 'app.truekeep.ios'
+    t =     9.25s Setting device orientation to Landscape Left
+    t =     9.25s     Device orientation changed to Landscape Left
+    t =     9.31s     Interface orientation changed to Landscape Right
+    t =     9.31s     Wait for app.truekeep.ios to idle
+    t =    11.72s Find the Target Application 'app.truekeep.ios'
+    t =    11.77s Checking existence of `"报告生成失败，请重试。" StaticText`
+    t =    11.84s Find the "报告生成失败，请重试。" StaticText
+    t =    11.91s Checking existence of `"报告生成失败，请重试。" StaticText`
+    t =    11.97s Find the "报告生成失败，请重试。" StaticText
+    t =    12.04s Find the Target Application 'app.truekeep.ios'
+    t =    12.08s Swipe up Target Application 'app.truekeep.ios'
+    t =    12.08s     Wait for app.truekeep.ios to idle
+    t =    12.08s     Find the Target Application 'app.truekeep.ios'
+    t =    12.12s     Check for interrupting elements affecting "留真" Application
+    t =    12.17s     Synthesize event
+    t =    12.67s     Wait for app.truekeep.ios to idle
+    t =    12.68s Checking existence of `"报告生成失败，请重试。" StaticText`
+    t =    12.76s Find the "报告生成失败，请重试。" StaticText
+    t =    12.83s Checking existence of `"报告生成失败，请重试。" StaticText`
+    t =    12.89s Find the "报告生成失败，请重试。" StaticText
+    t =    12.95s Find the Target Application 'app.truekeep.ios'
+    t =    12.99s Swipe up Target Application 'app.truekeep.ios'
+    t =    12.99s     Wait for app.truekeep.ios to idle
+    t =    12.99s     Find the Target Application 'app.truekeep.ios'
+    t =    13.03s     Check for interrupting elements affecting "留真" Application
+    t =    13.08s     Synthesize event
+    t =    13.57s     Wait for app.truekeep.ios to idle
+    t =    13.58s Checking existence of `"报告生成失败，请重试。" StaticText`
+    t =    13.66s Find the "报告生成失败，请重试。" StaticText
+    t =    13.74s Checking existence of `"报告生成失败，请重试。" StaticText`
+    t =    13.80s Find the "报告生成失败，请重试。" StaticText
+    t =    13.87s Find the Target Application 'app.truekeep.ios'
+    t =    13.91s Swipe up Target Application 'app.truekeep.ios'
+    t =    13.91s     Wait for app.truekeep.ios to idle
+    t =    13.91s     Find the Target Application 'app.truekeep.ios'
+    t =    13.95s     Check for interrupting elements affecting "留真" Application
+    t =    14.00s     Synthesize event
+    t =    14.48s     Wait for app.truekeep.ios to idle
+    t =    14.49s Checking existence of `"报告生成失败，请重试。" StaticText`
+    t =    14.55s Find the "报告生成失败，请重试。" StaticText
+    t =    14.62s Checking existence of `"报告生成失败，请重试。" StaticText`
+    t =    14.67s Find the "报告生成失败，请重试。" StaticText
+    t =    14.74s Find the Target Application 'app.truekeep.ios'
+    t =    14.78s Swipe up Target Application 'app.truekeep.ios'
+    t =    14.78s     Wait for app.truekeep.ios to idle
+    t =    14.78s     Find the Target Application 'app.truekeep.ios'
+    t =    14.82s     Check for interrupting elements affecting "留真" Application
+    t =    14.87s     Synthesize event
+    t =    15.35s     Wait for app.truekeep.ios to idle
+    t =    15.36s Checking existence of `"报告生成失败，请重试。" StaticText`
+    t =    15.42s Find the "报告生成失败，请重试。" StaticText
+    t =    15.49s Checking existence of `"报告生成失败，请重试。" StaticText`
+    t =    15.55s Find the "报告生成失败，请重试。" StaticText
+    t =    15.62s Find the Target Application 'app.truekeep.ios'
+    t =    15.66s Swipe up Target Application 'app.truekeep.ios'
+    t =    15.66s     Wait for app.truekeep.ios to idle
+    t =    15.66s     Find the Target Application 'app.truekeep.ios'
+    t =    15.70s     Check for interrupting elements affecting "留真" Application
+    t =    15.75s     Synthesize event
+    t =    16.24s     Wait for app.truekeep.ios to idle
+    t =    16.25s Checking existence of `"报告生成失败，请重试。" StaticText`
+    t =    16.31s Find the "报告生成失败，请重试。" StaticText
+    t =    16.38s Checking existence of `"报告生成失败，请重试。" StaticText`
+    t =    16.44s Find the "报告生成失败，请重试。" StaticText
+    t =    16.51s Find the Target Application 'app.truekeep.ios'
+    t =    16.54s Swipe up Target Application 'app.truekeep.ios'
+    t =    16.54s     Wait for app.truekeep.ios to idle
+    t =    16.55s     Find the Target Application 'app.truekeep.ios'
+    t =    16.59s     Check for interrupting elements affecting "留真" Application
+    t =    16.64s     Synthesize event
+    t =    17.13s     Wait for app.truekeep.ios to idle
+    t =    17.14s Checking existence of `"报告生成失败，请重试。" StaticText`
+    t =    17.22s Find the "报告生成失败，请重试。" StaticText
+    t =    17.29s Checking existence of `"报告生成失败，请重试。" StaticText`
+    t =    17.35s Find the "报告生成失败，请重试。" StaticText
+/Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeepUITests/TrueKeepUITests.swift:1225: error: -[TrueKeepUITests.TrueKeepUITests testDuoReportRotationFailureAndRetry] : XCTAssertTrue failed - Element should become visible after scrolling
+    t =    17.47s Tear Down
+    t =    17.47s     Setting device orientation to Portrait
+    t =    17.47s         Device orientation changed to Portrait
+    t =    17.49s         Interface orientation changed to Portrait
+    t =    17.49s         Wait for app.truekeep.ios to idle
+    t =    18.92s     Terminate app.truekeep.ios:98149
+2026-11-05 17:40:11.133 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:40:11.133 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testDuoReportRotationFailureAndRetry]' failed (20.056 seconds).
+2026-11-05 17:40:12.242868+0800 TrueKeepUITests-Runner[97137:24790534] [Default] Flushing outgoing messages to the IDE with timeout 600.00s
+2026-11-05 17:40:12.243423+0800 TrueKeepUITests-Runner[97137:24790565] [Default] Received confirmation that IDE processed remaining outgoing messages
+2026-11-05 17:40:12.270 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:40:12.270 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:40:12.535 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:40:12.915805+0800 TrueKeepUITests-Runner[98229:24796795] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+
+Restarting after unexpected exit, crash, or test timeout; summary will include totals from previous launches.
+
+Test Suite 'Selected tests' started at 2026-11-05 17:40:13.506.
+Test Suite 'TrueKeepUITests.xctest' started at 2026-11-05 17:40:13.507.
+Test Suite 'TrueKeepUITests' started at 2026-11-05 17:40:13.507.
+Test Case '-[TrueKeepUITests.TrueKeepUITests testRedesignMenuDeletionShowsBusyAndSuccess]' started.
+    t =     0.00s Start Test at 2026-11-05 17:40:13.508
+    t =     0.02s Set Up
+    t =     0.02s     Open app.truekeep.ios
+    t =     0.02s         Launch app.truekeep.ios
+2026-11-05 17:40:13.531 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:40:13.531 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:40:13.548 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     0.23s             Setting up automation session
+    t =     1.07s             Wait for app.truekeep.ios to idle
+    t =     2.32s Terminate app.truekeep.ios:98234
+2026-11-05 17:40:15.846 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:40:15.846 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+objc[98229]: Class UIAccessibilityLoaderWebShared is implemented in both /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x108d30310) and /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x1081ac398). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     3.35s Open app.truekeep.ios
+    t =     3.35s     Launch app.truekeep.ios
+2026-11-05 17:40:16.860 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:40:16.860 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:40:16.894 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     3.56s         Setting up automation session
+    t =     4.47s         Wait for app.truekeep.ios to idle
+    t =     5.71s Tap "truekeep.welcome.learn-more" Button
+    t =     5.71s     Wait for app.truekeep.ios to idle
+    t =     5.72s     Find the "truekeep.welcome.learn-more" Button
+    t =     5.78s     Check for interrupting elements affecting "truekeep.welcome.learn-more" Button
+    t =     5.79s     Synthesize event
+    t =     6.08s     Wait for app.truekeep.ios to idle
+    t =     6.10s Waiting 5.0s for "truekeep.settings.topic.how-it-works" Button to exist
+    t =     7.13s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.settings.topic.how-it-works" Button`
+    t =     7.13s         Checking existence of `"truekeep.settings.topic.how-it-works" Button`
+    t =     7.22s Tap "首页" Button
+    t =     7.22s     Wait for app.truekeep.ios to idle
+    t =     7.22s     Find the "首页" Button
+    t =     7.26s     Check for interrupting elements affecting "house" Button
+    t =     7.29s     Synthesize event
+    t =     7.58s     Wait for app.truekeep.ios to idle
+    t =     9.13s Waiting 5.0s for "truekeep.cleanup.results" ScrollView to exist
+    t =    10.20s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.cleanup.results" ScrollView`
+    t =    10.20s         Checking existence of `"truekeep.cleanup.results" ScrollView`
+    t =    10.27s Waiting 5.0s for "truekeep.cleanup.task.similar-family-12" Button to exist
+    t =    11.32s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.cleanup.task.similar-family-12" Button`
+    t =    11.32s         Checking existence of `"truekeep.cleanup.task.similar-family-12" Button`
+    t =    11.36s Find the "truekeep.cleanup.task.similar-family-12" Button
+    t =    11.42s Tap "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =    11.42s     Wait for app.truekeep.ios to idle
+    t =    11.42s     Find the "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =    11.46s     Check for interrupting elements affecting "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =    11.50s     Synthesize event
+    t =    11.79s     Wait for app.truekeep.ios to idle
+    t =    12.63s Tap "review.more" Button
+    t =    12.63s     Wait for app.truekeep.ios to idle
+    t =    12.64s     Find the "review.more" Button
+    t =    12.69s     Check for interrupting elements affecting "review.more" Button
+    t =    12.73s     Synthesize event
+    t =    13.03s     Wait for app.truekeep.ios to idle
+    t =    13.96s Tap "truekeep.review.direct-delete-selection" Button
+    t =    13.96s     Wait for app.truekeep.ios to idle
+    t =    13.97s     Find the "truekeep.review.direct-delete-selection" Button
+    t =    14.02s     Check for interrupting elements affecting "truekeep.review.direct-delete-selection" Button
+    t =    14.06s     Synthesize event
+    t =    14.36s     Wait for app.truekeep.ios to idle
+    t =    15.43s Waiting 5.0s for "truekeep.delete.confirm" Button to exist
+    t =    16.49s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.delete.confirm" Button`
+    t =    16.49s         Checking existence of `"truekeep.delete.confirm" Button`
+    t =    16.67s Added attachment named 'redesign-delete-confirm'
+    t =    16.67s Tap "truekeep.delete.cancel" Button
+    t =    16.67s     Wait for app.truekeep.ios to idle
+    t =    16.68s     Find the "truekeep.delete.cancel" Button
+    t =    16.72s     Check for interrupting elements affecting "truekeep.delete.cancel" Button
+    t =    16.76s     Synthesize event
+    t =    17.05s     Wait for app.truekeep.ios to idle
+    t =    17.44s Find the "truekeep.review.add-to-review-bin" Button
+    t =    17.61s Added attachment named 'redesign-delete-cancelled'
+    t =    17.61s Tap "review.more" Button
+    t =    17.61s     Wait for app.truekeep.ios to idle
+    t =    17.61s     Find the "review.more" Button
+    t =    17.65s     Check for interrupting elements affecting "review.more" Button
+    t =    17.68s     Synthesize event
+    t =    17.98s     Wait for app.truekeep.ios to idle
+    t =    18.88s Tap "truekeep.review.direct-delete-selection" Button
+    t =    18.88s     Wait for app.truekeep.ios to idle
+    t =    18.88s     Find the "truekeep.review.direct-delete-selection" Button
+    t =    18.94s     Check for interrupting elements affecting "truekeep.review.direct-delete-selection" Button
+    t =    18.98s     Synthesize event
+    t =    19.27s     Wait for app.truekeep.ios to idle
+    t =    20.32s Tap "truekeep.delete.confirm" Button
+    t =    20.32s     Wait for app.truekeep.ios to idle
+    t =    20.32s     Find the "truekeep.delete.confirm" Button
+    t =    20.39s     Check for interrupting elements affecting "truekeep.delete.confirm" Button
+    t =    20.43s     Synthesize event
+    t =    20.73s     Wait for app.truekeep.ios to idle
+    t =    21.78s Checking `Expect predicate `enabled == 0` for object "truekeep.delete.confirm" Button`
+    t =    21.78s     Find the "truekeep.delete.confirm" Button
+    t =    21.94s Added attachment named 'redesign-delete-busy'
+    t =    21.94s Waiting 10.0s for "删除已完成" StaticText to exist
+    t =    23.01s     Checking `Expect predicate `existsNoRetry == 1` for object "删除已完成" StaticText`
+    t =    23.01s         Checking existence of `"删除已完成" StaticText`
+    t =    23.06s         Capturing element debug description
+    t =    24.01s     Checking `Expect predicate `existsNoRetry == 1` for object "删除已完成" StaticText`
+    t =    24.01s         Checking existence of `"删除已完成" StaticText`
+    t =    24.09s         Capturing element debug description
+    t =    24.94s     Checking `Expect predicate `existsNoRetry == 1` for object "删除已完成" StaticText`
+    t =    24.95s         Checking existence of `"删除已完成" StaticText`
+    t =    25.00s Checking existence of `"truekeep.review.candidate.shot-01" Button`
+    t =    25.13s Added attachment named 'redesign-delete-success'
+    t =    25.13s Waiting 5.0s for Button (Element at index 0) to exist
+    t =    26.19s     Checking `Expect predicate `existsNoRetry == 1` for object Button (Element at index 0)`
+    t =    26.20s         Checking existence of `Button (Element at index 0)`
+    t =    26.24s Tap Button (Element at index 0)
+    t =    26.24s     Wait for app.truekeep.ios to idle
+    t =    26.24s     Find the Button (Element at index 0)
+    t =    26.28s     Check for interrupting elements affecting "review.return-to-tasks" Button
+    t =    26.31s     Synthesize event
+    t =    26.61s     Wait for app.truekeep.ios to idle
+    t =    27.30s Checking existence of `"truekeep.cleanup.task.screenshots-chat-03" Button`
+    t =    27.44s Added attachment named 'redesign-home-after-delete'
+    t =    27.44s Tear Down
+    t =    27.44s     Setting device orientation to Portrait
+    t =    27.45s         Wait for app.truekeep.ios to idle
+    t =    27.45s     Terminate app.truekeep.ios:98262
+2026-11-05 17:40:40.969 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:40:40.970 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testRedesignMenuDeletionShowsBusyAndSuccess]' passed (28.596 seconds).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testRedesignReviewAndConfirmationAtMaximumTextSize]' started.
+    t =     0.00s Start Test at 2026-11-05 17:40:42.104
+    t =     0.02s Set Up
+    t =     0.02s     Open app.truekeep.ios
+    t =     0.02s         Launch app.truekeep.ios
+2026-11-05 17:40:42.122 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:40:42.122 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:40:42.154 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     0.23s             Setting up automation session
+    t =     1.18s             Wait for app.truekeep.ios to idle
+    t =     2.46s Terminate app.truekeep.ios:98584
+2026-11-05 17:40:44.580 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:40:44.580 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     3.55s Open app.truekeep.ios
+    t =     3.55s     Launch app.truekeep.ios
+2026-11-05 17:40:45.657 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:40:45.657 xcodebuild[96416:24785994] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:40:45.685 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+    t =     3.76s         Setting up automation session
+    t =     4.64s         Wait for app.truekeep.ios to idle
+    t =     6.15s Checking existence of `"truekeep.cleanup.task.screenshots-chat-03" Button`
+    t =     6.28s Find the "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =     6.32s Checking existence of `"truekeep.cleanup.task.screenshots-chat-03" Button`
+    t =     6.36s Find the "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =     6.39s Find the Target Application 'app.truekeep.ios'
+    t =     6.42s Swipe up Target Application 'app.truekeep.ios'
+    t =     6.42s     Wait for app.truekeep.ios to idle
+    t =     6.42s     Find the Target Application 'app.truekeep.ios'
+    t =     6.44s     Check for interrupting elements affecting "留真" Application
+    t =     6.47s     Synthesize event
+    t =     6.96s     Wait for app.truekeep.ios to idle
+    t =     9.21s Checking existence of `"truekeep.cleanup.task.screenshots-chat-03" Button`
+    t =     9.27s Find the "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =     9.34s Checking existence of `"truekeep.cleanup.task.screenshots-chat-03" Button`
+    t =     9.38s Find the "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =     9.43s Tap "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =     9.43s     Wait for app.truekeep.ios to idle
+    t =     9.89s     Find the "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =     9.96s     Check for interrupting elements affecting "truekeep.cleanup.task.screenshots-chat-03" Button
+    t =     9.99s     Synthesize event
+    t =    10.29s     Wait for app.truekeep.ios to idle
+    t =    11.18s Waiting 5.0s for "truekeep.review.add-to-review-bin" Button to exist
+    t =    12.23s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.review.add-to-review-bin" Button`
+    t =    12.23s         Checking existence of `"truekeep.review.add-to-review-bin" Button`
+    t =    12.29s Checking existence of `"truekeep.review.add-to-review-bin" Button`
+    t =    12.33s Find the "truekeep.review.add-to-review-bin" Button
+    t =    12.38s Checking existence of `"truekeep.review.add-to-review-bin" Button`
+    t =    12.41s Find the "truekeep.review.add-to-review-bin" Button
+    t =    12.44s Find the Target Application 'app.truekeep.ios'
+    t =    12.46s Swipe up Target Application 'app.truekeep.ios'
+    t =    12.46s     Wait for app.truekeep.ios to idle
+    t =    12.47s     Find the Target Application 'app.truekeep.ios'
+    t =    12.49s     Check for interrupting elements affecting "留真" Application
+    t =    12.52s     Synthesize event
+    t =    13.01s     Wait for app.truekeep.ios to idle
+    t =    14.95s Checking existence of `"truekeep.review.add-to-review-bin" Button`
+    t =    15.00s Find the "truekeep.review.add-to-review-bin" Button
+    t =    15.05s Checking existence of `"truekeep.review.add-to-review-bin" Button`
+    t =    15.08s Find the "truekeep.review.add-to-review-bin" Button
+    t =    15.12s Find the Target Application 'app.truekeep.ios'
+    t =    15.14s Swipe up Target Application 'app.truekeep.ios'
+    t =    15.14s     Wait for app.truekeep.ios to idle
+    t =    15.15s     Find the Target Application 'app.truekeep.ios'
+    t =    15.17s     Check for interrupting elements affecting "留真" Application
+    t =    15.20s     Synthesize event
+    t =    15.70s     Wait for app.truekeep.ios to idle
+    t =    17.63s Checking existence of `"truekeep.review.add-to-review-bin" Button`
+    t =    17.69s Find the "truekeep.review.add-to-review-bin" Button
+    t =    17.73s Checking existence of `"truekeep.review.add-to-review-bin" Button`
+    t =    17.76s Find the "truekeep.review.add-to-review-bin" Button
+    t =    17.80s Find the Target Application 'app.truekeep.ios'
+    t =    17.82s Swipe up Target Application 'app.truekeep.ios'
+    t =    17.82s     Wait for app.truekeep.ios to idle
+    t =    17.83s     Find the Target Application 'app.truekeep.ios'
+    t =    17.85s     Check for interrupting elements affecting "留真" Application
+    t =    17.88s     Synthesize event
+    t =    18.38s     Wait for app.truekeep.ios to idle
+    t =    19.25s Checking existence of `"truekeep.review.add-to-review-bin" Button`
+    t =    19.30s Find the "truekeep.review.add-to-review-bin" Button
+    t =    19.34s Checking existence of `"truekeep.review.add-to-review-bin" Button`
+    t =    19.38s Find the "truekeep.review.add-to-review-bin" Button
+    t =    19.42s Find the "truekeep.review.add-to-review-bin" Button
+    t =    19.57s Added attachment named 'redesign-review-maximum-text'
+    t =    19.57s Tap "truekeep.review.add-to-review-bin" Button
+    t =    19.57s     Wait for app.truekeep.ios to idle
+    t =    19.58s     Find the "truekeep.review.add-to-review-bin" Button
+    t =    19.61s     Check for interrupting elements affecting "truekeep.review.add-to-review-bin" Button
+    t =    19.64s     Synthesize event
+    t =    19.94s     Wait for app.truekeep.ios to idle
+    t =    20.58s Waiting 5.0s for "truekeep.review-bin.delete-selection" Button to exist
+    t =    21.61s     Checking `Expect predicate `existsNoRetry == 1` for object "truekeep.review-bin.delete-selection" Button`
+    t =    21.61s         Checking existence of `"truekeep.review-bin.delete-selection" Button`
+    t =    21.64s Checking existence of `"truekeep.review-bin.delete-selection" Button`
+    t =    21.66s Find the "truekeep.review-bin.delete-selection" Button
+    t =    21.69s Checking existence of `"truekeep.review-bin.delete-selection" Button`
+    t =    21.71s Find the "truekeep.review-bin.delete-selection" Button
+    t =    21.73s Find the Target Application 'app.truekeep.ios'
+    t =    21.75s Swipe up Target Application 'app.truekeep.ios'
+    t =    21.75s     Wait for app.truekeep.ios to idle
+    t =    21.75s     Find the Target Application 'app.truekeep.ios'
+    t =    21.77s     Check for interrupting elements affecting "留真" Application
+    t =    21.79s     Synthesize event
+    t =    22.28s     Wait for app.truekeep.ios to idle
+    t =    24.22s Checking existence of `"truekeep.review-bin.delete-selection" Button`
+    t =    24.26s Find the "truekeep.review-bin.delete-selection" Button
+    t =    24.30s Checking existence of `"truekeep.review-bin.delete-selection" Button`
+    t =    24.32s Find the "truekeep.review-bin.delete-selection" Button
+    t =    24.34s Find the Target Application 'app.truekeep.ios'
+    t =    24.36s Swipe up Target Application 'app.truekeep.ios'
+    t =    24.36s     Wait for app.truekeep.ios to idle
+    t =    24.36s     Find the Target Application 'app.truekeep.ios'
+    t =    24.38s     Check for interrupting elements affecting "留真" Application
+    t =    24.40s     Synthesize event
+    t =    24.89s     Wait for app.truekeep.ios to idle
+    t =    26.82s Checking existence of `"truekeep.review-bin.delete-selection" Button`
+    t =    26.84s Find the "truekeep.review-bin.delete-selection" Button
+    t =    26.87s Checking existence of `"truekeep.review-bin.delete-selection" Button`
+    t =    26.89s Find the "truekeep.review-bin.delete-selection" Button
+    t =    26.92s Find the Target Application 'app.truekeep.ios'
+    t =    26.94s Swipe up Target Application 'app.truekeep.ios'
+    t =    26.94s     Wait for app.truekeep.ios to idle
+    t =    27.32s     Find the Target Application 'app.truekeep.ios'
+    t =    27.34s     Check for interrupting elements affecting "留真" Application
+    t =    27.36s     Synthesize event
+    t =    27.85s     Wait for app.truekeep.ios to idle
+    t =    28.92s Checking existence of `"truekeep.review-bin.delete-selection" Button`
+    t =    28.94s Find the "truekeep.review-bin.delete-selection" Button
+    t =    28.97s Checking existence of `"truekeep.review-bin.delete-selection" Button`
+    t =    28.99s Find the "truekeep.review-bin.delete-selection" Button
+    t =    29.14s Added attachment named 'redesign-bin-maximum-text'
+    t =    29.14s Tap "truekeep.review-bin.delete-selection" Button
+    t =    29.14s     Wait for app.truekeep.ios to idle
+    t =    29.15s     Find the "truekeep.review-bin.delete-selection" Button
+    t =    29.17s     Check for interrupting elements affecting "truekeep.review-bin.delete-selection" Button
+    t =    29.19s     Synthesize event
+    t =    29.48s     Wait for app.truekeep.ios to idle
+    t =    29.89s Checking existence of `"truekeep.delete.cancel" Button`
+    t =    29.95s Checking existence of `"truekeep.delete.cancel" Button`
+    t =    29.98s Swipe up Target Application 'app.truekeep.ios'
+    t =    29.98s     Wait for app.truekeep.ios to idle
+    t =    29.98s     Find the Target Application 'app.truekeep.ios'
+    t =    30.00s     Check for interrupting elements affecting "留真" Application
+    t =    30.03s     Synthesize event
+    t =    30.51s     Wait for app.truekeep.ios to idle
+    t =    32.48s Checking existence of `"truekeep.delete.cancel" Button`
+    t =    32.53s Find the "truekeep.delete.cancel" Button
+    t =    32.57s Checking existence of `"truekeep.delete.cancel" Button`
+    t =    32.60s Find the "truekeep.delete.cancel" Button
+    t =    32.63s Find the Target Application 'app.truekeep.ios'
+    t =    32.64s Swipe up Target Application 'app.truekeep.ios'
+    t =    32.64s     Wait for app.truekeep.ios to idle
+    t =    32.65s     Find the Target Application 'app.truekeep.ios'
+    t =    32.67s     Check for interrupting elements affecting "留真" Application
+    t =    32.69s     Synthesize event
+    t =    33.18s     Wait for app.truekeep.ios to idle
+    t =    33.62s Checking existence of `"truekeep.delete.cancel" Button`
+    t =    33.67s Find the "truekeep.delete.cancel" Button
+    t =    33.71s Checking existence of `"truekeep.delete.cancel" Button`
+    t =    33.73s Find the "truekeep.delete.cancel" Button
+    t =    33.77s Find the "truekeep.delete.cancel" Button
+    t =    33.89s Added attachment named 'redesign-delete-confirm-maximum-text'
+    t =    33.90s Tap "truekeep.delete.cancel" Button
+    t =    33.90s     Wait for app.truekeep.ios to idle
+    t =    33.90s     Find the "truekeep.delete.cancel" Button
+    t =    33.93s     Check for interrupting elements affecting "truekeep.delete.cancel" Button
+    t =    33.96s     Synthesize event
+    t =    34.24s     Wait for app.truekeep.ios to idle
+    t =    34.62s Find the "truekeep.review-bin.delete-selection" Button
+    t =    34.66s Tear Down
+    t =    34.66s     Setting device orientation to Portrait
+    t =    34.67s         Wait for app.truekeep.ios to idle
+    t =    34.67s     Terminate app.truekeep.ios:98615
+2026-11-05 17:41:16.798 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:41:16.799 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+Test Case '-[TrueKeepUITests.TrueKeepUITests testRedesignReviewAndConfirmationAtMaximumTextSize]' passed (35.926 seconds).
+Test Suite 'TrueKeepUITests' passed at 2026-11-05 17:41:18.031.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 64.522 (64.524) seconds
+Test Suite 'TrueKeepUITests.xctest' passed at 2026-11-05 17:41:18.031.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 64.522 (64.524) seconds
+Test Suite 'Selected tests' passed at 2026-11-05 17:41:18.032.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 64.522 (64.525) seconds
+2026-11-05 17:41:18.059 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:41:18.060 xcodebuild[96416:24785994] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:41:18.346 xcodebuild[96416:24785994] [MT] IDETestOperationsObserverDebug: 200.519 elapsed -- Testing started completed.
+2026-11-05 17:41:18.346 xcodebuild[96416:24785994] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-11-05 17:41:18.346 xcodebuild[96416:24785994] [MT] IDETestOperationsObserverDebug: 200.519 sec, +200.519 sec -- end
+
+Test session results, code coverage, and logs:
+	/tmp/TrueKeepDuo-20261105-iphone17-recheck.xcresult
+
+Failing tests:
+	LocalPhotoModelsUITests.testCancelAnalysisAndChangingGroupDiscardPendingResult()
+	TrueKeepUITests.testDuoReportRotationFailureAndRetry()
+
+** TEST EXECUTE FAILED **
+
+Testing started

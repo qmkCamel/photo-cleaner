@@ -10,6 +10,7 @@ struct PhotoDeletionSafetyPolicy: Hashable, Sendable {
     static let deletionDisabledEnvironmentKey = "TRUEKEEP_DISABLE_PHOTO_DELETION"
     static let destructiveDeletionEnabledArgument = "-TrueKeepEnableDestructivePhotoDeletion"
     static let destructiveDeletionEnabledEnvironmentKey = "TRUEKEEP_ENABLE_DESTRUCTIVE_PHOTO_DELETION"
+    static let persistedDestructiveDeletionKey = "TrueKeepDebugDestructivePhotoDeletionEnabled"
 
     var isDeletionDisabled: Bool
 
@@ -21,24 +22,33 @@ struct PhotoDeletionSafetyPolicy: Hashable, Sendable {
         resolved(
             arguments: ProcessInfo.processInfo.arguments,
             environment: ProcessInfo.processInfo.environment,
-            isDebugBuild: isDebugBuild
+            isDebugBuild: isDebugBuild,
+            defaults: .standard
         )
     }
 
     static func resolved(
         arguments: [String],
         environment: [String: String],
-        isDebugBuild: Bool
+        isDebugBuild: Bool,
+        defaults: UserDefaults? = nil
     ) -> PhotoDeletionSafetyPolicy {
         if arguments.contains(deletionDisabledArgument) || environment[deletionDisabledEnvironmentKey] == "1" {
+            if isDebugBuild {
+                defaults?.removeObject(forKey: persistedDestructiveDeletionKey)
+            }
             return PhotoDeletionSafetyPolicy(isDeletionDisabled: true)
         }
 
         let destructiveDeletionEnabled = arguments.contains(destructiveDeletionEnabledArgument)
             || environment[destructiveDeletionEnabledEnvironmentKey] == "1"
 
-        if isDebugBuild && !destructiveDeletionEnabled {
-            return PhotoDeletionSafetyPolicy(isDeletionDisabled: true)
+        if isDebugBuild {
+            if destructiveDeletionEnabled {
+                defaults?.set(true, forKey: persistedDestructiveDeletionKey)
+            }
+            let previouslyEnabled = defaults?.bool(forKey: persistedDestructiveDeletionKey) ?? false
+            return PhotoDeletionSafetyPolicy(isDeletionDisabled: !(destructiveDeletionEnabled || previouslyEnabled))
         }
 
         return PhotoDeletionSafetyPolicy(isDeletionDisabled: false)
@@ -68,6 +78,10 @@ struct SystemPhotoLibraryDeletionService: PhotoLibraryDeleting {
         }
 
         #if DEBUG
+        if safetyPolicy.isDeletionDisabled,
+           ProcessInfo.processInfo.arguments.contains("-TrueKeepUITestPartialPhotoDeletion") {
+            return .resolved(requestedAssetIDs: assetIDs, deletedAssetIDs: Array(assetIDs.prefix(1)), failureMessage: "部分项目未完成，请复核后重试。（测试结果，未删除系统照片）")
+        }
         if ProcessInfo.processInfo.arguments.contains(AppLaunchConfiguration.uiTestSuccessfulPhotoDeletionArgument) {
             return .success(deletedAssetIDs: assetIDs)
         }

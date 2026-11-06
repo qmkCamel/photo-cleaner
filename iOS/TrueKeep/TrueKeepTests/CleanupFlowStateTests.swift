@@ -3,6 +3,62 @@ import XCTest
 
 @MainActor
 final class CleanupFlowStateTests: XCTestCase {
+    func testReportExportContainsReferencesAndStatisticsNotPhotoContent() throws {
+        var state = CleanupFlowState.sample()
+        state.scanReport = PhotoScanReport(completedAt: Date(timeIntervalSince1970: 1_000), eligiblePhotos: 10, analyzedPhotos: 8, unavailablePhotos: 2)
+        let data = Data(state.evaluationJSON.utf8)
+        let report = try JSONDecoder().decode(ScanEvaluationExport.self, from: data)
+        XCTAssertEqual(report.similarGroups, state.reviewGroups.filter { $0.category == .similar }.map { $0.candidates.map(\.id) })
+        XCTAssertEqual(report.report?.unavailablePhotos, 2)
+        XCTAssertEqual(report.report?.completedAt, state.scanReport?.completedAt)
+        XCTAssertFalse(state.evaluationJSON.contains("thumbnail"))
+        XCTAssertFalse(state.evaluationJSON.contains("base64"))
+    }
+    func testMovingOutOfBinOnlyRemovesBufferRecords() {
+        var state = screenshotState()
+        state.addCurrentSelectionToReviewBin()
+        let candidates = state.reviewGroups.flatMap(\.candidates)
+        state.restoreSelectedReviewBinItems()
+        XCTAssertTrue(state.reviewBinItems.isEmpty)
+        XCTAssertEqual(state.reviewGroups.flatMap(\.candidates), candidates)
+        XCTAssertNil(state.deletionSummary)
+        XCTAssertFalse(state.hasDeletedItems)
+        XCTAssertFalse(state.reviewGroups.flatMap(\.candidates).contains(where: \.confirmedKeep))
+    }
+    func testSelectionCountAndBytesDeduplicateResourceIDs() {
+        var state = CleanupFlowState.sample()
+        state.reviewGroups[state.currentReviewGroupIndex].candidates[0].estimatedBytes = 1_000_000
+        let candidate = state.currentReviewGroup.candidates[0]
+        state.reviewGroups[state.currentReviewGroupIndex].candidates.append(candidate)
+        state.selectedCandidateIDs = [candidate.id]
+        XCTAssertEqual(state.currentReviewSelectionCount, 1)
+        XCTAssertEqual(state.selectedCurrentReviewAssetIDs, [candidate.id])
+        XCTAssertEqual(state.currentReviewSelectionSummary, "已选 1 项 · 预计 \(candidate.estimatedBytes.formattedStorage)")
+    }
+    func testSelectionSummaryUsesOnlySelectedResourcesAndReportsUnknownSize() {
+        var state = CleanupFlowState.sample()
+        XCTAssertEqual(state.currentReviewSelectionSummary, "选择要整理的照片")
+        let id = state.currentReviewGroup.candidates[0].id
+        state.reviewGroups[state.currentReviewGroupIndex].candidates[0].estimatedBytes = 0
+        state.selectedCandidateIDs = [id]
+        XCTAssertEqual(state.currentReviewSelectionSummary, "已选 1 项 · 大小未知")
+        state.applyConfirmedKeepAssetIDs([id])
+        XCTAssertEqual(state.currentReviewSelectionSummary, "选择要整理的照片")
+    }
+
+    func testSuccessfulRescanResetsSummaryWithoutRevivingDeletedOrKeptItems() {
+        var state = CleanupFlowState.sample()
+        let ids = state.currentReviewGroup.candidates.map(\.id)
+        state.selectedCandidateIDs = [ids[0]]
+        state.applyDirectDeletionResult(.success(deletedAssetIDs: [ids[0]]))
+        XCTAssertNotNil(state.deletionSummary)
+        state.mergeScanResult(.sample(), confirmedKeepAssetIDs: [ids[1]])
+        XCTAssertNil(state.deletionSummary)
+        XCTAssertFalse(state.reviewGroups.flatMap(\.candidates).contains { $0.id == ids[0] })
+        XCTAssertTrue(state.reviewGroups.flatMap(\.candidates).first { $0.id == ids[1] }?.confirmedKeep == true)
+        XCTAssertFalse(state.selectedCandidateIDs.contains(ids[1]))
+    }
+
     func testZeroStorageFormattingUsesNumericValue() {
         XCTAssertEqual(Int64(0).formattedStorage, "0 KB")
     }
@@ -35,7 +91,7 @@ final class CleanupFlowStateTests: XCTestCase {
         XCTAssertEqual(state.deletionSummary?.deletedAssetIDs, Set(deletedIDs))
         XCTAssertEqual(state.deletionSummary?.itemCount, 3)
         XCTAssertEqual(state.deletionSummary?.estimatedBytes, 6_000_000)
-        XCTAssertEqual(state.postDeletionRecoveryMessage, "所选项目已移至 Photos 的“最近删除”。建议保留恢复窗口，不要立即清空。")
+        XCTAssertEqual(state.postDeletionRecoveryMessage, "所选项目已移至照片 App 的“最近删除”。建议保留恢复窗口，不要立即清空。")
     }
 
     func testDirectDeletionRemovesCandidatesAndSynchronizesHomeTaskAndReviewBin() {

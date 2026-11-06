@@ -25,6 +25,7 @@ struct PermissionIssueView: View {
             .padding(.top, 14)
 
             ScrollView {
+                VStack(spacing: 0) {
                 VStack(spacing: 20) {
                     Image(systemName: access == .restricted ? "lock.trianglebadge.exclamationmark" : "photo.badge.exclamationmark")
                         .font(TrueKeepTheme.Font.iconHero)
@@ -56,8 +57,6 @@ struct PermissionIssueView: View {
                 .padding(.horizontal, 20)
                 .padding(.top, 26)
                 .padding(.bottom, 16)
-            }
-
             VStack(spacing: 12) {
                 if access.requiresSettings {
                     PrimaryActionButton(title: "打开系统设置", action: onOpenSettings)
@@ -85,6 +84,8 @@ struct PermissionIssueView: View {
             }
             .padding(20)
             .background(TrueKeepTheme.page)
+                }.readableContent()
+            }
         }
         .trueKeepScreenBackground()
     }

@@ -1,0 +1,30 @@
+test_capabilities_apply_two_deletion_guards_and_case_arguments (test_appclaw_regression.AppClawRegressionTests) ... ok
+test_command_is_strict_dom_flow_for_selected_device (test_appclaw_regression.AppClawRegressionTests) ... ok
+test_default_case_timeout_prevents_unbounded_device_runs (test_appclaw_regression.AppClawRegressionTests) ... ok
+test_managed_wda_commands_do_not_hardcode_a_device_or_bundle (test_appclaw_regression.AppClawRegressionTests) ... ok
+test_manifest_has_unique_p0_cases_with_existing_flows_and_deletion_lock (test_appclaw_regression.AppClawRegressionTests) ... ok
+test_unknown_case_is_rejected (test_appclaw_regression.AppClawRegressionTests) ... ok
+test_build_command_uses_confirmed_team_and_device_without_committing_team (test_device_smoke.DeviceSmokeScriptTests) ... ok
+test_launch_command_forces_deletion_safety_lock (test_device_smoke.DeviceSmokeScriptTests) ... ok
+test_parse_args_requires_explicit_execute_for_mutating_install (test_device_smoke.DeviceSmokeScriptTests) ... ok
+test_empty_denominators_are_unknown_not_perfect (test_evaluate_recognition.EvaluationTests) ... ok
+test_split_merge_and_missed_quality_are_visible (test_evaluate_recognition.EvaluationTests) ... ok
+test_unknown_assets_and_overlapping_groups_fail (test_evaluate_recognition.EvaluationTests) ... ok
+test_external_submission_placeholders_report_info_until_final_urls_exist (test_release_preflight.ReleasePreflightScriptTests) ... ok
+test_guard_allows_scanner_sha256_but_rejects_encryption (test_release_preflight.ReleasePreflightScriptTests) ... ok
+test_localized_copy_guard_checks_chinese_design_docs_and_prototype (test_release_preflight.ReleasePreflightScriptTests) ... ok
+test_localized_copy_guard_checks_only_zh_hans_listing_section (test_release_preflight.ReleasePreflightScriptTests) ... ok
+test_localized_copy_guard_fails_when_chinese_surfaces_use_review_bin (test_release_preflight.ReleasePreflightScriptTests) ... ok
+test_localized_copy_guard_ignores_binary_assets (test_release_preflight.ReleasePreflightScriptTests) ... ok
+test_metadata_packet_guard_fails_when_copy_paste_file_differs_from_listing (test_release_preflight.ReleasePreflightScriptTests) ... ok
+test_metadata_packet_guard_passes_when_copy_paste_files_match_listing (test_release_preflight.ReleasePreflightScriptTests) ... ok
+test_privacy_manifest_accepts_app_local_user_defaults (test_release_preflight.ReleasePreflightScriptTests) ... ok
+test_privacy_manifest_preserves_no_collection_or_tracking_guardrails (test_release_preflight.ReleasePreflightScriptTests) ... ok
+test_privacy_manifest_rejects_missing_or_unapproved_api_reasons (test_release_preflight.ReleasePreflightScriptTests) ... ok
+test_signing_state_accepts_confirmed_team_and_current_xcode_profile_directory (test_release_preflight.ReleasePreflightScriptTests) ... ok
+test_signing_state_rejects_unconfirmed_team (test_release_preflight.ReleasePreflightScriptTests) ... ok
+
+----------------------------------------------------------------------
+Ran 25 tests in 0.194s
+
+OK

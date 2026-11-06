@@ -43,7 +43,7 @@ enum PrivacySafetyTopic: String, CaseIterable, Identifiable, Hashable {
         case .privacyDetails:
             "照片和视频不会上传到服务器。应用不需要账号，不加入广告 SDK，不做跨 App 追踪。缩略图只通过系统 Photos 框架读取并使用内存缓存，不会把你的照片或视频另存到应用目录。"
         case .helpSupport:
-            "如果扫描结果不完整，请检查是否只授予了 Limited Photos Access。删除前请确认 iCloud Photos 状态；删除后不要立即清空 Recently Deleted，这样仍有恢复窗口。"
+            "如果扫描结果不完整，请检查是否只授予了 有限照片访问。删除前请确认 iCloud 照片 状态；删除后不要立即清空 “最近删除”，这样仍有恢复窗口。"
         }
     }
 
@@ -57,77 +57,81 @@ struct PrivacySafetyView: View {
     var confirmedKeepAssetIDs: Set<String> = []
     var onRemoveConfirmedKeep: (String) -> Void = { _ in }
     var onResetConfirmedKeeps: () -> Void = {}
+    var onRestoreConfirmedKeeps: (Set<String>) -> Void = { _ in }
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 18) {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("我们的承诺")
-                        .font(TrueKeepTheme.Font.sheetTitle)
-                    Text("用清楚的话说明留真会做什么，也说明不会做什么。")
-                        .font(TrueKeepTheme.Font.bodySmall)
-                        .foregroundStyle(TrueKeepTheme.muted)
-                        .lineLimit(nil)
-                        .fixedSize(horizontal: false, vertical: true)
-                    Text("TrueKeep / 留真 · v0.1.0")
-                        .font(TrueKeepTheme.Font.captionStrong)
-                        .foregroundStyle(TrueKeepTheme.ink)
-                }
-
-                VStack(alignment: .leading, spacing: 16) {
-                    PromiseRow(systemImage: "lock.shield", title: "100% 本地处理", subtitle: "所有分析都在你的 iPhone 上完成，不经过服务器。")
-                    PromiseRow(systemImage: "icloud.slash", title: "不收集照片或视频", subtitle: "我们不会收集、上传、分享你的照片或视频。")
-                    PromiseRow(systemImage: "eye.slash", title: "不做跟踪", subtitle: "没有广告 SDK，没有用于画像的追踪。")
-                    PromiseRow(systemImage: "person.crop.circle", title: "由你控制", subtitle: "你决定保留什么、删除什么。未经你确认不会删除。")
-                }
-
-                SafetyNotice(
-                    title: "iCloud Photos",
-                    message: "删除照片或视频可能会同步到 iCloud 和其他设备。真正删除前，请在 Photos App 的 Recently Deleted 中保留恢复窗口。"
-                )
-
-                VStack(spacing: 8) {
-                    NavigationLink {
-                        LocalPhotoModelsView(controller: localModels)
-                    } label: {
-                        SettingsRow(title: "本地模型实验", detail: localModels.isEnabled ? "已开启" : "关闭")
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityIdentifier("truekeep.settings.local-models")
-                    ForEach(PrivacySafetyTopic.allCases) { topic in
-                        NavigationLink(value: topic) {
-                            SettingsRow(
-                                title: topic.title,
-                                detail: topic == .confirmedKeeps
-                                    ? confirmedKeepsCountText
-                                    : nil
-                            )
-                        }
-                        .buttonStyle(.plain)
-                        .accessibilityIdentifier(topic.accessibilityIdentifier)
-                        .accessibilityLabel(topic.title)
-                        .accessibilityValue(topic == .confirmedKeeps ? confirmedKeepsCountText : "")
-                        .accessibilityHint("打开详情")
-                    }
-                }
+        List {
+            Section {
+                sectionTitle("整理管理")
+                topicLink(.confirmedKeeps)
             }
-            .padding(20)
-            .padding(.bottom, TrueKeepTheme.tabScrollBottomPadding)
+            Section {
+                sectionTitle("帮助与隐私")
+                topicLink(.howItWorks)
+                topicLink(.privacyDetails)
+                topicLink(.helpSupport)
+            }
+            Section {
+                sectionTitle("进阶")
+                NavigationLink {
+                    LocalPhotoModelsView(controller: localModels)
+                } label: {
+                    LabeledContent("本地模型实验") {
+                        Text(localModels.isEnabled ? "已开启" : "关闭")
+                            .foregroundStyle(TrueKeepTheme.muted)
+                    }
+                }
+                .accessibilityIdentifier("truekeep.settings.local-models")
+            }
+            Section {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("TrueKeep / 留真 · \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "—")")
+                    Text("本地分析，不上传照片，不自动删除。")
+                        .font(TrueKeepTheme.Font.bodySmall)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .foregroundStyle(TrueKeepTheme.muted)
+            }
         }
-        .navigationTitle("隐私与安全")
+        .readableContent()
+        .navigationTitle("设置")
         .navigationBarTitleDisplayMode(.inline)
         .navigationDestination(for: PrivacySafetyTopic.self) { topic in
             if topic == .confirmedKeeps {
                 ConfirmedKeepsView(
                     assetIDs: confirmedKeepAssetIDs,
                     onRemove: onRemoveConfirmedKeep,
-                    onReset: onResetConfirmedKeeps
+                    onReset: onResetConfirmedKeeps,
+                    onRestore: onRestoreConfirmedKeeps
                 )
             } else {
                 PrivacySafetyTopicDetailView(topic: topic)
             }
         }
         .trueKeepScreenBackground()
+    }
+
+    private func topicLink(_ topic: PrivacySafetyTopic) -> some View {
+        NavigationLink(value: topic) {
+            HStack {
+                Text(topic.title).font(.body).fixedSize(horizontal: false, vertical: true)
+                Spacer()
+                if topic == .confirmedKeeps {
+                    Text(confirmedKeepsCountText).font(.body).foregroundStyle(TrueKeepTheme.muted)
+                }
+            }
+        }
+        .accessibilityIdentifier(topic.accessibilityIdentifier)
+        .accessibilityLabel(topic.title)
+        .accessibilityValue(topic == .confirmedKeeps ? confirmedKeepsCountText : "")
+    }
+
+    private func sectionTitle(_ title: String) -> some View {
+        Text(title)
+            .font(TrueKeepTheme.Font.sectionTitle)
+            .foregroundStyle(TrueKeepTheme.ink)
+            .fixedSize(horizontal: false, vertical: true)
+            .accessibilityAddTraits(.isHeader)
     }
 
     private var confirmedKeepsCountText: String {
@@ -139,118 +143,133 @@ private struct ConfirmedKeepsView: View {
     var assetIDs: Set<String>
     var onRemove: (String) -> Void
     var onReset: () -> Void
-
+    var onRestore: (Set<String>) -> Void
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.windowLayout) private var layout
+    @State private var isEditing = false
+    @State private var selectedIDs: Set<String> = []
+    @State private var removedIDs: Set<String> = []
     @State private var showsResetConfirmation = false
+    @State private var previewCandidate: CleanupCandidate?
 
-    private var sortedAssetIDs: [String] {
-        assetIDs.sorted()
+    private var candidates: [CleanupCandidate] {
+        assetIDs.sorted().enumerated().map { index, id in
+            CleanupCandidate(id: id, category: .similar, confidence: .low,
+                             defaultSelectedForDeletion: false, recommendedKeep: false, confirmedKeep: true,
+                             reason: "已确认保留照片 \(index + 1)", estimatedBytes: 0, thumbnail: .kidPortrait, thumbnailAssetID: id)
+        }
     }
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 18) {
-                SafetyNotice(
-                    title: "只在本机记住",
-                    message: "这些照片不会再作为普通清理候选。相似照片复核中仍可能作为受保护的比较参考；取消后可能在下次扫描再次出现。"
-                )
-
-                if sortedAssetIDs.isEmpty {
-                    VStack(spacing: 10) {
-                        Image(systemName: "checkmark.shield")
-                            .font(TrueKeepTheme.Font.iconLarge)
-                            .foregroundStyle(TrueKeepTheme.green)
-                            .accessibilityHidden(true)
-                        Text("还没有已确认保留的照片")
-                            .font(TrueKeepTheme.Font.cardTitle)
-                            .foregroundStyle(TrueKeepTheme.ink)
-                        Text("在复核照片时使用更多操作即可确认保留。")
-                            .font(TrueKeepTheme.Font.bodySmall)
-                            .foregroundStyle(TrueKeepTheme.muted)
-                            .multilineTextAlignment(.center)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 36)
+            VStack(alignment: .leading, spacing: 16) {
+                Text("取消保留不会删除照片；照片可能在之后扫描中再次出现。")
+                    .font(TrueKeepTheme.Font.caption).foregroundStyle(TrueKeepTheme.muted)
+                if !removedIDs.isEmpty {
+                    HStack {
+                        Text("已取消 \(removedIDs.count) 项保留")
+                        Spacer()
+                        Button {
+                            onRestore(removedIDs)
+                            removedIDs = []
+                        } label: {
+                            Text("撤销").frame(minWidth: 44, minHeight: 44).contentShape(Rectangle())
+                        }.buttonStyle(.plain).foregroundStyle(TrueKeepTheme.greenStrong)
+                            .accessibilityIdentifier("keeps.undo")
+                    }.font(TrueKeepTheme.Font.caption)
+                }
+                if assetIDs.isEmpty {
+                    ContentUnavailableView("还没有已确认保留的照片", systemImage: "checkmark.shield",
+                                           description: Text("打开照片预览，选择“确认保留，不再提醒”。"))
                 } else {
-                    LazyVGrid(
-                        columns: [GridItem(.flexible()), GridItem(.flexible())],
-                        spacing: 12
-                    ) {
-                        ForEach(Array(sortedAssetIDs.enumerated()), id: \.element) { index, assetID in
-                            VStack(alignment: .leading, spacing: 8) {
-                                ThumbnailView(
-                                    style: .kidPortrait,
-                                    assetID: assetID,
-                                    isConfirmedKeep: true,
-                                    showsSelectionIndicator: false
-                                )
-                                .frame(height: 132)
-
-                                Text("保留照片 \(index + 1)")
-                                    .font(TrueKeepTheme.Font.captionStrong)
-                                    .foregroundStyle(TrueKeepTheme.ink)
-
-                                Button {
-                                    onRemove(assetID)
-                                } label: {
-                                    Label("取消保留", systemImage: "arrow.uturn.backward")
-                                        .font(TrueKeepTheme.Font.inlineAction)
-                                        .frame(maxWidth: .infinity, minHeight: 44)
+                    AdaptivePhotoGrid {
+                        ForEach(candidates) { candidate in
+                            Button {
+                                if isEditing {
+                                    if !selectedIDs.insert(candidate.id).inserted { selectedIDs.remove(candidate.id) }
+                                } else {
+                                    previewCandidate = candidate
                                 }
-                                .buttonStyle(.plain)
-                                .foregroundStyle(TrueKeepTheme.greenStrong)
-                                .background(TrueKeepTheme.paper)
-                                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                                .overlay {
-                                    RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                        .stroke(TrueKeepTheme.line)
-                                }
-                                .accessibilityIdentifier(TrueKeepAccessibility.confirmedKeepItem(id: assetID))
-                                .accessibilityLabel("取消保留照片 \(index + 1)")
-                                .accessibilityHint("取消后可能在下次扫描中再次出现")
+                            } label: {
+                                ThumbnailView(style: .kidPortrait, assetID: candidate.id,
+                                              isSelected: selectedIDs.contains(candidate.id),
+                                              isConfirmedKeep: !isEditing, showsSelectionIndicator: isEditing)
+                                    .aspectRatio(1, contentMode: .fit)
                             }
-                            .padding(10)
-                            .background(TrueKeepTheme.paper)
-                            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                            .overlay {
-                                RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                    .stroke(TrueKeepTheme.line)
-                            }
+                            .buttonStyle(.plain)
+                            .accessibilityIdentifier(TrueKeepAccessibility.confirmedKeepItem(id: candidate.id))
+                            .accessibilityLabel(candidate.reason)
+                            .accessibilityValue(isEditing ? (selectedIDs.contains(candidate.id) ? "已选择" : "未选择") : "已确认保留")
+                            .accessibilityHint(isEditing ? "切换取消保留的选择" : "只读预览")
                         }
                     }
-
-                    Button(role: .destructive) {
-                        showsResetConfirmation = true
-                    } label: {
-                        Label("全部取消保留", systemImage: "arrow.counterclockwise")
-                            .font(TrueKeepTheme.Font.button)
-                            .frame(maxWidth: .infinity, minHeight: 52)
-                    }
-                    .buttonStyle(.plain)
-                    .foregroundStyle(TrueKeepTheme.danger)
-                    .background(TrueKeepTheme.paper)
-                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 8, style: .continuous)
-                            .stroke(TrueKeepTheme.danger.opacity(0.45))
-                    }
-                    .accessibilityIdentifier(TrueKeepAccessibility.Control.resetConfirmedKeeps.id)
                 }
-            }
-            .padding(20)
-            .padding(.bottom, TrueKeepTheme.tabScrollBottomPadding)
+                if layout.usesInlineActions { keepActions }
+            }.padding(20)
+        }
+        .safeAreaInset(edge: .bottom) {
+            if !layout.usesInlineActions { keepActions }
         }
         .navigationTitle("已确认保留")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            if !assetIDs.isEmpty {
+                Button {
+                    isEditing.toggle()
+                    selectedIDs = []
+                } label: {
+                    Text(isEditing ? "完成" : "编辑").font(TrueKeepTheme.Font.caption)
+                        .frame(minWidth: 44, minHeight: 44).contentShape(Rectangle())
+                }
+                    .foregroundStyle(TrueKeepTheme.greenStrong)
+                    .buttonStyle(.plain)
+                    .dynamicTypeSize(dynamicTypeSize)
+                    .accessibilityIdentifier("keeps.edit")
+            }
+        }
         .trueKeepScreenBackground()
         .alert("全部取消保留？", isPresented: $showsResetConfirmation) {
             Button("取消", role: .cancel) {}
-            Button("全部取消保留", role: .destructive) {
-                onReset()
-            }
+            Button("全部取消保留", role: .destructive) { removeSelection() }
         } message: {
-            Text("不会删除任何照片，但这些照片可能在下次扫描中再次成为复核候选。")
+            Text("只移除保留记录，不会删除照片。照片可能在下次扫描再次成为候选。")
         }
+        .fullScreenCover(item: $previewCandidate) { candidate in
+            MediaReviewView(candidates: candidates, initialID: candidate.id)
+        }
+        .onChange(of: assetIDs) {
+            selectedIDs.formIntersection(assetIDs)
+            if assetIDs.isEmpty { isEditing = false }
+        }
+    }
+
+    @ViewBuilder private var keepActions: some View {
+            if isEditing && !assetIDs.isEmpty {
+                VStack(spacing: 8) {
+                    Button {
+                        selectedIDs = selectedIDs == assetIDs ? [] : assetIDs
+                    } label: {
+                        Text(selectedIDs == assetIDs ? "取消全选" : "全选")
+                            .frame(minWidth: 44, minHeight: 44).contentShape(Rectangle())
+                    }.buttonStyle(.plain).foregroundStyle(TrueKeepTheme.greenStrong)
+                        .accessibilityIdentifier("keeps.select-all")
+                    SecondaryActionButton(title: "取消所选保留（\(selectedIDs.count)）") {
+                        if selectedIDs == assetIDs { showsResetConfirmation = true }
+                        else { removeSelection() }
+                    }
+                    .disabled(selectedIDs.isEmpty)
+                    .accessibilityIdentifier(TrueKeepAccessibility.Control.resetConfirmedKeeps.id)
+                }.padding().background(TrueKeepTheme.page)
+        }
+    }
+
+    private func removeSelection() {
+        let ids = selectedIDs.intersection(assetIDs)
+        guard !ids.isEmpty else { return }
+        removedIDs = ids
+        selectedIDs = []
+        if ids == assetIDs { onReset() }
+        else { for id in ids { onRemove(id) } }
     }
 }
 
@@ -278,6 +297,7 @@ private struct PrivacySafetyTopicDetailView: View {
                 )
             }
             .padding(20)
+            .readableContent()
         }
         .navigationTitle(topic.title)
         .navigationBarTitleDisplayMode(.inline)

@@ -56,6 +56,7 @@ struct LocalPhotoModelsView: View {
                 if controller.isFixture { Text("UI 测试模式：未加载真实权重").font(.footnote) }
             }
         }
+        .readableContent()
         .navigationTitle("本地模型实验")
         .navigationBarTitleDisplayMode(.inline)
         .task { await controller.refresh() }

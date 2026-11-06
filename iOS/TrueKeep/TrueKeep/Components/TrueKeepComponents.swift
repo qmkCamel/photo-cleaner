@@ -1,7 +1,22 @@
 import SwiftUI
 import UIKit
 
+struct DeletionCancellationNotice: View {
+    @ObservedObject var coordinator: DeletionCoordinator
+    var body: some View {
+        if coordinator.request == nil, let message = coordinator.message {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(message).font(.caption).fixedSize(horizontal: false, vertical: true)
+                Button("知道了") { coordinator.clearMessage() }.frame(minHeight: 44)
+            }
+            .padding(12).frame(maxWidth: .infinity, alignment: .leading)
+            .background(TrueKeepTheme.greenSoft, in: RoundedRectangle(cornerRadius: 8))
+        }
+    }
+}
+
 struct PrimaryActionButton: View {
+    @Environment(\.isEnabled) private var isEnabled
     var title: String
     var isBusy: Bool = false
     var action: () -> Void
@@ -12,8 +27,8 @@ struct PrimaryActionButton: View {
         }
         .disabled(isBusy)
         .buttonStyle(.plain)
-        .foregroundStyle(.white)
-        .background(TrueKeepTheme.greenStrong)
+        .foregroundStyle(isEnabled ? .white : TrueKeepTheme.muted)
+        .background(isEnabled ? TrueKeepTheme.greenStrong : TrueKeepTheme.line)
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .shadow(color: TrueKeepTheme.green.opacity(0.20), radius: 12, y: 6)
@@ -230,12 +245,13 @@ struct ThumbnailView: View {
                                 .clipShape(Capsule())
                         }
                         if isConfirmedKeep {
-                            Image(systemName: "checkmark.shield.fill")
-                                .font(TrueKeepTheme.Font.iconCaption)
+                            Label("已保留", systemImage: "checkmark.shield.fill")
+                                .font(TrueKeepTheme.Font.caption2Strong)
                                 .foregroundStyle(.white)
-                                .frame(width: 28, height: 28)
+                                .padding(.horizontal, 7)
+                                .padding(.vertical, 5)
                                 .background(TrueKeepTheme.greenStrong.opacity(0.95))
-                                .clipShape(Circle())
+                                .clipShape(Capsule())
                                 .accessibilityHidden(true)
                         }
                         Spacer()

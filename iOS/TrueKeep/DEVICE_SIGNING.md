@@ -121,7 +121,11 @@ or:
 TRUEKEEP_ENABLE_DESTRUCTIVE_PHOTO_DELETION=1
 ```
 
-Do not use either opt-in during normal physical-device smoke testing.
+After an explicit opt-in, Debug builds now save the authorization locally. Force-quitting and reopening from the Home Screen retains real deletion capability; the app's second confirmation and system Photos confirmation still apply. Fresh installations remain deletion-safe by default.
+
+To revoke the saved authorization, launch once with `-TrueKeepDisablePhotoDeletion` or `TRUEKEEP_DISABLE_PHOTO_DELETION=1`. Disable always wins, clears the saved Debug authorization, and keeps subsequent ordinary launches safe. Release behavior is unchanged.
+
+Do not use either opt-in during normal physical-device smoke testing. The smoke script's explicit disable also revokes any prior manual opt-in.
 
 ## Smoke Test Pass Criteria
 

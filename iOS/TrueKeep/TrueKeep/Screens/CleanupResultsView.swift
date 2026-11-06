@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct CleanupResultsView: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     var state: CleanupFlowState
     var scanLimitationWarning: String? = nil
     var shouldShowPhotoAccessPrompt: Bool = false
@@ -17,17 +18,25 @@ struct CleanupResultsView: View {
     var onManagePhotoAccess: () -> Void = {}
     var onRequestPhotoAccess: () -> Void = {}
     var onSelectScanDateRange: (PhotoScanDateRange) -> Void = { _ in }
-    var onScan: () -> Void = {}
+    var onScan: (PhotoScanDateRange) -> Void = { _ in }
     var onViewScanProgress: () -> Void = {}
     var onReviewTask: (CleanupTask) -> Void
     @State private var confirmsRebuild = false
+    @State private var showsScanSetup = false
+    @State private var showsScanDetails = false
+    @State private var draftRange: PhotoScanDateRange = .defaultValue
+    @State private var exportText: String?
+    @State private var exportError: String?
+    @State private var isExporting = false
+    @State private var exportTask: Task<Void, Never>?
+    @State private var exportAttempts = 0
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("扫描结果")
+                        Text(hasCompletedScan ? "扫描结果" : "开始整理")
                             .font(TrueKeepTheme.Font.pageTitle)
                         Text(headerMessage)
                             .font(TrueKeepTheme.Font.bodySmall)
@@ -45,6 +54,11 @@ struct CleanupResultsView: View {
                             .accessibilityIdentifier(
                                 TrueKeepAccessibility.Control.completedScanDateRange.id
                             )
+                        }
+                        if hasCompletedScan, let completedAt = state.scanReport?.completedAt {
+                            Text("扫描于 \(completedAt.formatted(date: .abbreviated, time: .shortened))")
+                                .font(TrueKeepTheme.Font.bodySmall)
+                                .foregroundStyle(TrueKeepTheme.ink)
                         }
                     }
                     Spacer()
@@ -65,32 +79,14 @@ struct CleanupResultsView: View {
                     }
                 }
 
-                if let report = state.scanReport {
-                    VStack(alignment: .leading, spacing: 5) {
-                        Text(report.summary)
-                        Text("耗时 \(report.elapsedSeconds, specifier: "%.1f") 秒。仅分析本机可读取内容；未读取不代表没有问题。")
-                    }
-                    .font(TrueKeepTheme.Font.caption)
-                    .accessibilityIdentifier("scan.coverage")
-                    ShareLink(item: state.evaluationJSON) {
-                        Label("导出本次复核报告", systemImage: "square.and.arrow.up")
-                    }
-                    .accessibilityIdentifier("scan.export-report")
-                    Text("报告含本地项目标识和分析统计，不含照片。分享前请确认接收方。")
-                        .font(TrueKeepTheme.Font.caption)
+                if activeScanProgress != nil, hasCompletedScan {
+                    Text("以下为上次扫描结果，新扫描完成后更新。")
+                        .font(TrueKeepTheme.Font.caption).foregroundStyle(TrueKeepTheme.muted)
                 }
-
-                if canScan {
-                    ScanDateRangeSelector(
-                        title: hasCompletedScan || activeScanProgress != nil
-                            ? "下次扫描范围"
-                            : "扫描范围",
-                        selection: selectedScanDateRange,
-                        usesCompactLayout: hasCompletedScan,
-                        onSelect: onSelectScanDateRange
-                    )
+                if let report = state.scanReport, report.unavailablePhotos > 0 {
+                    Text("有 \(report.unavailablePhotos) 项本地内容未能读取，结果可能不完整。")
+                        .font(TrueKeepTheme.Font.caption).foregroundStyle(TrueKeepTheme.muted)
                 }
-
                 if let deletionSummary = state.deletionSummary {
                     PhotoDeletionSummaryNotice(summary: deletionSummary)
                 }
@@ -116,12 +112,12 @@ struct CleanupResultsView: View {
                 }
 
                 if state.tasks.isEmpty {
-                    if canScan, state.deletionSummary == nil {
+                    if canScan, activeScanProgress == nil {
                         scanAction
                     }
                     if state.deletionSummary != nil {
                         PostDeletionEmptyState()
-                    } else {
+                    } else if canScan {
                         EmptyResultsState(hasCompletedScan: hasCompletedScan)
                     }
                 } else {
@@ -149,17 +145,121 @@ struct CleanupResultsView: View {
                 }
             }
             .padding(20)
-            .padding(.bottom, TrueKeepTheme.tabScrollBottomPadding)
+            .readableContent()
         }
         .accessibilityIdentifier(TrueKeepAccessibility.Control.cleanupResultsScreen.id)
-        .safeAreaInset(edge: .bottom) {
-            if canScan, (!state.tasks.isEmpty || state.deletionSummary != nil) {
-                resultsRescanFooter
-            }
-        }
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .trueKeepScreenBackground()
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            TrueKeepTheme.page.frame(height: 1)
+                .background(TrueKeepTheme.page.ignoresSafeArea(edges: .bottom))
+                .accessibilityHidden(true)
+        }
+        .toolbar {
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                if hasCompletedScan {
+                    Button {
+                        exportText = nil
+                        exportError = nil
+                        showsScanDetails = true
+                    } label: {
+                        Text("扫描详情").font(TrueKeepTheme.Font.caption)
+                            .frame(minWidth: 44, minHeight: 44).contentShape(Rectangle())
+                    }
+                        .foregroundStyle(TrueKeepTheme.greenStrong)
+                        .buttonStyle(.plain)
+                        .dynamicTypeSize(dynamicTypeSize)
+                        .accessibilityIdentifier("scan.details")
+                }
+                if canScan, !state.tasks.isEmpty, activeScanProgress == nil {
+                    Button(action: openScanSetup) {
+                        Text("重新扫描").font(TrueKeepTheme.Font.caption)
+                            .frame(minWidth: 44, minHeight: 44).contentShape(Rectangle())
+                    }
+                        .foregroundStyle(TrueKeepTheme.greenStrong)
+                        .buttonStyle(.plain)
+                        .dynamicTypeSize(dynamicTypeSize)
+                        .accessibilityIdentifier(TrueKeepAccessibility.Control.homeScan.id)
+                }
+            }
+        }
+        .sheet(isPresented: $showsScanSetup) {
+            NavigationStack {
+                ScrollView {
+                    ScanDateRangeSelector(title: "扫描范围", selection: draftRange, usesCompactLayout: false) { draftRange = $0 }
+                    if let scanLimitationWarning {
+                        SafetyNotice(title: "访问范围有限", message: scanLimitationWarning)
+                    }
+                }.padding()
+                .safeAreaInset(edge: .bottom) {
+                    PrimaryActionButton(title: "开始扫描") {
+                        let range = draftRange
+                        showsScanSetup = false
+                        onSelectScanDateRange(range)
+                        onScan(range)
+                    }
+                    .accessibilityIdentifier("scan.setup.start")
+                    .padding()
+                }
+                .navigationTitle("本地扫描")
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button { showsScanSetup = false } label: {
+                            Text("取消").font(TrueKeepTheme.Font.caption)
+                                .frame(minWidth: 44, minHeight: 44).contentShape(Rectangle())
+                        }
+                            .foregroundStyle(TrueKeepTheme.greenStrong)
+                            .buttonStyle(.plain)
+                            .dynamicTypeSize(dynamicTypeSize)
+                            .accessibilityIdentifier("scan.setup.cancel")
+                    }
+                }
+            }.presentationDetents([.medium, .large])
+        }
+        .sheet(isPresented: $showsScanDetails, onDismiss: {
+            exportTask?.cancel()
+            exportTask = nil
+            isExporting = false
+        }) {
+            NavigationStack {
+                Form {
+                    if let completedScanDateRange { Text("本次范围：\(completedScanDateRange.title)") }
+                    if let report = state.scanReport {
+                        Text(report.summary).accessibilityIdentifier("scan.coverage")
+                        Text("耗时 \(report.elapsedSeconds, specifier: "%.1f") 秒。未读取不代表没有问题。")
+                    }
+                    if let scanLimitationWarning { Text(scanLimitationWarning) }
+                    Section("导出复核报告") {
+                        Text("报告含本地项目标识和分析统计，不含照片。分享前请确认接收方。")
+                        if let exportText {
+                            ShareLink(item: exportText) {
+                                Label("分享本次复核报告", systemImage: "square.and.arrow.up")
+                            }.accessibilityIdentifier("scan.share-report")
+                        } else {
+                            Button(action: prepareReport) {
+                                HStack {
+                                    if isExporting { ProgressView() }
+                                    Text(isExporting ? "正在生成报告…" : "生成本次复核报告")
+                                }
+                            }.disabled(isExporting).accessibilityIdentifier("scan.export-report")
+                        }
+                        if let exportError { Text(exportError).foregroundStyle(TrueKeepTheme.danger) }
+                    }
+                }
+                .accessibilityIdentifier("scan.details.form")
+                .navigationTitle("扫描详情")
+                .toolbar {
+                    Button { showsScanDetails = false } label: {
+                        Text("完成").font(TrueKeepTheme.Font.caption)
+                            .frame(minWidth: 44, minHeight: 44).contentShape(Rectangle())
+                    }
+                        .foregroundStyle(TrueKeepTheme.greenStrong)
+                        .buttonStyle(.plain)
+                        .dynamicTypeSize(dynamicTypeSize)
+                }
+            }
+        }
         .confirmationDialog("重建本地复核记录？", isPresented: $confirmsRebuild, titleVisibility: .visible) {
             Button("保留备份并重建", action: onRebuildSession)
             Button("取消", role: .cancel) {}
@@ -184,33 +284,55 @@ struct CleanupResultsView: View {
         return "我们找到了值得你复核的项目。"
     }
 
-    @ViewBuilder
+    private func openScanSetup() {
+        guard activeScanProgress == nil else { return }
+        draftRange = selectedScanDateRange
+        showsScanSetup = true
+    }
+
+    private func prepareReport() {
+        guard !isExporting else { return }
+        isExporting = true
+        exportError = nil
+        exportAttempts += 1
+        let snapshot = state.evaluationExport
+        let attempt = exportAttempts
+        exportTask = Task { @MainActor in
+            let worker = Task.detached(priority: .userInitiated) {
+                try Task.checkCancellation()
+                #if DEBUG
+                let arguments = ProcessInfo.processInfo.arguments
+                if arguments.contains("-TrueKeepDisablePhotoDeletion"), arguments.contains("-TrueKeepUITestReportExportFailure") {
+                    try await Task.sleep(for: .seconds(2))
+                    if attempt == 1 { throw CocoaError(.fileWriteUnknown) }
+                }
+                #endif
+                let encoder = JSONEncoder()
+                encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+                let data = try encoder.encode(snapshot)
+                try Task.checkCancellation()
+                return String(decoding: data, as: UTF8.self)
+            }
+            do {
+                let text = try await withTaskCancellationHandler {
+                    try await worker.value
+                } onCancel: { worker.cancel() }
+                guard !Task.isCancelled else { return }
+                exportText = text
+            } catch {
+                guard !Task.isCancelled else { return }
+                exportError = "报告生成失败，请重试。"
+            }
+            isExporting = false
+            exportTask = nil
+        }
+    }
+
     private var scanAction: some View {
-        PrimaryActionButton(
-            title: activeScanProgress == nil
-                ? (hasCompletedScan ? "重新扫描" : "扫描相册")
-                : "查看扫描进度",
-            action: activeScanProgress == nil ? onScan : onViewScanProgress
-        )
+        PrimaryActionButton(title: hasCompletedScan ? "重新扫描" : "扫描相册", action: openScanSetup)
             .accessibilityIdentifier(TrueKeepAccessibility.Control.homeScan.id)
     }
 
-    private var resultsRescanFooter: some View {
-        PrimaryActionButton(
-            title: activeScanProgress == nil ? "重新扫描" : "查看扫描进度",
-            action: activeScanProgress == nil ? onScan : onViewScanProgress
-        )
-            .accessibilityIdentifier(TrueKeepAccessibility.Control.homeScan.id)
-            .padding(.horizontal, 20)
-            .padding(.top, 12)
-            .padding(.bottom, 12)
-            .background(TrueKeepTheme.page.ignoresSafeArea(edges: .bottom))
-            .overlay(alignment: .top) {
-                Rectangle()
-                    .fill(TrueKeepTheme.line)
-                    .frame(height: 1)
-            }
-    }
 }
 
 private struct ActiveScanNotice: View {
@@ -403,11 +525,15 @@ private struct PostDeletionEmptyState: View {
 }
 
 private struct PhotoAccessPrompt: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     var isRequestingAccess: Bool
     var onRequestAccess: () -> Void
 
     var body: some View {
-        HStack(alignment: .center, spacing: 12) {
+        let layout = dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 12))
+            : AnyLayout(HStackLayout(alignment: .center, spacing: 12))
+        layout {
             Image(systemName: "photo.on.rectangle")
                 .font(TrueKeepTheme.Font.iconMedium)
                 .foregroundStyle(TrueKeepTheme.greenStrong)
@@ -434,7 +560,7 @@ private struct PhotoAccessPrompt: View {
                 isBusy: isRequestingAccess,
                 action: onRequestAccess
             )
-            .frame(width: 116)
+            .frame(width: dynamicTypeSize.isAccessibilitySize ? nil : 116)
             .disabled(isRequestingAccess)
             .opacity(isRequestingAccess ? 0.72 : 1)
             .accessibilityIdentifier(TrueKeepAccessibility.Control.allowPhotos.id)
@@ -452,7 +578,7 @@ private struct EmptyResultsState: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Image(systemName: "checkmark.seal")
+            Image(systemName: hasCompletedScan ? "checkmark.seal" : "photo.on.rectangle")
                 .font(TrueKeepTheme.Font.iconLarge)
                 .foregroundStyle(TrueKeepTheme.green)
             Text(hasCompletedScan ? "暂未发现可清理项目" : "尚未扫描相册")
@@ -483,6 +609,7 @@ private struct EmptyResultsState: View {
 
 private struct CleanupTaskCard: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @State private var availableWidth: CGFloat = 320
 
     var task: CleanupTask
     var onTap: () -> Void
@@ -497,6 +624,7 @@ private struct CleanupTaskCard: View {
             .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).stroke(TrueKeepTheme.line))
         }
         .buttonStyle(.plain)
+        .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { availableWidth = $0 }
         .accessibilityIdentifier(TrueKeepAccessibility.cleanupTask(id: task.id))
         .accessibilityLabel("\(task.category.title)，\(task.description)，\(task.candidateCount) 项，\(task.confidenceLabel)")
         .accessibilityHint("打开复核列表")
@@ -504,7 +632,7 @@ private struct CleanupTaskCard: View {
 
     @ViewBuilder
     private var cardContent: some View {
-        if dynamicTypeSize.isAccessibilitySize {
+        if dynamicTypeSize.isAccessibilitySize || availableWidth < 340 {
             VStack(alignment: .leading, spacing: 10) {
                 HStack(alignment: .top, spacing: 10) {
                     categoryIcon
@@ -544,6 +672,7 @@ private struct CleanupTaskCard: View {
             .frame(width: 34, height: 34)
             .background(Color(red: 0.953, green: 0.965, blue: 0.957))
             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .accessibilityHidden(true)
     }
 
     private var taskTitle: some View {
@@ -565,6 +694,7 @@ private struct CleanupTaskCard: View {
                 .frame(width: 37, height: 37)
             }
         }
+        .accessibilityHidden(true)
     }
 
     private var candidateCount: some View {

@@ -94,6 +94,7 @@
       "launchArguments": [
         "-TrueKeepDisablePhotoDeletion",
         "-TrueKeepResetIntroState",
+        "-TrueKeepResetScanPreferences",
         "-TrueKeepUITestAuthorizedHome"
       ]
     },

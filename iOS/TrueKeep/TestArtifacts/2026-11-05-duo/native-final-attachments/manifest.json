@@ -1,0 +1,176 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "62A87288-C41F-42F7-981B-DD066ECC5CA8",
+        "deviceName" : "iPhone Duo",
+        "exportedFileName" : "6686C2C0-5471-4FAA-B841-6F787D69AA8A.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "local-model-07-group-change-discards-pending_0_2A1F88CB-3DB6-4E56-9837-733EAF236D2C.png",
+        "timestamp" : 1793872138.56
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "62A87288-C41F-42F7-981B-DD066ECC5CA8",
+        "deviceName" : "iPhone Duo",
+        "exportedFileName" : "A3BC819C-9657-4706-A7F9-B4702AF66F90.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "local-model-group-navigation-before-tap_0_D7CD5C0A-559A-4828-98BA-81AC7F81C6E5.png",
+        "timestamp" : 1793872135.686
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "62A87288-C41F-42F7-981B-DD066ECC5CA8",
+        "deviceName" : "iPhone Duo",
+        "exportedFileName" : "60B668FE-3EAF-4805-BB9F-B6603A7D9C2F.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "local-model-06-analysis-cancelled_0_7FAFE83C-6C61-4DB8-8CEF-C551550A8EA5.png",
+        "timestamp" : 1793872132.538
+      }
+    ],
+    "testIdentifier" : "LocalPhotoModelsUITests/testCancelAnalysisAndChangingGroupDiscardPendingResult()",
+    "testIdentifierURL" : "test://com.apple.xcode/TrueKeep/TrueKeepUITests/LocalPhotoModelsUITests/testCancelAnalysisAndChangingGroupDiscardPendingResult"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "62A87288-C41F-42F7-981B-DD066ECC5CA8",
+        "deviceName" : "iPhone Duo",
+        "exportedFileName" : "CCE3AECA-362A-44EB-AD4E-A062D145E4BD.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "duo-orientation-request-no-window-change_0_83FC5F5E-B2F3-4846-B7DD-534A57049078.png",
+        "timestamp" : 1793872165.607
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "62A87288-C41F-42F7-981B-DD066ECC5CA8",
+        "deviceName" : "iPhone Duo",
+        "exportedFileName" : "D198068A-8F04-4C84-A4A6-E82DC29408DB.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "duo-direct-confirm-before-rotation_0_41A7DB7A-0F56-4B42-ABAA-8B2450864F2C.png",
+        "timestamp" : 1793872162.332
+      }
+    ],
+    "testIdentifier" : "TrueKeepUITests/testDuoDeleteConfirmationAndInflightRotation()",
+    "testIdentifierURL" : "test://com.apple.xcode/TrueKeep/TrueKeepUITests/TrueKeepUITests/testDuoDeleteConfirmationAndInflightRotation"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "62A87288-C41F-42F7-981B-DD066ECC5CA8",
+        "deviceName" : "iPhone Duo",
+        "exportedFileName" : "64FFFD5C-DE83-4041-9D06-D465DCEFE43B.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "duo-delete-safe-text-all-visible_0_84E10A6F-3C59-4A0F-9B3C-7B8BD9997F38.png",
+        "timestamp" : 1793872186.911
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "62A87288-C41F-42F7-981B-DD066ECC5CA8",
+        "deviceName" : "iPhone Duo",
+        "exportedFileName" : "0E7665D2-FC0C-4C56-B26F-9D97C039BB95.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "accessibility-passed-duo-delete-confirmation_0_2F908653-1FB7-40B8-B7E4-5D9826BAAEB4.png",
+        "timestamp" : 1793872186.813
+      }
+    ],
+    "testIdentifier" : "TrueKeepUITests/testDuoDeletionSafetyTextAccessibility()",
+    "testIdentifierURL" : "test://com.apple.xcode/TrueKeep/TrueKeepUITests/TrueKeepUITests/testDuoDeletionSafetyTextAccessibility"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "62A87288-C41F-42F7-981B-DD066ECC5CA8",
+        "deviceName" : "iPhone Duo",
+        "exportedFileName" : "EA7E117D-49EE-42FB-BAE6-6E466BA1475A.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "duo-orientation-request-no-window-change_0_65146BC1-4D5C-4291-B146-934F9C4C3DDF.png",
+        "timestamp" : 1793872206.634
+      }
+    ],
+    "testIdentifier" : "TrueKeepUITests/testDuoReportRotationFailureAndRetry()",
+    "testIdentifierURL" : "test://com.apple.xcode/TrueKeep/TrueKeepUITests/TrueKeepUITests/testDuoReportRotationFailureAndRetry"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "62A87288-C41F-42F7-981B-DD066ECC5CA8",
+        "deviceName" : "iPhone Duo",
+        "exportedFileName" : "F5FAFB27-E169-4CC8-811D-E71A0994023A.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "duo-orientation-request-no-window-change_0_84873446-ED51-4398-9695-C3C3234067DE.png",
+        "timestamp" : 1793872226.191
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "62A87288-C41F-42F7-981B-DD066ECC5CA8",
+        "deviceName" : "iPhone Duo",
+        "exportedFileName" : "4072E682-4D5D-4C13-90B4-1D80927FD1BA.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "duo-review-portrait-selected_0_4E06A3DB-DED4-4C58-A84E-ABF2C510A0ED.png",
+        "timestamp" : 1793872222.982
+      }
+    ],
+    "testIdentifier" : "TrueKeepUITests/testDuoReviewSelectionSurvivesRotation()",
+    "testIdentifierURL" : "test://com.apple.xcode/TrueKeep/TrueKeepUITests/TrueKeepUITests/testDuoReviewSelectionSurvivesRotation"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "62A87288-C41F-42F7-981B-DD066ECC5CA8",
+        "deviceName" : "iPhone Duo",
+        "exportedFileName" : "621768AD-1129-4BC2-8DC8-8E87AA3E3173.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "duo-orientation-request-no-window-change_0_5643EAB9-CB29-4222-ACA9-C6392E36EA67.png",
+        "timestamp" : 1793872242.517
+      }
+    ],
+    "testIdentifier" : "TrueKeepUITests/testDuoScanBusyRotateReturnAndCancel()",
+    "testIdentifierURL" : "test://com.apple.xcode/TrueKeep/TrueKeepUITests/TrueKeepUITests/testDuoScanBusyRotateReturnAndCancel"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "62A87288-C41F-42F7-981B-DD066ECC5CA8",
+        "deviceName" : "iPhone Duo",
+        "exportedFileName" : "977EBFDB-47E4-41BE-92A9-17061C0F0C63.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "duo-orientation-request-no-window-change_0_2F71B655-3E7F-4EEA-8C92-C8A31EBDD2C8.png",
+        "timestamp" : 1793872261.026
+      }
+    ],
+    "testIdentifier" : "TrueKeepUITests/testDuoScanDraftSurvivesRotationAndCancel()",
+    "testIdentifierURL" : "test://com.apple.xcode/TrueKeep/TrueKeepUITests/TrueKeepUITests/testDuoScanDraftSurvivesRotationAndCancel"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "62A87288-C41F-42F7-981B-DD066ECC5CA8",
+        "deviceName" : "iPhone Duo",
+        "exportedFileName" : "17C47C5A-2F97-4BC0-A714-FA0973ED15FF.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "redesign-bin-delete-partial-failure_0_0666F59A-A9DD-4635-963C-C8EA0571AB57.png",
+        "timestamp" : 1793872304.2
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "62A87288-C41F-42F7-981B-DD066ECC5CA8",
+        "deviceName" : "iPhone Duo",
+        "exportedFileName" : "2714CC0A-6968-4463-AEE2-28F69FA7BE70.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "redesign-direct-delete-partial-failure_0_12187FFA-4066-4DE9-B799-BC048F619FCA.png",
+        "timestamp" : 1793872285.901
+      }
+    ],
+    "testIdentifier" : "TrueKeepUITests/testRedesignPartialDeletionPreservesFailuresOnBothPaths()",
+    "testIdentifierURL" : "test://com.apple.xcode/TrueKeep/TrueKeepUITests/TrueKeepUITests/testRedesignPartialDeletionPreservesFailuresOnBothPaths"
+  }
+]

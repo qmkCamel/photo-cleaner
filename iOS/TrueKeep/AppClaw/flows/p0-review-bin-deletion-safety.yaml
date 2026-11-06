@@ -27,7 +27,7 @@ steps:
   - tap: truekeep.review-bin.delete-selection
   - waitUntil: truekeep.delete.confirm
     timeout: 10
-  - assert: iCloud Photos 风险
+  - assert: iCloud 照片同步
   - tap: truekeep.delete.confirm
 assertions:
   - waitUntil: 删除未完成

@@ -1,0 +1,17 @@
+[
+  {
+    "attachments": [
+      {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "642F2F40-1DF5-4C73-A382-494BBE4C53AB",
+        "deviceName": "iPhone 17 Pro",
+        "exportedFileName": "scan-coverage-with-local-unavailable.png",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "scan-coverage-with-local-unavailable_0_FE291C0E-77D7-46A9-A6D9-04345B4CA50D.png",
+        "timestamp": 1793798658.054
+      }
+    ],
+    "testIdentifier": "TrueKeepUITests/testCoverageSummaryIncludesUnreadablePhotosWithScreenshot()",
+    "testIdentifierURL": "test://com.apple.xcode/TrueKeep/TrueKeepUITests/TrueKeepUITests/testCoverageSummaryIncludesUnreadablePhotosWithScreenshot"
+  }
+]

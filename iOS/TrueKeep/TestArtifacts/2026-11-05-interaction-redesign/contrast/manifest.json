@@ -1,0 +1,50 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "642F2F40-1DF5-4C73-A382-494BBE4C53AB",
+        "deviceName" : "iPhone 17 Pro",
+        "exportedFileName" : "370B3098-E269-4F6A-B61B-E47F9419DBA5.png",
+        "isAssociatedWithFailure" : true,
+        "suggestedHumanReadableName" : "App Screenshot_0_A0D4D9E8-FFC7-4F97-B9AD-5AA010C9A8B0.png",
+        "timestamp" : 1793862248.202
+      }
+    ],
+    "testIdentifier" : "TrueKeepUITests/testCriticalScreensPassAccessibilityAudit()",
+    "testIdentifierURL" : "test://com.apple.xcode/TrueKeep/TrueKeepUITests/TrueKeepUITests/testCriticalScreensPassAccessibilityAudit"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "642F2F40-1DF5-4C73-A382-494BBE4C53AB",
+        "deviceName" : "iPhone 17 Pro",
+        "exportedFileName" : "BBBE901B-97BE-473C-B873-3CA614F9C154.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "home-scan-range-last-three-months-result_0_88ABA4BD-BD49-4071-916B-F47B99581B02.png",
+        "timestamp" : 1793862269.301
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "642F2F40-1DF5-4C73-A382-494BBE4C53AB",
+        "deviceName" : "iPhone 17 Pro",
+        "exportedFileName" : "5E95D2FC-8CEA-44EE-8AA1-B66CA4B73661.png",
+        "isAssociatedWithFailure" : true,
+        "suggestedHumanReadableName" : "App Screenshot_0_EC93C86C-5896-4A4C-8286-23D279CEF846.png",
+        "timestamp" : 1793862269.856
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "642F2F40-1DF5-4C73-A382-494BBE4C53AB",
+        "deviceName" : "iPhone 17 Pro",
+        "exportedFileName" : "6CFBFE4A-04DB-4075-B23F-023E2BC25D60.png",
+        "isAssociatedWithFailure" : true,
+        "suggestedHumanReadableName" : "Element Screenshot_1_F7E40A2D-4C1E-47CF-904D-53EF50261CCE.png",
+        "timestamp" : 1793862269.856
+      }
+    ],
+    "testIdentifier" : "TrueKeepUITests/testScanDateRangeSelectionIsAppliedAndKeptSeparateFromNextSelection()",
+    "testIdentifierURL" : "test://com.apple.xcode/TrueKeep/TrueKeepUITests/TrueKeepUITests/testScanDateRangeSelectionIsAppliedAndKeptSeparateFromNextSelection"
+  }
+]

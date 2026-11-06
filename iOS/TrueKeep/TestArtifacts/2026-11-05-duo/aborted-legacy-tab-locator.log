@@ -1,0 +1,405 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -project iOS/TrueKeep/TrueKeep.xcodeproj -scheme TrueKeep -destination "platform=iOS Simulator,id=62A87288-C41F-42F7-981B-DD066ECC5CA8" -derivedDataPath /tmp/truekeep-duo-20261105 -parallel-testing-enabled NO -collect-test-diagnostics never -resultBundlePath /tmp/TrueKeepDuo-20261105-final-regression.xcresult CODE_SIGNING_ALLOWED=NO
+
+Build settings from command line:
+    CODE_SIGNING_ALLOWED = NO
+
+Resolve Package Graph
+
+
+Resolved source packages:
+  swift-transformers: https://github.com/huggingface/swift-transformers @ 1.3.0
+  swift-huggingface: https://github.com/huggingface/swift-huggingface.git @ 0.13.0
+  swift-crypto: https://github.com/apple/swift-crypto.git @ 4.5.2
+  LocalPhotoModels: /Users/edge/side/photo-cleaner/iOS/TrueKeep/Packages/LocalPhotoModels
+  Jinja: https://github.com/huggingface/swift-jinja.git @ 2.5.2
+  swift-numerics: https://github.com/apple/swift-numerics @ 1.1.1
+  yyjson: https://github.com/ibireme/yyjson.git @ 0.12.0
+  swift-syntax: https://github.com/swiftlang/swift-syntax.git @ 603.0.2
+  swift-collections: https://github.com/apple/swift-collections.git @ 1.7.4
+  swift-asn1: https://github.com/apple/swift-asn1.git @ 1.7.3
+  EventSource: https://github.com/mattt/EventSource.git @ 1.5.1
+  mlx-swift-lm: https://github.com/ml-explore/mlx-swift-lm @ 3.32.3
+  mlx-swift: https://github.com/ml-explore/mlx-swift @ 0.32.3
+
+Writing result bundle at path:
+	/tmp/TrueKeepDuo-20261105-final-regression.xcresult
+
+2026-11-05 17:29:06.645 xcodebuild[89997:24757234] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:29:06.645 xcodebuild[89997:24757234] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+2026-11-05 17:29:10.634739+0800 TrueKeep[90190:24758617] [XPCErrors] non-launching port is incompatible with service identifier "com.apple.PointerUI.pointeruid.default-service"
+Test Suite 'All tests' started at 2026-11-05 17:29:11.561.
+Test Suite 'TrueKeepTests.xctest' started at 2026-11-05 17:29:11.562.
+Test Suite 'AdaptiveLayoutTests' started at 2026-11-05 17:29:11.562.
+Test Case '-[TrueKeepTests.AdaptiveLayoutTests testGridBoundariesAndAccessibility]' started.
+Test Case '-[TrueKeepTests.AdaptiveLayoutTests testGridBoundariesAndAccessibility]' passed (0.003 seconds).
+Test Case '-[TrueKeepTests.AdaptiveLayoutTests testHorizontalFoldUsesUnobstructedPane]' started.
+Test Case '-[TrueKeepTests.AdaptiveLayoutTests testHorizontalFoldUsesUnobstructedPane]' passed (0.002 seconds).
+Test Case '-[TrueKeepTests.AdaptiveLayoutTests testPhysicalAsymmetryDoesNotMirrorWithLanguage]' started.
+Test Case '-[TrueKeepTests.AdaptiveLayoutTests testPhysicalAsymmetryDoesNotMirrorWithLanguage]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.AdaptiveLayoutTests testSafeBoundsAreNotDeductedTwice]' started.
+Test Case '-[TrueKeepTests.AdaptiveLayoutTests testSafeBoundsAreNotDeductedTwice]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.AdaptiveLayoutTests testShortWindowMovesActionsIntoScrollContent]' started.
+Test Case '-[TrueKeepTests.AdaptiveLayoutTests testShortWindowMovesActionsIntoScrollContent]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.AdaptiveLayoutTests testSplitRequiresEveryConstraint]' started.
+Test Case '-[TrueKeepTests.AdaptiveLayoutTests testSplitRequiresEveryConstraint]' passed (0.000 seconds).
+Test Suite 'AdaptiveLayoutTests' passed at 2026-11-05 17:29:11.573.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 0.007 (0.010) seconds
+Test Suite 'CleanupFlowStateTests' started at 2026-11-05 17:29:11.573.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testCancellingConfirmedKeepRestoresEligibilityWithoutSelectingForDeletion]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testCancellingConfirmedKeepRestoresEligibilityWithoutSelectingForDeletion]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testConfirmedKeepRemovesCandidateFromDeletionPathsAndTaskMetrics]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testConfirmedKeepRemovesCandidateFromDeletionPathsAndTaskMetrics]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testDeletingEarlierGroupPreservesCurrentReviewGroupByIdentity]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testDeletingEarlierGroupPreservesCurrentReviewGroupByIdentity]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testDeletingOtherCandidateKeepsInternalRecommendationAvailableForReview]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testDeletingOtherCandidateKeepsInternalRecommendationAvailableForReview]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testDeletionSummaryAccumulatesUniqueAssetsAcrossBatches]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testDeletionSummaryAccumulatesUniqueAssetsAcrossBatches]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testDirectDeletionOfInternallyRankedCandidateRebuildsTaskWithoutRecommendationCopy]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testDirectDeletionOfInternallyRankedCandidateRebuildsTaskWithoutRecommendationCopy]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testDirectDeletionOnlyRemovesMatchingGroupWhenCategoriesRepeat]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testDirectDeletionOnlyRemovesMatchingGroupWhenCategoriesRepeat]' passed (0.014 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testDirectDeletionRemovesCandidatesAndSynchronizesHomeTaskAndReviewBin]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testDirectDeletionRemovesCandidatesAndSynchronizesHomeTaskAndReviewBin]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testDisabledRecommendationCountsRawRecommendationInTaskMetrics]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testDisabledRecommendationCountsRawRecommendationInTaskMetrics]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testFailedDirectDeletionPreservesCandidatesAndSelection]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testFailedDirectDeletionPreservesCandidatesAndSelection]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testFailedPhotoDeletionKeepsItemsAndShowsError]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testFailedPhotoDeletionKeepsItemsAndShowsError]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testHidingProtectedNonSimilarCandidatesKeepsSimilarReferenceOnly]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testHidingProtectedNonSimilarCandidatesKeepsSimilarReferenceOnly]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testMovingOutOfBinOnlyRemovesBufferRecords]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testMovingOutOfBinOnlyRemovesBufferRecords]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testNewScanStateDoesNotCarryDeletionSummary]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testNewScanStateDoesNotCarryDeletionSummary]' passed (0.003 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testPartialDirectDeletionRemovesSuccessAndKeepsFailuresSelected]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testPartialDirectDeletionRemovesSuccessAndKeepsFailuresSelected]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testPartialPhotoDeletionRemovesOnlySuccessesAndRebuildsRemainingTask]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testPartialPhotoDeletionRemovesOnlySuccessesAndRebuildsRemainingTask]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testRecommendedKeepCapabilityIsSuppressedAndCandidateCanBeToggledNormally]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testRecommendedKeepCapabilityIsSuppressedAndCandidateCanBeToggledNormally]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testReportExportContainsReferencesAndStatisticsNotPhotoContent]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testReportExportContainsReferencesAndStatisticsNotPhotoContent]' passed (0.002 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testReviewGroupNavigationMovesBetweenGroupsAndRefreshesSelection]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testReviewGroupNavigationMovesBetweenGroupsAndRefreshesSelection]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testReviewGroupNavigationSkipsGroupsWithOnlyConfirmedKeeps]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testReviewGroupNavigationSkipsGroupsWithOnlyConfirmedKeeps]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testReviewSelectionMovesIntoReviewBinBeforeDeletion]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testReviewSelectionMovesIntoReviewBinBeforeDeletion]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSampleTasksEachOpenAReviewGroup]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSampleTasksEachOpenAReviewGroup]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSelectedReviewBinAssetIDsOnlyIncludesSelectedItems]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSelectedReviewBinAssetIDsOnlyIncludesSelectedItems]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSelectingMissingReviewGroupIDPreservesCurrentState]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSelectingMissingReviewGroupIDPreservesCurrentState]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSelectingReviewGroupByIDRefreshesDefaultSelection]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSelectingReviewGroupByIDRefreshesDefaultSelection]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSelectingSimilarReviewGroupByIDClearsDefaultSelectionWhenRecommendationIsDisabled]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSelectingSimilarReviewGroupByIDClearsDefaultSelectionWhenRecommendationIsDisabled]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSelectionCountAndBytesDeduplicateResourceIDs]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSelectionCountAndBytesDeduplicateResourceIDs]' passed (0.006 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSelectionSummaryUsesOnlySelectedResourcesAndReportsUnknownSize]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSelectionSummaryUsesOnlySelectedResourcesAndReportsUnknownSize]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSuccessfulDeletionClearsAllDerivedResultsAndExposesStructuredSummary]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSuccessfulDeletionClearsAllDerivedResultsAndExposesStructuredSummary]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSuccessfulRescanResetsSummaryWithoutRevivingDeletedOrKeptItems]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testSuccessfulRescanResetsSummaryWithoutRevivingDeletedOrKeptItems]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testTogglingAllReviewCandidatesIncludesInternalRecommendationWhenCapabilityIsDisabled]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testTogglingAllReviewCandidatesIncludesInternalRecommendationWhenCapabilityIsDisabled]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testTogglingFullySelectedReviewGroupClearsAllCurrentCandidates]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testTogglingFullySelectedReviewGroupClearsAllCurrentCandidates]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testZeroStorageFormattingUsesNumericValue]' started.
+Test Case '-[TrueKeepTests.CleanupFlowStateTests testZeroStorageFormattingUsesNumericValue]' passed (0.001 seconds).
+Test Suite 'CleanupFlowStateTests' passed at 2026-11-05 17:29:11.625.
+	 Executed 33 tests, with 0 failures (0 unexpected) in 0.043 (0.052) seconds
+Test Suite 'DeletionCoordinatorTests' started at 2026-11-05 17:29:11.625.
+Test Case '-[TrueKeepTests.DeletionCoordinatorTests testAllInvalidCannotSubmitAndCancelHasExplicitFeedback]' started.
+Test Case '-[TrueKeepTests.DeletionCoordinatorTests testAllInvalidCannotSubmitAndCancelHasExplicitFeedback]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.DeletionCoordinatorTests testChangedSnapshotNeedsAnotherExplicitConfirmation]' started.
+Test Case '-[TrueKeepTests.DeletionCoordinatorTests testChangedSnapshotNeedsAnotherExplicitConfirmation]' passed (0.003 seconds).
+Test Case '-[TrueKeepTests.DeletionCoordinatorTests testDuplicateSubmissionAndDismissWhileRunning]' started.
+Test Case '-[TrueKeepTests.DeletionCoordinatorTests testDuplicateSubmissionAndDismissWhileRunning]' passed (0.004 seconds).
+Test Case '-[TrueKeepTests.DeletionCoordinatorTests testFailureReleasesLockWithoutAutomaticRetry]' started.
+Test Case '-[TrueKeepTests.DeletionCoordinatorTests testFailureReleasesLockWithoutAutomaticRetry]' passed (0.001 seconds).
+Test Suite 'DeletionCoordinatorTests' passed at 2026-11-05 17:29:11.635.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.009 (0.010) seconds
+Test Suite 'LocalPhotoModelControllerTests' started at 2026-11-05 17:29:11.635.
+Test Case '-[TrueKeepTests.LocalPhotoModelControllerTests testAnalysisFailurePreservesReportAndSwitchClearsIt]' started.
+Test Case '-[TrueKeepTests.LocalPhotoModelControllerTests testAnalysisFailurePreservesReportAndSwitchClearsIt]' passed (0.024 seconds).
+Test Case '-[TrueKeepTests.LocalPhotoModelControllerTests testCancellationBlocksStaleResultsAndDuplicateSubmission]' started.
+Test Case '-[TrueKeepTests.LocalPhotoModelControllerTests testCancellationBlocksStaleResultsAndDuplicateSubmission]' passed (0.012 seconds).
+Test Case '-[TrueKeepTests.LocalPhotoModelControllerTests testDefaultIsDisabledAndModelSelectionPersists]' started.
+Test Case '-[TrueKeepTests.LocalPhotoModelControllerTests testDefaultIsDisabledAndModelSelectionPersists]' passed (0.007 seconds).
+Test Case '-[TrueKeepTests.LocalPhotoModelControllerTests testFixtureRequiresDeletionSafetyFlag]' started.
+Test Case '-[TrueKeepTests.LocalPhotoModelControllerTests testFixtureRequiresDeletionSafetyFlag]' passed (0.003 seconds).
+Test Case '-[TrueKeepTests.LocalPhotoModelControllerTests testMissingModelFailsWithoutStartingTask]' started.
+Test Case '-[TrueKeepTests.LocalPhotoModelControllerTests testMissingModelFailsWithoutStartingTask]' passed (0.004 seconds).
+Test Suite 'LocalPhotoModelControllerTests' passed at 2026-11-05 17:29:11.688.
+	 Executed 5 tests, with 0 failures (0 unexpected) in 0.051 (0.052) seconds
+Test Suite 'PhotoDeletionResultTests' started at 2026-11-05 17:29:11.688.
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testDebugOptInPersistsAcrossDefaultsInstances]' started.
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testDebugOptInPersistsAcrossDefaultsInstances]' passed (0.011 seconds).
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testDebugSafetyPolicyDisablesDeletionByDefault]' started.
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testDebugSafetyPolicyDisablesDeletionByDefault]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testDebugSafetyPolicyRequiresExplicitDestructiveDeletionOptIn]' started.
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testDebugSafetyPolicyRequiresExplicitDestructiveDeletionOptIn]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testDeletionServiceHonorsDebugSafetyLockBeforeTouchingPhotos]' started.
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testDeletionServiceHonorsDebugSafetyLockBeforeTouchingPhotos]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testExplicitDeletionDisableWinsOverDestructiveDeletionOptIn]' started.
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testExplicitDeletionDisableWinsOverDestructiveDeletionOptIn]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testExplicitDisableRevokesSavedOptInEvenWithEnableArgument]' started.
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testExplicitDisableRevokesSavedOptInEvenWithEnableArgument]' passed (0.011 seconds).
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testReleaseDoesNotReadOrModifyDebugOptIn]' started.
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testReleaseDoesNotReadOrModifyDebugOptIn]' passed (0.007 seconds).
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testReleaseSafetyPolicyAllowsDeletionUnlessExplicitlyDisabled]' started.
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testReleaseSafetyPolicyAllowsDeletionUnlessExplicitlyDisabled]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testResolvedDeletionResultFailsWhenNothingDeleted]' started.
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testResolvedDeletionResultFailsWhenNothingDeleted]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testResolvedDeletionResultReportsPartialMissingAssets]' started.
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testResolvedDeletionResultReportsPartialMissingAssets]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testResolvedDeletionResultSucceedsWhenEveryRequestedAssetDeleted]' started.
+Test Case '-[TrueKeepTests.PhotoDeletionResultTests testResolvedDeletionResultSucceedsWhenEveryRequestedAssetDeleted]' passed (0.000 seconds).
+Test Suite 'PhotoDeletionResultTests' passed at 2026-11-05 17:29:11.724.
+	 Executed 11 tests, with 0 failures (0 unexpected) in 0.033 (0.036) seconds
+Test Suite 'PhotoLibraryAuthorizationTests' started at 2026-11-05 17:29:11.724.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testAllRangeHasNoDateBoundsAndRecentRangesExcludeUnknownDates]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testAllRangeHasNoDateBoundsAndRecentRangesExcludeUnknownDates]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testAuthorizedHomeScenarioStartsWithoutCompletedScan]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testAuthorizedHomeScenarioStartsWithoutCompletedScan]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testConfirmedKeepStorePersistsUniqueSortedIDsAndResets]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testConfirmedKeepStorePersistsUniqueSortedIDsAndResets]' passed (0.009 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testDeniedAndRestrictedAccessRequireSettings]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testDeniedAndRestrictedAccessRequireSettings]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testFullAndLimitedAccessCanScan]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testFullAndLimitedAccessCanScan]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testLaunchConfigurationRecognizesConfirmedKeepResetArgument]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testLaunchConfigurationRecognizesConfirmedKeepResetArgument]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testLimitedAccessExposesIncompleteResultsWarning]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testLimitedAccessExposesIncompleteResultsWarning]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testPermissionDecisionRoutesDeniedAndRestrictedToPermissionIssue]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testPermissionDecisionRoutesDeniedAndRestrictedToPermissionIssue]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testPermissionDecisionRoutesFullAndLimitedAccessToScan]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testPermissionDecisionRoutesFullAndLimitedAccessToScan]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testPermissionDecisionRoutesNotDeterminedToMainAfterIntroAction]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testPermissionDecisionRoutesNotDeterminedToMainAfterIntroAction]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testPhotoPermissionCopyDescribesOnDeviceVisualCandidatesWithSafetyLimits]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testPhotoPermissionCopyDescribesOnDeviceVisualCandidatesWithSafetyLimits]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testPhotoScanDateRangeDefaultsToLastMonth]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testPhotoScanDateRangeDefaultsToLastMonth]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testPostDeletionSuccessScenarioStartsOnLimitedHomeWithReconciledResults]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testPostDeletionSuccessScenarioStartsOnLimitedHomeWithReconciledResults]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testRecentPhotoScanDateRangesUseRollingCalendarMonthsAndClosedBounds]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testRecentPhotoScanDateRangesUseRollingCalendarMonthsAndClosedBounds]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testSampleCleanupDataRepresentsCompletedScanResults]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryAuthorizationTests testSampleCleanupDataRepresentsCompletedScanResults]' passed (0.000 seconds).
+Test Suite 'PhotoLibraryAuthorizationTests' passed at 2026-11-05 17:29:11.746.
+	 Executed 15 tests, with 0 failures (0 unexpected) in 0.018 (0.022) seconds
+Test Suite 'PhotoLibraryScanPolicyTests' started at 2026-11-05 17:29:11.746.
+Test Case '-[TrueKeepTests.PhotoLibraryScanPolicyTests testBatchCollectStopsBeforeReadingWhenCancelled]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryScanPolicyTests testBatchCollectStopsBeforeReadingWhenCancelled]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryScanPolicyTests testBatchRangesCoverAllItemsWithoutOvershooting]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryScanPolicyTests testBatchRangesCoverAllItemsWithoutOvershooting]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryScanPolicyTests testUsesSmallerBatchSizeInLowPowerMode]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryScanPolicyTests testUsesSmallerBatchSizeInLowPowerMode]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoLibraryScanPolicyTests testUsesSmallerVisualBatchesWithoutTruncatingTheLibrary]' started.
+Test Case '-[TrueKeepTests.PhotoLibraryScanPolicyTests testUsesSmallerVisualBatchesWithoutTruncatingTheLibrary]' passed (0.000 seconds).
+Test Suite 'PhotoLibraryScanPolicyTests' passed at 2026-11-05 17:29:11.749.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.002 (0.003) seconds
+Test Suite 'PhotoScanResultBuilderTests' started at 2026-11-05 17:29:11.750.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testAspectPreservingRasterDimensionsKeepLandscapePortraitAndPanoramaComposition]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testAspectPreservingRasterDimensionsKeepLandscapePortraitAndPanoramaComposition]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testBuildsScreenshotAndLargeVideoTasksFromAssetSnapshots]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testBuildsScreenshotAndLargeVideoTasksFromAssetSnapshots]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testBuildsVisualClassifierTasksFromClassifiedPhotoSnapshots]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testBuildsVisualClassifierTasksFromClassifiedPhotoSnapshots]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testConfirmedKeepIsFilteredFromNonSimilarScanTasks]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testConfirmedKeepIsFilteredFromNonSimilarScanTasks]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testConfirmedKeepRemainsProtectedReferenceInSimilarGroup]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testConfirmedKeepRemainsProtectedReferenceInSimilarGroup]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testCoreMLQualityScorerParsesNamedModelOutputs]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testCoreMLQualityScorerParsesNamedModelOutputs]' passed (0.006 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testExactDuplicateGrouperSeparatesStillLiveAndIncompleteResources]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testExactDuplicateGrouperSeparatesStillLiveAndIncompleteResources]' passed (0.002 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testExactDuplicateGroupUsesDistinctUserFacingCopy]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testExactDuplicateGroupUsesDistinctUserFacingCopy]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testExactDuplicateRequiresCompletedRefinementForEveryMarkedMember]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testExactDuplicateRequiresCompletedRefinementForEveryMarkedMember]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testFixtureCandidatesDoNotClaimPhotoAssetThumbnails]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testFixtureCandidatesDoNotClaimPhotoAssetThumbnails]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testHashFallbackRejectsMateriallyDifferentAspectRatios]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testHashFallbackRejectsMateriallyDifferentAspectRatios]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testInternalRecommendationStillCreatesReviewTaskWhenCapabilityIsDisabled]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testInternalRecommendationStillCreatesReviewTaskWhenCapabilityIsDisabled]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testOrientationNormalizerAppliesRightRotationBeforeAnalysis]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testOrientationNormalizerAppliesRightRotationBeforeAnalysis]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testPhotoImageRequestOptionsStayLocalForBothDeliveryModes]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testPhotoImageRequestOptionsStayLocalForBothDeliveryModes]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testPhotoImageRequestStrategyFallsBackToHighQualityImage]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testPhotoImageRequestStrategyFallsBackToHighQualityImage]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testPhotoImageRequestStrategyReturnsNilAfterBothLocalRequestsFail]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testPhotoImageRequestStrategyReturnsNilAfterBothLocalRequestsFail]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testPhotoImageRequestStrategyStopsAfterFastImageIsAvailable]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testPhotoImageRequestStrategyStopsAfterFastImageIsAvailable]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testRealScanCandidatesKeepPhotoAssetIdentifierForThumbnails]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testRealScanCandidatesKeepPhotoAssetIdentifierForThumbnails]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testRefinedFeaturePrintCanSplitCoarseSimilarGroup]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testRefinedFeaturePrintCanSplitCoarseSimilarGroup]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testRefinedQualityCanChangeRecommendedKeep]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testRefinedQualityCanChangeRecommendedKeep]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testRefinementCanRemoveCoarseBlurAndAccidentalFindings]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testRefinementCanRemoveCoarseBlurAndAccidentalFindings]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testRefinementSelectionIncludesAllSimilarMembersAndRiskBoundaryCandidates]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testRefinementSelectionIncludesAllSimilarMembersAndRiskBoundaryCandidates]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testResourceDigestAccumulatorHashesIncrementalChunks]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testResourceDigestAccumulatorHashesIncrementalChunks]' passed (0.003 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testResourceDigestOptionsNeverAllowNetworkAccess]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testResourceDigestOptionsNeverAllowNetworkAccess]' passed (0.004 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testResourceRequestCancellationHandlesCancellationBeforeRequestIDArrives]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testResourceRequestCancellationHandlesCancellationBeforeRequestIDArrives]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testSimilarVisualGroupKeepsInternalRankingButStartsWithNoDeletionSelection]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testSimilarVisualGroupKeepsInternalRankingButStartsWithNoDeletionSelection]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testUnavailableRefinementKeepsCandidateLowConfidenceAndUnselected]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testUnavailableRefinementKeepsCandidateLowConfidenceAndUnselected]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testUnclassifiedSnapshotsDoNotCreateVisualReviewTasks]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testUnclassifiedSnapshotsDoNotCreateVisualReviewTasks]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisionQualityScorerDoesNotTreatUtilityAsAccidental]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisionQualityScorerDoesNotTreatUtilityAsAccidental]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisionQualityScorerNormalizesAestheticsAndAveragesFaceQuality]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisionQualityScorerNormalizesAestheticsAndAveragesFaceQuality]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisionQualityScorerUsesOnlyExtremelyLowNonUtilityScoreAsAccidentalRisk]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisionQualityScorerUsesOnlyExtremelyLowNonUtilityScoreAsAccidentalRisk]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualAnalyzerFallsBackToHeuristicsWhenVisionScoringFails]' started.
+2026-11-05 17:29:11.945310+0800 TrueKeep[90190:24758782] [default] CSU exception: Failed to create espresso context.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualAnalyzerFallsBackToHeuristicsWhenVisionScoringFails]' passed (0.160 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualAnalyzerRetainsSourceAspectRatioAtBothStages]' started.
+2026-11-05 17:29:11.954185+0800 TrueKeep[90190:24758778] [default] CSU exception: Failed to create espresso context.
+2026-11-05 17:29:11.958713+0800 TrueKeep[90190:24758778] [default] CSU exception: Failed to create espresso context.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualAnalyzerRetainsSourceAspectRatioAtBothStages]' passed (0.010 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierDoesNotGroupNearHashesOutsideTimeWindow]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierDoesNotGroupNearHashesOutsideTimeWindow]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierDoesNotUseHashFallbackWhenFeaturePrintsAreComparableAndDistant]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierDoesNotUseHashFallbackWhenFeaturePrintsAreComparableAndDistant]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierFallsBackToPerceptualHashWhenFeaturePrintIsMissing]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierFallsBackToPerceptualHashWhenFeaturePrintIsMissing]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierGroupsNearHashesAndKeepsSharpestInput]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierGroupsNearHashesAndKeepsSharpestInput]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierMarksAccidentalAndBlurrySingles]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierMarksAccidentalAndBlurrySingles]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierPrefersFeaturePrintSimilarityOverPerceptualHash]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierPrefersFeaturePrintSimilarityOverPerceptualHash]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierUsesFaceCaptureQualityAsRecommendedKeepSupport]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierUsesFaceCaptureQualityAsRecommendedKeepSupport]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierUsesQualityAssessmentForBlurrySingles]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierUsesQualityAssessmentForBlurrySingles]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierUsesQualityScoreForRecommendedKeep]' started.
+Test Case '-[TrueKeepTests.PhotoScanResultBuilderTests testVisualClassifierUsesQualityScoreForRecommendedKeep]' passed (0.001 seconds).
+Test Suite 'PhotoScanResultBuilderTests' passed at 2026-11-05 17:29:11.967.
+	 Executed 42 tests, with 0 failures (0 unexpected) in 0.206 (0.218) seconds
+Test Suite 'PhotoThumbnailRequestKeyTests' started at 2026-11-05 17:29:11.967.
+Test Case '-[TrueKeepTests.PhotoThumbnailRequestKeyTests testBuildsStablePixelCacheKeyFromAssetAndScaledSize]' started.
+Test Case '-[TrueKeepTests.PhotoThumbnailRequestKeyTests testBuildsStablePixelCacheKeyFromAssetAndScaledSize]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PhotoThumbnailRequestKeyTests testClampsEmptyTargetSizeToSinglePixel]' started.
+Test Case '-[TrueKeepTests.PhotoThumbnailRequestKeyTests testClampsEmptyTargetSizeToSinglePixel]' passed (0.000 seconds).
+Test Suite 'PhotoThumbnailRequestKeyTests' passed at 2026-11-05 17:29:11.969.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.001 (0.002) seconds
+Test Suite 'PrivacyManifestTests' started at 2026-11-05 17:29:11.969.
+Test Case '-[TrueKeepTests.PrivacyManifestTests testPrivacyManifestDeclaresAppLocalUserDefaultsUsage]' started.
+Test Case '-[TrueKeepTests.PrivacyManifestTests testPrivacyManifestDeclaresAppLocalUserDefaultsUsage]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.PrivacyManifestTests testPrivacyManifestDeclaresNoCollectionOrTracking]' started.
+Test Case '-[TrueKeepTests.PrivacyManifestTests testPrivacyManifestDeclaresNoCollectionOrTracking]' passed (0.001 seconds).
+Test Suite 'PrivacyManifestTests' passed at 2026-11-05 17:29:11.971.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.002 (0.002) seconds
+Test Suite 'PrivacySafetyTopicTests' started at 2026-11-05 17:29:11.971.
+Test Case '-[TrueKeepTests.PrivacySafetyTopicTests testSettingsTopicsHaveStableAccessibilityIdentifiers]' started.
+Test Case '-[TrueKeepTests.PrivacySafetyTopicTests testSettingsTopicsHaveStableAccessibilityIdentifiers]' passed (0.000 seconds).
+Test Case '-[TrueKeepTests.PrivacySafetyTopicTests testSettingsTopicsHaveTappableDestinations]' started.
+Test Case '-[TrueKeepTests.PrivacySafetyTopicTests testSettingsTopicsHaveTappableDestinations]' passed (0.001 seconds).
+Test Suite 'PrivacySafetyTopicTests' passed at 2026-11-05 17:29:11.973.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.001 (0.002) seconds
+Test Suite 'PublicScanCapabilityCopyTests' started at 2026-11-05 17:29:11.973.
+Test Case '-[TrueKeepTests.PublicScanCapabilityCopyTests testPhotoPermissionCopyClaimsOnlyOnDeviceReviewCandidatesWithSafetyLimits]' started.
+Test Case '-[TrueKeepTests.PublicScanCapabilityCopyTests testPhotoPermissionCopyClaimsOnlyOnDeviceReviewCandidatesWithSafetyLimits]' passed (0.001 seconds).
+Test Suite 'PublicScanCapabilityCopyTests' passed at 2026-11-05 17:29:11.974.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.001 (0.001) seconds
+Test Suite 'ReviewIterationTests' started at 2026-11-05 17:29:11.974.
+Test Case '-[TrueKeepTests.ReviewIterationTests testBatchRangesCoverBeyondBothFormerGlobalLimits]' started.
+Test Case '-[TrueKeepTests.ReviewIterationTests testBatchRangesCoverBeyondBothFormerGlobalLimits]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.ReviewIterationTests testCacheInvalidatesModifiedAssetsAndKeepsBoundedSize]' started.
+Test Case '-[TrueKeepTests.ReviewIterationTests testCacheInvalidatesModifiedAssetsAndKeepsBoundedSize]' passed (0.014 seconds).
+Test Case '-[TrueKeepTests.ReviewIterationTests testConfirmedKeepClearsBinAndRememberedSelectionWithoutEnablingRecommendation]' started.
+Test Case '-[TrueKeepTests.ReviewIterationTests testConfirmedKeepClearsBinAndRememberedSelectionWithoutEnablingRecommendation]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.ReviewIterationTests testConfirmedSimilarReferenceSurvivesPermissionReconciliation]' started.
+Test Case '-[TrueKeepTests.ReviewIterationTests testConfirmedSimilarReferenceSurvivesPermissionReconciliation]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.ReviewIterationTests testCorruptSessionThrowsAndRemainsUntouched]' started.
+Test Case '-[TrueKeepTests.ReviewIterationTests testCorruptSessionThrowsAndRemainsUntouched]' passed (0.004 seconds).
+Test Case '-[TrueKeepTests.ReviewIterationTests testCrossTimeDuplicatesNeedResourceEvidenceBeforeExactClassification]' started.
+Test Case '-[TrueKeepTests.ReviewIterationTests testCrossTimeDuplicatesNeedResourceEvidenceBeforeExactClassification]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.ReviewIterationTests testLatestConfirmedKeepStoreOverridesRestoredSnapshot]' started.
+Test Case '-[TrueKeepTests.ReviewIterationTests testLatestConfirmedKeepStoreOverridesRestoredSnapshot]' passed (0.012 seconds).
+Test Case '-[TrueKeepTests.ReviewIterationTests testPartialSelectionSurvivesGroupNavigation]' started.
+Test Case '-[TrueKeepTests.ReviewIterationTests testPartialSelectionSurvivesGroupNavigation]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.ReviewIterationTests testPermissionShrinkAndEmptyGroupAreSafeWithoutDeletionSummary]' started.
+Test Case '-[TrueKeepTests.ReviewIterationTests testPermissionShrinkAndEmptyGroupAreSafeWithoutDeletionSummary]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.ReviewIterationTests testRebuildKeepsCorruptFileBackup]' started.
+Test Case '-[TrueKeepTests.ReviewIterationTests testRebuildKeepsCorruptFileBackup]' passed (0.012 seconds).
+Test Case '-[TrueKeepTests.ReviewIterationTests testRescanMergeRetainsBinAndAppliesConfirmedKeeps]' started.
+Test Case '-[TrueKeepTests.ReviewIterationTests testRescanMergeRetainsBinAndAppliesConfirmedKeeps]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.ReviewIterationTests testSessionRoundTripAndExpirationNeverDeletePhotos]' started.
+Test Case '-[TrueKeepTests.ReviewIterationTests testSessionRoundTripAndExpirationNeverDeletePhotos]' passed (0.004 seconds).
+Test Case '-[TrueKeepTests.ReviewIterationTests testSuccessfulRescanResetsDeletionSummaryAndDoesNotResurrectDeletedItems]' started.
+Test Case '-[TrueKeepTests.ReviewIterationTests testSuccessfulRescanResetsDeletionSummaryAndDoesNotResurrectDeletedItems]' passed (0.001 seconds).
+Test Suite 'ReviewIterationTests' passed at 2026-11-05 17:29:12.030.
+	 Executed 13 tests, with 0 failures (0 unexpected) in 0.052 (0.056) seconds
+Test Suite 'TrueKeepAccessibilityTests' started at 2026-11-05 17:29:12.031.
+Test Case '-[TrueKeepTests.TrueKeepAccessibilityTests testAppSourcesDoNotUseFixedSizeTextFonts]' started.
+Test Case '-[TrueKeepTests.TrueKeepAccessibilityTests testAppSourcesDoNotUseFixedSizeTextFonts]' passed (0.022 seconds).
+Test Case '-[TrueKeepTests.TrueKeepAccessibilityTests testDynamicIdentifiersRemainStableForAutomation]' started.
+Test Case '-[TrueKeepTests.TrueKeepAccessibilityTests testDynamicIdentifiersRemainStableForAutomation]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.TrueKeepAccessibilityTests testPrimaryControlIdentifiersAreUniqueAndAutomationSafe]' started.
+Test Case '-[TrueKeepTests.TrueKeepAccessibilityTests testPrimaryControlIdentifiersAreUniqueAndAutomationSafe]' passed (0.001 seconds).
+Test Case '-[TrueKeepTests.TrueKeepAccessibilityTests testPrimaryControlIdentifiersCoverCriticalFlowActions]' started.
+Test Case '-[TrueKeepTests.TrueKeepAccessibilityTests testPrimaryControlIdentifiersCoverCriticalFlowActions]' passed (0.001 seconds).
+Test Suite 'TrueKeepAccessibilityTests' passed at 2026-11-05 17:29:12.056.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.024 (0.025) seconds
+Test Suite 'TrueKeepTests.xctest' passed at 2026-11-05 17:29:12.056.
+	 Executed 144 tests, with 0 failures (0 unexpected) in 0.450 (0.494) seconds
+Test Suite 'All tests' passed at 2026-11-05 17:29:12.056.
+	 Executed 144 tests, with 0 failures (0 unexpected) in 0.450 (0.495) seconds
+2026-11-05 17:29:12.071 xcodebuild[89997:24757234] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:29:12.071 xcodebuild[89997:24757234] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+2026-11-05 17:29:12.071 xcodebuild[89997:24757234] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:29:12.071 xcodebuild[89997:24757234] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+2026-11-05 17:29:12.072 xcodebuild[89997:24757234] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:29:12.072 xcodebuild[89997:24757234] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+2026-11-05 17:29:12.346 xcodebuild[89997:24757234] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:29:12.346 xcodebuild[89997:24757234] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+2026-11-05 17:29:13.954972+0800 TrueKeepUITests-Runner[90229:24759026] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'All tests' started at 2026-11-05 17:29:18.658.
+Test Suite 'TrueKeepUITests.xctest' started at 2026-11-05 17:29:18.659.
+Test Suite 'LocalPhotoModelsUITests' started at 2026-11-05 17:29:18.660.
+Test Case '-[TrueKeepUITests.LocalPhotoModelsUITests testAnalysisProgressSelectionContinuitySuccessAndFailure]' started.
+    t =     0.01s Start Test at 2026-11-05 17:29:18.668
+    t =     0.03s Set Up
+    t =     0.03s     Open app.truekeep.ios
+    t =     0.03s         Launch app.truekeep.ios
+2026-11-05 17:29:18.764 xcodebuild[89997:24757234] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-11-05 17:29:18.764 xcodebuild[89997:24757234] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-11-05 17:29:18.839 xcodebuild[89997:24757234] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-11-05 17:29:18.839 xcodebuild[89997:24757234] [MT] IDESchemeActionDeviceRecord: versionAndBuild = 27.1 (24A94232), error = invalidDigitCount(94232).
+    t =     0.32s             Setting up automation session
+objc[90229]: Class UIAccessibilityLoaderWebShared is implemented in both /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.94232.0.cjy1L8/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.1.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x102740310) and /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.94232.0.cjy1L8/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.1.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x103a78398). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     3.91s             Wait for app.truekeep.ios to idle
+    t =     6.00s     Tap "设置" Button
+    t =     6.00s         Wait for app.truekeep.ios to idle
+    t =     6.00s         Find the "设置" Button
+    t =     7.46s             Find the "设置" Button (retry 1)
+    t =     8.52s             Find the "设置" Button (retry 2)
+    t =     8.61s     Requesting snapshot of accessibility hierarchy for app with pid 90287
+/Users/edge/side/photo-cleaner/iOS/TrueKeep/TrueKeepUITests/LocalPhotoModelsUITests.swift:16: error: -[TrueKeepUITests.LocalPhotoModelsUITests testAnalysisProgressSelectionContinuitySuccessAndFailure] : Failed to tap "设置" Button: No matches found for Descendants matching type TabBar from input {(
+    Application, pid: 90287, label: '留真'
+)}
+    t =     8.80s     Tear Down
+** BUILD INTERRUPTED **

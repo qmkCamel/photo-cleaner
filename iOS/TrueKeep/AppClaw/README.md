@@ -12,11 +12,13 @@
 | `permission-denied-retry` | 权限关闭与重试 | 重试按钮显示局部忙碌状态，失败后可继续重试或回到首页 |
 | `scan-cancel-recovery` | 扫描中取消 | 取消入口始终可用，明确未改动照片，能够回到首页 |
 | `candidate-refinement-continuity` | 候选复核离页继续 | 展示真实候选复核进度；离页后首页可返回进度页，取消后保留恢复路径 |
-| `limited-results-rescan` | 有限权限结果页重扫 | 入口位于 Tab Bar 上方，点击后重新进入本地扫描流程 |
+| `limited-results-rescan` | 有限权限结果页重扫 | 可见重扫入口先打开范围设置，确认后重新扫描 |
 | `scan-date-range-selection` | 扫描时间范围 | 默认近一个月，可切换近三个月；进度页与结果页保留实际范围 |
 | `post-deletion-home-sync` | 删除成功后的首页同步 | 已删除候选和旧空间汇总消失，展示可恢复摘要、有限权限提醒与重新扫描入口 |
 
 启动参数集中维护在 `cases.json`，Flow 在 `flows/`。每条用例都必须包含 `-TrueKeepDisablePhotoDeletion`；运行器还会注入 `TRUEKEEP_DISABLE_PHOTO_DELETION=1` 作为第二道保护。
+
+2026-11-05 交互改版：范围选择移入扫描设置，确认入口为 `scan.setup.start`，取消入口为 `scan.setup.cancel`；运行中使用 `truekeep.scan.stage`，不再寻找无操作意义的“扫描中”按钮。上述 YAML 已同步新入口；本轮主要运行证据来自 XCUITest，不把 YAML 更新或运行器单测通过算成 AppClaw 设备执行通过。新视觉/恢复用例和截图见 `TestArtifacts/2026-11-05-interaction-redesign/`。
 
 ## 运行前提
 

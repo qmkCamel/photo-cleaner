@@ -1,0 +1,87 @@
+Application, 0x108ebebc0, pid: 89731, label: '留真' <App element pid: 89731>
+  Window (Main), 0x108ebf340, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 89731, elementOrHash.elementID: 4335339520.4>
+    Other, 0x108ebfac0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 89731, elementOrHash.elementID: 4396544000.5>
+      Other, 0x108ebdf40, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 89731, elementOrHash.elementID: 4396203008.6>
+        Other, 0x108ebcc80, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 89731, elementOrHash.elementID: 4335338496.7>
+          Other, 0x108ebef80, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 89731, elementOrHash.elementID: 4336526976.8>
+            Other, 0x108ebcb40, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 89731, elementOrHash.elementID: 4336609792.26>
+              Other, 0x108ebed00, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 89731, elementOrHash.elementID: 4396545024.27>
+                Other, 0x108ebc3c0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 89731, elementOrHash.elementID: 4336844800.29>
+                  Other, 0x108ebc8c0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 89731, elementOrHash.elementID: 4335346688.160>
+                    Other, 0x108ebc500, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 89731, elementOrHash.elementID: 4396086848.161>
+                      Other, 0x108ebee40, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 89731, elementOrHash.elementID: 4396086400.162>
+                        Other, 0x108ebc780, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'truekeep.tab.home' <AX element pid: 89731, elementOrHash.elementID: 4396041536.163>
+                          Other, 0x108ebd900, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 89731, elementOrHash.elementID: 4396041984.164>
+                            Other, 0x108ebd540, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 89731, elementOrHash.elementID: 4917976576.166>
+                              Other, 0x108ebc000, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 89731, elementOrHash.elementID: 4396055872.168>
+                                NavigationBar, 0x108ebfd40, {{0.0, 62.0}, {402.0, 54.0}}, identifier: '截图复核' <AX element pid: 89731, elementOrHash.elementID: 4398971904.169>
+                                  Button, 0x108ebf5c0, {{16.0, 62.0}, {44.0, 44.0}}, identifier: 'BackButton', label: 'Back' <AX element pid: 89731, elementOrHash.elementID: 4961921216.246>
+                                  StaticText, 0x108ebcf00, {{167.0, 73.7}, {67.7, 20.7}}, label: '截图复核' <AX element pid: 89731, elementOrHash.elementID: 4940125440.247>
+                                  Other, 0x108ebde00, {{334.0, 66.0}, {48.0, 36.0}}, identifier: 'review.more', label: '更多复核操作' <AX element pid: 89731, elementOrHash.elementID: 4939303424.248>
+                                    Other, 0x108ebcdc0, {{334.0, 66.0}, {48.0, 36.0}} <AX element pid: 89731, elementOrHash.elementID: 4396142528.249>
+                                      Button, 0x108ebf840, {{334.0, 66.0}, {48.0, 36.0}}, identifier: 'review.more', label: '更多复核操作' <AX element pid: 89731, elementOrHash.elementID: 4396142080.251>
+                                        Button, 0x108ebf480, {{334.0, 66.0}, {48.0, 36.0}} <AX element pid: 89731, elementOrHash.elementID: 4940120960.253>
+                                          Image, 0x108ebdcc0, {{348.0, 82.0}, {20.0, 4.3}}, identifier: 'ellipsis', label: '更多' <AX element pid: 89731, elementOrHash.elementID: 4396140736.260>
+                                Other, 0x108ebfe80, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 89731, elementOrHash.elementID: 4396057024.170>
+                                  Other, 0x108ebc640, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 89731, elementOrHash.elementID: 4396061056.173>
+                                    Other, 0x108ebc280, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 89731, elementOrHash.elementID: 4940120064.250>
+                                      Other, 0x108ebca00, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 89731, elementOrHash.elementID: 4396072256.252>
+                                        ScrollView, 0x108ebdb80, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 89731, elementOrHash.elementID: 4335071232.254>
+                                          Other, 0x108ebd040, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 89731, elementOrHash.elementID: 4396139392.261>
+                                            Other, 0x108ebd180, {{0.0, 0.0}, {402.0, 170.8}} <AX element pid: 89731, elementOrHash.elementID: 4396177536.266>
+                                            Other, 0x108ebd2c0, {{0.0, 726.2}, {402.0, 147.8}} <AX element pid: 89731, elementOrHash.elementID: 4396186944.267>
+                                          Other, 0x108ebd400, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 89731, elementOrHash.elementID: 4396138944.262>
+                                          Other, 0x108ebda40, {{0.0, 116.0}, {402.0, 541.7}} <AX element pid: 89731, elementOrHash.elementID: 4919406592.263>
+                                            Button, 0x108ebfc00, {{20.0, 136.0}, {44.0, 44.0}}, identifier: 'truekeep.review.previous-group', label: '上一组' <AX element pid: 89731, elementOrHash.elementID: 4396152832.268>
+                                            StaticText, 0x108ebf0c0, {{165.5, 150.8}, {71.0, 14.3}}, label: '第 2 组 / 5 组' <AX element pid: 89731, elementOrHash.elementID: 4396151936.269>
+                                            Button, 0x108ebd680, {{338.0, 136.0}, {44.0, 44.0}}, identifier: 'truekeep.review.next-group', label: '下一组' <AX element pid: 89731, elementOrHash.elementID: 4396153728.270>
+                                            StaticText, 0x108d0f840, {{20.0, 193.0}, {346.0, 30.3}}, label: '这些截图更像临时信息或重复记录。删除前请确认没有账号、订单或重要凭证。' <AX element pid: 89731, elementOrHash.elementID: 4396154176.271>
+                                            Other, 0x108d0f980, {{20.0, 236.3}, {362.0, 362.0}} <AX element pid: 89731, elementOrHash.elementID: 4396054080.272>
+                                              Button, 0x108d0fd40, {{20.0, 236.3}, {175.0, 175.0}}, identifier: 'review.preview.shot-01', label: '预览，已选择删除，截图和聊天截图，旧截图。，1.1 MB' <AX element pid: 89731, elementOrHash.elementID: 4396148800.276>
+                                              Button, 0x108d0fc00, {{151.0, 236.3}, {44.0, 44.0}}, identifier: 'truekeep.review.candidate.shot-01', label: '已选择删除，截图和聊天截图，旧截图。', Selected <AX element pid: 89731, elementOrHash.elementID: 4396558400.277>
+                                              Button, 0x108d0fac0, {{207.0, 236.3}, {175.0, 175.0}}, identifier: 'review.preview.shot-02', label: '预览，已选择删除，截图和聊天截图，临时聊天截图。，1 MB' <AX element pid: 89731, elementOrHash.elementID: 4396557056.278>
+                                              Button, 0x108d0fe80, {{338.0, 236.3}, {44.0, 44.0}}, identifier: 'truekeep.review.candidate.shot-02', label: '已选择删除，截图和聊天截图，临时聊天截图。', Selected <AX element pid: 89731, elementOrHash.elementID: 4396555712.279>
+                                              Button, 0x108e1d2c0, {{20.0, 423.3}, {175.0, 175.0}}, identifier: 'review.preview.shot-03', label: '预览，已选择删除，截图和聊天截图，重复截图。，1.3 MB' <AX element pid: 89731, elementOrHash.elementID: 4396555264.280>
+                                              Button, 0x108e1ea80, {{151.0, 423.3}, {44.0, 44.0}}, identifier: 'truekeep.review.candidate.shot-03', label: '已选择删除，截图和聊天截图，重复截图。', Selected <AX element pid: 89731, elementOrHash.elementID: 4396105024.281>
+                                            StaticText, 0x108e1e800, {{20.0, 611.3}, {46.7, 14.3}}, label: '3 张照片' <AX element pid: 89731, elementOrHash.elementID: 4396053632.273>
+                                            StaticText, 0x108e1e940, {{255.3, 611.3}, {126.7, 14.3}}, label: '本组预计可清理 3.4 MB' <AX element pid: 89731, elementOrHash.elementID: 4336519360.274>
+                                          Other, 0x108e1d540, {{369.0, 116.0}, {30.0, 547.0}}, label: 'Vertical scroll bar, 1 pages', value: 0% <AX element pid: 89731, elementOrHash.elementID: 4939656704.264>
+                                            Other, 0x108e1d180, {{396.0, 124.3}, {3.0, 535.7}} <AX element pid: 89731, elementOrHash.elementID: 4396104576.275>
+                                          Other, 0x108e1dcc0, {{369.0, 116.0}, {30.0, 547.0}}, label: 'Vertical scroll bar, 1 pages', value: 0% <AX element pid: 89731, elementOrHash.elementID: 4939656704.264>
+                                            Other, 0x108e1cdc0, {{396.0, 124.3}, {3.0, 535.7}} <AX element pid: 89731, elementOrHash.elementID: 4396104576.275>
+                                        StaticText, 0x108e1ca00, {{20.0, 694.0}, {159.3, 18.0}}, label: '已选 3 项 · 预计 3.4 MB' <AX element pid: 89731, elementOrHash.elementID: 4336702720.255>
+                                        Button, 0x108e1e1c0, {{322.3, 681.0}, {59.7, 44.0}}, identifier: 'truekeep.review.review-all', label: '取消全选' <AX element pid: 89731, elementOrHash.elementID: 4396023104.256>
+                                        Button, 0x108e1c3c0, {{20.0, 729.0}, {362.0, 52.0}}, identifier: 'truekeep.review.add-to-review-bin', label: '加入复核箱（3）' <AX element pid: 89731, elementOrHash.elementID: 4396064192.257>
+                                Other, 0x108e1c780, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 89731, elementOrHash.elementID: 4939657216.171>
+                                  Other, 0x108e1e6c0, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 89731, elementOrHash.elementID: 4939659264.174>
+                          Other, 0x108e1e440, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 89731, elementOrHash.elementID: 4396042432.165>
+                            Other, 0x108e1e580, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 89731, elementOrHash.elementID: 4396042880.167>
+              Other, 0x108e1c8c0, {{0.0, 791.0}, {402.0, 83.0}} <AX element pid: 89731, elementOrHash.elementID: 4336610688.28>
+                Other, 0x108e1fe80, {{0.0, 0.0}, {402.0, 874.0}} <AX element pid: 89731, elementOrHash.elementID: 4336697344.30>
+                  TabBar, 0x108e1d400, {{0.0, 791.0}, {402.0, 83.0}}, label: 'Tab Bar' <AX element pid: 89731, elementOrHash.elementID: 4397423488.33>
+                    Other, 0x108e1c500, {{64.0, 791.0}, {274.0, 62.0}} <AX element pid: 89731, elementOrHash.elementID: 4336612480.36>
+                      Other, 0x108e1df40, {{64.0, 791.0}, {94.0, 54.0}} <AX element pid: 89731, elementOrHash.elementID: 4336852416.39>
+                      Other, 0x108e1c140, {{64.0, 791.0}, {274.0, 62.0}} <AX element pid: 89731, elementOrHash.elementID: 4336614720.40>
+                        Button, 0x108e1f340, {{68.0, 795.0}, {94.0, 54.0}}, identifier: 'house', label: '首页', Selected <AX element pid: 89731, elementOrHash.elementID: 4335326208.45>
+                          Image, 0x108e1f5c0, {{98.0, 801.0}, {33.3, 28.0}}, identifier: 'house.fill', label: 'home' <AX element pid: 89731, elementOrHash.elementID: 4915871744.54>
+                        Button, 0x108e1f700, {{154.0, 795.0}, {94.0, 54.0}}, identifier: 'trash', label: '复核箱' <AX element pid: 89731, elementOrHash.elementID: 4335328768.46>
+                          Image, 0x108e1f840, {{188.0, 799.0}, {25.7, 29.7}}, identifier: 'trash.fill', label: 'trash' <AX element pid: 89731, elementOrHash.elementID: 4915873280.55>
+                        Button, 0x108e1f980, {{240.0, 795.0}, {94.0, 54.0}}, identifier: 'gearshape', label: '设置' <AX element pid: 89731, elementOrHash.elementID: 4335331328.47>
+                          Image, 0x108e1fac0, {{273.0, 801.0}, {28.0, 28.0}}, identifier: 'gearshape.fill', label: 'gearshape.fill' <AX element pid: 89731, elementOrHash.elementID: 4915874304.56>
+                      Other, 0x108e1fd40, {{68.0, 795.0}, {94.0, 54.0}} <AX element pid: 89731, elementOrHash.elementID: 4397424128.41>
+                        Other, 0x104e3bac0, {{68.0, 795.0}, {94.0, 54.0}} <AX element pid: 89731, elementOrHash.elementID: 4336532352.48>
+                          Other, 0x104e3bc00, {{68.0, 795.0}, {94.0, 54.0}} <AX element pid: 89731, elementOrHash.elementID: 4336528768.57>
+                          Other, 0x104e3bd40, {{68.0, 795.0}, {94.0, 54.0}} <AX element pid: 89731, elementOrHash.elementID: 4336667264.58>
+                            Other, 0x104e3be80, {{68.0, 795.0}, {94.0, 54.0}} <AX element pid: 89731, elementOrHash.elementID: 4336674880.63>
+                              Other, 0x104e3b700, {{68.0, 795.0}, {94.0, 54.0}} <AX element pid: 89731, elementOrHash.elementID: 4336675776.66>
+                                Other, 0x104e3b0c0, {{68.0, 795.0}, {94.0, 54.0}} <AX element pid: 89731, elementOrHash.elementID: 4336676672.69>
+                              Other, 0x104e3b5c0, {{68.0, 795.0}, {94.0, 54.0}} <AX element pid: 89731, elementOrHash.elementID: 4336672192.67>
+                            Other, 0x104e3b200, {{68.0, 795.0}, {94.0, 54.0}} <AX element pid: 89731, elementOrHash.elementID: 4336673984.64>
+                Other, 0x104e3b480, {{0.0, 791.0}, {402.0, 83.0}} <AX element pid: 89731, elementOrHash.elementID: 4697930752.31>
+                  Other, 0x104e3b340, {{0.0, 791.0}, {402.0, 83.0}} <AX element pid: 89731, elementOrHash.elementID: 4335851648.34>
+                    Other, 0x104e3b980, {{0.0, 791.0}, {402.0, 83.0}} <AX element pid: 89731, elementOrHash.elementID: 4336853760.37>
+                      Other, 0x104e3ae40, {{0.0, 791.0}, {402.0, 83.0}} <AX element pid: 89731, elementOrHash.elementID: 4336854656.42>
+                        Other, 0x115108000, {{0.0, 791.0}, {402.0, 83.0}} <AX element pid: 89731, elementOrHash.elementID: 4915876352.49>
+                          Other, 0x115108140, {{0.0, 791.0}, {402.0, 83.0}} <AX element pid: 89731, elementOrHash.elementID: 4336855552.59>
+                      Other, 0x115108280, {{0.0, 791.0}, {402.0, 83.0}} <AX element pid: 89731, elementOrHash.elementID: 4915876864.43>
+                        Other, 0x1151083c0, {{0.0, 791.0}, {402.0, 83.0}} <AX element pid: 89731, elementOrHash.elementID: 4336858688.50>

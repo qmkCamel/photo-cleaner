@@ -17,8 +17,11 @@ steps:
     timeout: 3
   - assert: truekeep.cleanup.scan
   - tap: truekeep.cleanup.scan
+  - waitUntil: scan.setup.start
+    timeout: 10
+  - tap: scan.setup.start
 assertions:
   - waitUntilGone: truekeep.cleanup.deletion-summary
     timeout: 10
-  - assert: 本地扫描
+  - assert: 扫描完成
   - done
